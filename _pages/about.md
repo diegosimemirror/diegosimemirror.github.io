@@ -6,6 +6,8 @@ author_profile: true
 
 Gestor público, con certificación en gestión de proyectos (PMP) y maestría en Filosofía. Actualmente estudio la Diplomatura de Especialización en Ciencia de Datos para las Ciencias Sociales y la Gestión Pública.
 
+[CV en PDF]({{ '/files/cv-diego-sime.pdf' | relative_url }})
+
 ## Proyectos
 
 <div class="tarjetas">
