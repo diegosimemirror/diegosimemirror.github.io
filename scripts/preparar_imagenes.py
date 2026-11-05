@@ -66,10 +66,10 @@ for origen, nombre in figuras.items():
     imagen.save(destino / nombre, optimize=True)
     print(nombre, imagen.size)
 
-# --- Paso 5.1.2: Captura del mapa de salud ---
-# crop(): conserva el encabezado y la arquitectura, y deja fuera el círculo cortado de abajo
+# --- Paso 5.1.2: Captura del mapa de salud (tomada a 900 x 640 para que se lea en la tarjeta) ---
 captura = Image.open(sys.argv[1]).convert("RGB")
-captura = limitar_ancho(captura.crop((0, 0, captura.width, 805)))
+# crop(): deja fuera la franja cortada de la parte inferior
+captura = limitar_ancho(captura.crop((0, 0, captura.width, 608)))
 captura.save(destino / "mapa-salud-peru.png", optimize=True)
 print("mapa-salud-peru.png", captura.size)
 

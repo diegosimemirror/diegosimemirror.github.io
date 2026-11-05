@@ -153,3 +153,23 @@
   border: 1px solid var(--global-border-color);
   border-radius: 8px;
 }
+
+/* Botón «Enlaces» del celular: la plantilla lo deja casi invisible.
+   Antes: gris claro sobre blanco | Después: mismo contraste que los demás botones */
+.author__urls-wrapper button.btn--inverse {
+  min-height: 44px;
+  color: var(--global-text-color) !important;
+  border: 1px solid var(--global-text-color) !important;
+  background: transparent !important;
+}
+
+/* Pie de página: la plantilla lo deja fijo y ocupa pantalla mientras se lee.
+   Antes: siempre visible, encima del contenido | Después: solo aparece al final de la página */
+body {
+  padding-bottom: 0;
+}
+
+.page__footer {
+  position: relative;
+  bottom: auto;
+}
