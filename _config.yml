@@ -23,7 +23,7 @@ repository               : "diegosimemirror/diegosimemirror.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "profile.svg"   # PENDIENTE: reemplazar por la foto real
+  avatar           : "foto-diego-sime.jpg"
   name             : "Diego Sime"
   pronouns         : # example: "she/her"  
   bio              :
