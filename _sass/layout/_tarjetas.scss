@@ -173,3 +173,12 @@ body {
   position: relative;
   bottom: auto;
 }
+
+/* Reel vertical: no más ancho que un celular, para que quepa completo en la pantalla */
+.reel video {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  border-radius: 8px;
+  background: #000;
+}

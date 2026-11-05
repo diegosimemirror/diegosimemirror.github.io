@@ -1,7 +1,7 @@
 ---
 title: "Incendios en Junín: a quién expone el fuego y si la red de salud puede responder"
 excerpt: "Clasificación de focos de calor en Junín, población expuesta y capacidad de respuesta de la red pública de salud, del 14 al 21 de octubre de 2026."
-orden: 2
+orden: 3
 tema: "Mapas · Datos satelitales"
 pregunta: "¿Qué focos de calor son probablemente incendios forestales, a quién exponen y puede responder la red de salud?"
 resultado: "Con criterios de evidencia, las personas a 5 km o menos del fuego bajan de 746,046 a 232,748."

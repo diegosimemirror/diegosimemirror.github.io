@@ -31,7 +31,7 @@ Código del sitio https://diegosimemirror.github.io, publicado con GitHub Pages.
 | 3 | Limpiar la plantilla | Contenido de ejemplo | Borrar o traducir | Sin restos de la plantilla |
 | 4 | Inicio | Presentación y enlaces | `_pages/about.md` | Portada |
 | 5 | Proyectos y publicaciones | Repos, productos e informes | `_portfolio/`, `_data/publicaciones.yml` y `scripts/preparar_imagenes.py` | Tarjetas y fichas |
-| 6 | Demo incrustada | `web_junin.html` de `incendios-2026` | Copia en `demos/incendios-junin/` con la etiqueta `viewport`, para que se adapte al celular | Demo dentro del sitio |
+| 6 | Demos y video | `web_junin.html` de `incendios-2026`; dashboard y reel de `designaciones` | Copia en `demos/incendios-junin/` con la etiqueta `viewport`; el dashboard y el reel se insertan desde donde ya están publicados | Demos y video dentro del sitio |
 
 ## Créditos
 

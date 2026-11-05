@@ -1,7 +1,7 @@
 ---
 title: "Tres skills de Claude Code que limpian, grafican y mapean la ENAHO 2024"
 excerpt: "Tres skills de Claude Code que convierten los microdatos de la Encuesta Nacional de Hogares 2024 en una base validada contra la pobreza oficial."
-orden: 3
+orden: 4
 tema: "Agentes de IA · Encuestas"
 pregunta: "¿Puede un agente de IA limpiar la Encuesta Nacional de Hogares (ENAHO) y replicar la pobreza oficial?"
 resultado: "Pobreza de 27.53 % frente a 27.6 % del INEI, con los mismos 108,664 residentes. Con las skills resolvió 3 de 3 pedidos; sin ellas, ninguno."

@@ -73,6 +73,14 @@ captura = limitar_ancho(captura.crop((0, 0, captura.width, 608)))
 captura.save(destino / "mapa-salud-peru.png", optimize=True)
 print("mapa-salud-peru.png", captura.size)
 
+# --- Paso 5.1.3: Captura de la red de Designaciones ---
+# crop(): conserva el título, la leyenda y los primeros grupos de la red; quita lo demás
+# Antes: captura vertical de 1280 x 1390 | Después: recorte horizontal que cabe en la tarjeta
+red = Image.open(REPOS / "designaciones" / "tarea_3" / "reel" / "capturas" / "red_seguimiento_dashboard.png")
+red = limitar_ancho(red.convert("RGB").crop((70, 285, 1210, 1000)))
+red.save(destino / "designaciones-red.png", optimize=True)
+print("designaciones-red.png", red.size)
+
 # --- Paso 4.1.1: Imagen para compartir el enlace ---
 # Antes: no existe | Después: imagen de 1200 x 630, la medida que usan las redes
 lamina = Image.new("RGB", (1200, 630), (255, 255, 255))
