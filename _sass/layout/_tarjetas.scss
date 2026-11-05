@@ -182,3 +182,32 @@ body {
   border-radius: 8px;
   background: #000;
 }
+
+/* Foto del inicio. La plantilla la muestra redonda, en color y muy pequeña en el celular.
+   Antes: círculo de 36 px en el celular | Después: cuadrada, en sepia y de 96 px
+   Para volver al color, borra la línea de filter. */
+.author__avatar {
+  width: 96px;
+}
+
+.author__avatar img {
+  display: block;
+  width: 96px;
+  max-width: none;
+  border-radius: 4px;
+  filter: sepia(1);
+}
+
+/* En pantallas grandes, la foto ocupa el ancho del panel lateral, hasta 220 px */
+@media (min-width: 925px) {
+  .author__avatar {
+    width: auto;
+  }
+
+  .author__avatar img {
+    width: 100%;
+    max-width: 220px;
+    padding: 0;
+    border: 0;
+  }
+}
