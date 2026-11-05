@@ -1,0 +1,24 @@
+{% comment %}
+  PROCESO 5: Tarjeta de un proyecto
+  Insumo:    la cabecera de un archivo de _portfolio/ (título, pregunta, resultado, imagen y enlaces)
+  Resultado: el bloque de la tarjeta que se ve en la portada y en la página de cada proyecto
+
+  Antes:  datos sueltos en la cabecera del archivo.
+  Después: una tarjeta con imagen, pregunta, resultado y botones.
+
+  Parámetros:
+    proyecto = el archivo del proyecto (obligatorio)
+    detalle  = true cuando la tarjeta va dentro de la página del proyecto; oculta el título,
+               porque esa página ya lo muestra arriba
+{% endcomment %}
+{% assign p = include.proyecto %}
+<article class="tarjeta">
+<a class="tarjeta__imagen" href="{{ p.url | relative_url }}"><img src="{{ '/images/proyectos/' | append: p.imagen | relative_url }}" alt="{{ p.imagen_alt | escape }}" loading="lazy"></a>
+<div class="tarjeta__texto">
+{% unless include.detalle %}<p class="tarjeta__tema">{{ p.tema }}</p>
+<h3 class="tarjeta__titulo"><a href="{{ p.url | relative_url }}">{{ p.title }}</a></h3>{% endunless %}
+<p><strong>Pregunta:</strong> {{ p.pregunta }}</p>
+<p><strong>Resultado:</strong> {{ p.resultado }}</p>
+<p class="botones">{% for enlace in p.enlaces %}<a class="boton" href="{% if enlace.url contains '://' %}{{ enlace.url }}{% else %}{{ enlace.url | relative_url }}{% endif %}">{{ enlace.texto }}</a>{% endfor %}</p>
+</div>
+</article>

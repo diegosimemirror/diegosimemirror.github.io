@@ -1,0 +1,155 @@
+/* ==========================================================================
+   PROCESOS 5 y 6: Estilos propios del portafolio
+   Insumo:    el HTML de las tarjetas, las publicaciones y la demo
+   Resultado: bloques que se leen bien en el celular y en la computadora
+
+   Las variables --global-* vienen de la plantilla y cambian solas entre el
+   tema claro y el oscuro.
+   ========================================================================== */
+
+/* Lista de tarjetas: una debajo de otra */
+.tarjetas {
+  display: grid;
+  gap: 1.25em;
+  margin-bottom: 2em;
+}
+
+/* Tarjeta: en el celular, la imagen va arriba y el texto debajo */
+.tarjeta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--global-border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5em;
+}
+
+.tarjetas .tarjeta {
+  margin-bottom: 0;
+}
+
+/* Desde el ancho de una tableta, la imagen pasa a la izquierda */
+@media (min-width: 48em) {
+  .tarjeta {
+    grid-template-columns: minmax(0, 36%) minmax(0, 1fr);
+  }
+}
+
+/* La imagen se muestra completa, sobre blanco, incluso en el tema oscuro */
+.tarjeta__imagen {
+  display: block;
+  background: #fff;
+  padding: 0.5em;
+  aspect-ratio: 16 / 10;
+}
+
+@media (min-width: 48em) {
+  .tarjeta__imagen {
+    aspect-ratio: auto;
+  }
+}
+
+.tarjeta__imagen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.tarjeta__texto {
+  padding: 0.9em 1em 1em;
+  min-width: 0;
+}
+
+.tarjeta__texto p {
+  font-size: 0.9em;
+  margin: 0 0 0.6em;
+}
+
+.tarjeta__tema {
+  color: var(--global-text-color);
+  opacity: 0.8;
+  letter-spacing: 0.03em;
+}
+
+.page__content .tarjeta__titulo {
+  font-size: 1.05em;
+  line-height: 1.3;
+  margin: 0 0 0.6em;
+  padding: 0;
+  border: 0;
+}
+
+.tarjeta__titulo a {
+  color: var(--global-text-color);
+  text-decoration: none;
+}
+
+.tarjeta__titulo a:hover {
+  text-decoration: underline;
+}
+
+/* Botones: de al menos 44 px de alto para poder tocarlos con el dedo */
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin: 0.8em 0 0;
+}
+
+.page__content .boton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.3em 0.9em;
+  border: 1px solid var(--global-text-color);
+  border-radius: 6px;
+  color: var(--global-text-color);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.page__content .boton:hover {
+  background: var(--global-text-color);
+  color: var(--global-bg-color);
+}
+
+/* Publicaciones e informes */
+.publicacion {
+  padding: 1em 0;
+  border-top: 1px solid var(--global-border-color);
+}
+
+.publicacion:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.publicacion p {
+  font-size: 0.9em;
+  margin: 0 0 0.6em;
+}
+
+.page__content .publicacion__titulo {
+  font-size: 1.05em;
+  line-height: 1.3;
+  margin: 0 0 0.3em;
+  padding: 0;
+  border: 0;
+}
+
+.publicacion__fuente {
+  opacity: 0.8;
+}
+
+/* Demo incrustada: alta, pero sin ocupar toda la pantalla, para poder seguir bajando */
+.demo iframe {
+  display: block;
+  width: 100%;
+  height: 75vh;
+  min-height: 420px;
+  max-height: 800px;
+  border: 1px solid var(--global-border-color);
+  border-radius: 8px;
+}

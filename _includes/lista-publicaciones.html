@@ -1,0 +1,16 @@
+{% comment %}
+  PROCESO 5.2: Lista de publicaciones e informes
+  Insumo:    _data/publicaciones.yml (una entrada por documento)
+  Resultado: una ficha por documento, con su título, quién lo publicó, mi aporte y sus enlaces
+
+  Antes:  una lista de datos en un archivo de texto.
+  Después: fichas en la portada, en el mismo orden del archivo.
+{% endcomment %}
+<div class="publicaciones">
+{% for pub in site.data.publicaciones %}<article class="publicacion">
+<h3 class="publicacion__titulo">{{ pub.titulo }}</h3>
+<p class="publicacion__fuente">{{ pub.editor }}, {{ pub.anio }}</p>
+<p>{{ pub.aporte }}</p>
+<p class="botones">{% for enlace in pub.enlaces %}<a class="boton" href="{{ enlace.url }}">{{ enlace.texto }}</a>{% endfor %}</p>
+</article>
+{% endfor %}</div>

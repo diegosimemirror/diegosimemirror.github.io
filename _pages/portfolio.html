@@ -1,14 +1,11 @@
 ---
-layout: archive
-title: "Portfolio"
+layout: single
+title: "Proyectos"
 permalink: /portfolio/
+excerpt: "Proyectos de Diego Sime, cada uno con su pregunta, su resultado y su código."
 author_profile: true
 ---
 
-{% include base_path %}
-
-
-{% for post in site.portfolio %}
-  {% include archive-single.html %}
-{% endfor %}
-
+<div class="tarjetas">
+{% assign proyectos = site.portfolio | sort: "orden" %}{% for proyecto in proyectos %}{% include tarjeta-proyecto.html proyecto=proyecto %}{% endfor %}
+</div>
