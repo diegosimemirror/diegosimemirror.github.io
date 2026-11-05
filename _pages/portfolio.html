@@ -9,3 +9,7 @@ author_profile: true
 <div class="tarjetas">
 {% assign proyectos = site.portfolio | sort: "orden" %}{% for proyecto in proyectos %}{% include tarjeta-proyecto.html proyecto=proyecto %}{% endfor %}
 </div>
+
+<h2 id="otros-proyectos">Otros proyectos</h2>
+
+{% include lista-otros-proyectos.html %}

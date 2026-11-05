@@ -1,0 +1,15 @@
+{% comment %}
+  PROCESO 5.3: Otros proyectos
+  Insumo:    _data/otros_proyectos.yml (una entrada por proyecto)
+  Resultado: una ficha breve por proyecto, con su título, una línea de resumen y sus enlaces
+
+  Antes:  una lista de datos en un archivo de texto.
+  Después: fichas sin imagen, para mostrar más trabajo sin alargar la portada.
+{% endcomment %}
+<div class="fichas">
+{% for proyecto in site.data.otros_proyectos %}<article class="ficha">
+<h3 class="ficha__titulo">{{ proyecto.titulo }}</h3>
+<p>{{ proyecto.resumen }}</p>
+<p class="botones">{% for enlace in proyecto.enlaces %}<a class="boton" href="{{ enlace.url }}">{{ enlace.texto }}</a>{% endfor %}</p>
+</article>
+{% endfor %}</div>

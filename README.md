@@ -9,7 +9,8 @@ Código del sitio https://diegosimemirror.github.io, publicado con GitHub Pages.
 | Mi presentación | `_pages/about.md` |
 | Nombre, foto y enlaces | `_config.yml`, sección `author` |
 | Un proyecto | `_portfolio/<proyecto>.md` |
-| Publicaciones e informes | `_data/publicaciones.yml` |
+| Otros proyectos | `_data/otros_proyectos.yml` |
+| Participación en estudios internacionales | `_data/participacion.yml` |
 | Menú superior | `_data/navigation.yml` |
 | Imágenes de las tarjetas | `images/proyectos/` |
 | CV y otros PDF | `files/` |
@@ -30,7 +31,7 @@ Código del sitio https://diegosimemirror.github.io, publicado con GitHub Pages.
 | 2 | Configurar | `_config.yml` | Nombre, dirección y enlaces | Sitio con mis datos |
 | 3 | Limpiar la plantilla | Contenido de ejemplo | Borrar o traducir | Sin restos de la plantilla |
 | 4 | Inicio | Presentación y enlaces | `_pages/about.md` | Portada |
-| 5 | Proyectos y publicaciones | Repos, productos e informes | `_portfolio/`, `_data/publicaciones.yml` y `scripts/preparar_imagenes.py` | Tarjetas y fichas |
+| 5 | Proyectos y participación | Repos, productos y estudios | `_portfolio/`, `_data/otros_proyectos.yml`, `_data/participacion.yml` y `scripts/preparar_imagenes.py` | Tarjetas y fichas |
 | 6 | Demos y video | `web_junin.html` de `incendios-2026`; dashboard y reel de `designaciones` | Copia en `demos/incendios-junin/` con la etiqueta `viewport`; el dashboard y el reel se insertan desde donde ya están publicados | Demos y video dentro del sitio |
 
 ## Créditos

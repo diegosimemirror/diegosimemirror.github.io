@@ -1,6 +1,6 @@
 /* ==========================================================================
    PROCESOS 5 y 6: Estilos propios del portafolio
-   Insumo:    el HTML de las tarjetas, las publicaciones y la demo
+   Insumo:    el HTML de las tarjetas, las fichas y la demo
    Resultado: bloques que se leen bien en el celular y en la computadora
 
    Las variables --global-* vienen de la plantilla y cambian solas entre el
@@ -115,23 +115,23 @@
   color: var(--global-bg-color);
 }
 
-/* Publicaciones e informes */
-.publicacion {
+/* Fichas de otros proyectos y de estudios en los que participé */
+.ficha {
   padding: 1em 0;
   border-top: 1px solid var(--global-border-color);
 }
 
-.publicacion:first-child {
+.ficha:first-child {
   border-top: 0;
   padding-top: 0;
 }
 
-.publicacion p {
+.ficha p {
   font-size: 0.9em;
   margin: 0 0 0.6em;
 }
 
-.page__content .publicacion__titulo {
+.page__content .ficha__titulo {
   font-size: 1.05em;
   line-height: 1.3;
   margin: 0 0 0.3em;
@@ -139,7 +139,7 @@
   border: 0;
 }
 
-.publicacion__fuente {
+.ficha__fuente {
   opacity: 0.8;
 }
 

@@ -1,0 +1,33 @@
+# Otros proyectos: fichas breves, sin imagen, en este orden.
+# Para agregar uno, copia un bloque completo y cambia sus datos.
+# Los dashboards de Streamlit se duermen sin visitas; el botón lo avisa.
+
+- titulo: "Noticias peruanas: del titular al clasificador"
+  resumen: "Un modelo de lenguaje clasifica titulares de La República en cuatro categorías y acierta 57 de 60 que no había visto."
+  enlaces:
+    - texto: "Código"
+      url: "https://github.com/diegosimemirror/Python-Intermedio-QLAB/tree/main/tarea_1"
+
+- titulo: "Voces y documentos peruanos: del archivo escaneado al texto buscable"
+  resumen: "Convierte escaneos y entrevistas en texto buscable. Funciona con impresos, fotos y voz; todavía no con manuscritos."
+  enlaces:
+    - texto: "Dashboard (puede tardar en abrir)"
+      url: "https://python-intermedio-qlab-aeod9u3y4jl5hta8gpphg4.streamlit.app/"
+    - texto: "Código"
+      url: "https://github.com/diegosimemirror/Python-Intermedio-QLAB/tree/main/tarea_2"
+
+- titulo: "Distritos bajo emergencia por lluvias"
+  resumen: "Muestra el alcance territorial de 20 decretos de emergencia de 2024, que abarcaron 873 distritos, el 46.1 % del total."
+  enlaces:
+    - texto: "Dashboard (puede tardar en abrir)"
+      url: "https://assignment-3-individual-dfsygtjtgshrimcn7czyqi.streamlit.app/"
+    - texto: "Código"
+      url: "https://github.com/diegosimemirror/Assignment-3-Individual"
+
+- titulo: "Claude con las series oficiales del Banco Central de Reserva del Perú"
+  resumen: "Con un servidor propio, Claude acertó 10 de 10 cifras en una prueba, frente a 7 de 10 con búsqueda web."
+  enlaces:
+    - texto: "Informe"
+      url: "https://github.com/diegosimemirror/mcp-1/blob/main/informe.md"
+    - texto: "Código"
+      url: "https://github.com/diegosimemirror/mcp-1"

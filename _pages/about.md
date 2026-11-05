@@ -12,6 +12,10 @@ Gestor público, con certificación en gestión de proyectos (PMP) y maestría e
 {% assign proyectos = site.portfolio | sort: "orden" %}{% for proyecto in proyectos %}{% include tarjeta-proyecto.html proyecto=proyecto %}{% endfor %}
 </div>
 
-## Publicaciones e informes {#publicaciones}
+## Otros proyectos {#otros-proyectos}
 
-{% include lista-publicaciones.html %}
+{% include lista-otros-proyectos.html %}
+
+## Participación en estudios internacionales {#participacion}
+
+{% include lista-participacion.html %}

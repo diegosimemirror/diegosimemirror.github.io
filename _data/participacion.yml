@@ -1,8 +1,9 @@
-# Publicaciones e informes que aparecen en la portada, en este orden.
+# Estudios en los que participé. Aparecen en la portada, en este orden.
+# «editor» es quien publica el documento; «aporte» describe solo mi participación.
 # Para agregar uno, copia un bloque completo y cambia sus datos.
 
 - titulo: "Estudios de la OCDE sobre los Sistemas de Salud: Perú 2025"
-  editor: "Organización para la Cooperación y el Desarrollo Económicos (OCDE)"
+  editor: "la Organización para la Cooperación y el Desarrollo Económicos (OCDE)"
   anio: 2025
   aporte: "Conformé el equipo que gestionó la visita de la misión de la OCDE en el Perú y brindó soporte al proceso de recopilación de datos e información del sistema de salud para el informe de adhesión del Comité de Salud de la OCDE, lo que permitió concluir esa evaluación. Como producto de este proceso, la OCDE publicó este estudio."
   enlaces:
@@ -12,7 +13,7 @@
       url: "https://www.oecd.org/en/publications/oecd-reviews-of-health-systems-peru-2025_f3ddb6a4-en.html"
 
 - titulo: "Improving Networks of Community Mental Health Services in the Asia-Pacific Economies"
-  editor: "Foro de Cooperación Económica Asia-Pacífico (APEC)"
+  editor: "el Foro de Cooperación Económica Asia-Pacífico (APEC)"
   anio: 2020
   aporte: "Brindé apoyo a la organización del proyecto «Mejoramiento de las Redes de Servicios Comunitarios de Salud Mental en las Economías de Asia-Pacífico», de APEC y la Dirección de Salud Mental del Ministerio de Salud del Perú. Elaboré el informe final en inglés, que recogió experiencias de más de diez países."
   enlaces:

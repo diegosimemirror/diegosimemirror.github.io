@@ -1,0 +1,17 @@
+{% comment %}
+  PROCESO 5.2: Estudios en los que participé
+  Insumo:    _data/participacion.yml (una entrada por estudio)
+  Resultado: una ficha por estudio, con su título, quién lo publicó, mi aporte y sus enlaces
+
+  Antes:  una lista de datos en un archivo de texto.
+  Después: fichas en la portada, en el mismo orden del archivo.
+  La línea «Publicado por» deja claro que el documento es de quien lo publica.
+{% endcomment %}
+<div class="fichas">
+{% for estudio in site.data.participacion %}<article class="ficha">
+<h3 class="ficha__titulo">{{ estudio.titulo }}</h3>
+<p class="ficha__fuente">Publicado por {{ estudio.editor }}, {{ estudio.anio }}</p>
+<p>{{ estudio.aporte }}</p>
+<p class="botones">{% for enlace in estudio.enlaces %}<a class="boton" href="{{ enlace.url }}">{{ enlace.texto }}</a>{% endfor %}</p>
+</article>
+{% endfor %}</div>
