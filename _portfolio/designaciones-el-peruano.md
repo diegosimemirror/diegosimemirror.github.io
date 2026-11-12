@@ -1,7 +1,7 @@
 ---
 title: "Designaciones de El Peruano: ¿cambia todo para que no cambie nada?"
 excerpt: "Análisis de cuatro años de designaciones, conclusiones y renuncias de funcionarios publicadas en el diario oficial del Perú, con un dashboard interactivo."
-orden: 1
+orden: 2
 tema: "Gestión pública · Redes · Dashboard"
 pregunta: "La alta rotación de cargos de confianza, ¿renueva el elenco de funcionarios o hace circular a las mismas personas?"
 resultado: "El 50 % de quienes designó el gobierno de julio de 2026 ya había tenido un cargo entre 2022 y 2026 (61 % en cargos altos). Base: 46,892 movimientos."

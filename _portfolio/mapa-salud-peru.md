@@ -1,7 +1,7 @@
 ---
 title: "Mapa del Sistema de Salud del Perú"
 excerpt: "Mapa interactivo de cómo encajan las piezas del sistema de salud peruano: cada problema, sus causas y quién puede actuar sobre él."
-orden: 2
+orden: 3
 tema: "Salud pública · Mapa interactivo"
 pregunta: "¿Cómo encajan las piezas del sistema de salud peruano, qué causa cada problema y quién puede actuar sobre él?"
 resultado: "51 problemas y 80 vínculos causales (68 de la OCDE y 12 inferidos, marcados aparte), con 67 indicadores y 22 recomendaciones."

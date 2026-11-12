@@ -1,7 +1,7 @@
 ---
 title: "Juntos y la pobreza: a quién protege hoy la política social en el Perú"
 excerpt: "Un agente de Claude Code que consulta las series del Banco Central con un servidor MCP propio y analiza la ENAHO 2024 con tres skills, con un dashboard para explorar los resultados."
-orden: 5
+orden: 1
 tema: "Agentes de IA · Política social · Dashboard"
 pregunta: "¿Cuánto poder de compra perdió la transferencia de Juntos y dónde y en qué hogares se concentra hoy la pobreza monetaria?"
 resultado: "Los S/&nbsp;100 de Juntos de octubre de 2026 valen S/&nbsp;51.47 de 2006. El 72.7 % de los pobres vive en ciudades, pero solo el 15 % de los pobres urbanos vive en un hogar con Juntos."
