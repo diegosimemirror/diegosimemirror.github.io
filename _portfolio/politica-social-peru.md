@@ -4,7 +4,7 @@ excerpt: "Un agente de Claude Code que consulta las series del Banco Central con
 orden: 5
 tema: "Agentes de IA · Política social · Dashboard"
 pregunta: "¿Cuánto poder de compra perdió la transferencia de Juntos y dónde y en qué hogares se concentra hoy la pobreza monetaria?"
-resultado: "Los S/ 100 de Juntos de octubre de 2026 valen S/ 51.47 de 2006. El 72.7 % de los pobres vive en ciudades, pero solo el 15 % de los pobres urbanos vive en un hogar con Juntos."
+resultado: "Los S/&nbsp;100 de Juntos de octubre de 2026 valen S/&nbsp;51.47 de 2006. El 72.7 % de los pobres vive en ciudades, pero solo el 15 % de los pobres urbanos vive en un hogar con Juntos."
 imagen: politica-social-peru.png
 imagen_alt: "Gráfico del dashboard: índice de precios de Lima con diciembre de 2006 = 100. En octubre de 2026 los alimentos llegan a 229.7 y el total a 194.3."
 enlaces:
@@ -29,7 +29,7 @@ En una sola ejecución, el agente usó cinco herramientas del servidor y las tre
 
 ## Hallazgos
 
-- **Juntos perdió la mitad de su valor.** Paga S/ 100 al mes desde 2006. En soles de diciembre de 2006, los S/ 100 de octubre de 2026 valen S/ 51.47, y S/ 43.53 si se miden con los precios de los alimentos.
+- **Juntos perdió la mitad de su valor.** Paga S/&nbsp;100 al mes desde 2006. En soles de diciembre de 2006, los S/&nbsp;100 de octubre de 2026 valen S/&nbsp;51.47, y S/&nbsp;43.53 si se miden con los precios de los alimentos.
 - **Los alimentos subieron más y pesan más en el gasto de los pobres.** Entre 2006 y 2026 subieron 129.7 %, frente a 71.4 % del resto de precios. Los hogares pobres destinan 44.6 % de su gasto a alimentos; los no pobres, 33.2 %.
 - **La tasa más alta es rural, pero la mayoría de los pobres es urbana.** La pobreza es de 39.30 % en el campo y de 24.81 % en las ciudades, pero el 72.7 % de los pobres vive en ciudades. En los hogares con niños menores de 5 años llega a 43.80 %.
 - **Juntos casi no llega a los pobres urbanos.** El 48.7 % de los pobres rurales vive en un hogar con Juntos; entre los urbanos, el 15.1 %.
