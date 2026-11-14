@@ -1,7 +1,0 @@
-# Menú superior del sitio: cada entrada es un enlace, en este orden.
-main:
-  - title: "Proyectos"
-    url: /portfolio/
-
-  - title: "Participación"
-    url: /#participacion

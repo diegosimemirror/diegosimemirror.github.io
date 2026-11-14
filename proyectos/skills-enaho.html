@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Skills para la ENAHO 2024 · Diego Sime</title>
+<meta name="description" content="Tres skills de Claude Code que convierten los microdatos de la Encuesta Nacional de Hogares 2024 en una base validada contra la pobreza oficial.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- PROCESO 1: Cabecera. El nombre vuelve a la portada; el menú es igual en todas las páginas. -->
+<header class="cabecera">
+  <a class="cabecera__nombre" href="../index.html">Diego Sime, MA</a>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="../index.html#proyectos">Proyectos</a>
+    <a href="../index.html#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- PROCESO 2: Título, gráfico y ficha. El clic en el mapa lleva al repositorio del proyecto. -->
+<div class="encabezado-proyecto">
+  <p class="tema">Agentes de IA · Encuestas</p>
+  <h1 class="titulo-pagina">Tres skills de Claude Code que limpian, grafican y mapean la ENAHO 2024</h1>
+</div>
+
+<div class="proyecto proyecto--detalle">
+  <a class="figura" href="https://github.com/diegosimemirror/skills" target="_blank" rel="noopener" title="Ver el código">
+    <img src="../imagenes/proyectos/pobreza-departamento.png" width="1196" height="1327" alt="Mapa del Perú con la pobreza monetaria de 2024 por departamento: más oscuro significa más pobreza.">
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Puede un agente de IA limpiar la Encuesta Nacional de Hogares (ENAHO) y replicar la pobreza oficial?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">Pobreza de 27.53&nbsp;% frente a 27.6&nbsp;% del INEI, con los mismos 108,664 residentes. Con las skills resolvió 3&nbsp;de&nbsp;3 pedidos; sin ellas, ninguno.</p>
+      <p class="enlaces">
+        <a href="https://github.com/diegosimemirror/skills" target="_blank" rel="noopener">Código</a>
+        <a href="https://github.com/diegosimemirror/skills/blob/main/evaluacion.md" target="_blank" rel="noopener">Evaluación</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO 3: Detalle. Cada sección usa la rejilla de dos columnas: título a la izquierda y texto a la derecha. -->
+<section class="seccion dos-columnas">
+  <h2>Qué hice</h2>
+  <div class="prosa">
+    <p>Una <em>skill</em> es un conjunto de instrucciones que Claude Code activa por su cuenta cuando un pedido encaja con ella. Construí tres:</p>
+    <ul>
+      <li><code>limpiando-enaho</code> une los módulos de la encuesta y deja una base de personas validada.</li>
+      <li><code>graficando-enaho</code> produce gráficos de pobreza con reglas fijas.</li>
+      <li><code>mapeando-enaho</code> produce el mapa por departamento.</li>
+    </ul>
+    <p>Basta un pedido como «haz un mapa de la pobreza» para que se activen dos skills seguidas: si la base limpia no existe, primero la crea.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Validación</h2>
+  <div class="prosa tabla">
+    <table>
+      <thead>
+        <tr><th scope="col">Indicador</th><th scope="col">Esta base</th><th scope="col">INEI</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Residentes habituales</td><td>108,664</td><td>108,664</td></tr>
+        <tr><td>Pobreza monetaria</td><td>27.53&nbsp;%</td><td>27.6&nbsp;%</td></tr>
+        <tr><td>Pobreza extrema</td><td>5.50&nbsp;%</td><td>5.5&nbsp;%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Evaluación</h2>
+  <div class="prosa">
+    <p>Hice tres pedidos en copias aisladas del proyecto, con y sin skills. Con ellas, las cifras coincidieron con las de referencia, con diferencias de 0.1 puntos o menos. Sin ellas, Claude no entregó ningún resultado: buscó en otro lado o se detuvo a pedir confirmaciones.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Limitaciones</h2>
+  <div class="prosa">
+    <ul>
+      <li>Es una sola corrida por pedido, así que no mide la variación entre corridas.</li>
+      <li>Mis instrucciones generales a Claude piden confirmar antes de programar, y eso explica en parte por qué se detuvieron las corridas sin skills.</li>
+      <li>Los microdatos no están en el repositorio. Se descargan del INEI con los comandos del README.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROCESO 4: Paso al proyecto siguiente. Después del último, vuelve al primero. -->
+<nav class="siguiente" aria-label="Proyecto siguiente">
+  <p class="etiqueta">Siguiente proyecto</p>
+  <a href="politica-social-peru.html">Juntos y la pobreza: a quién protege hoy la política social en el Perú</a>
+</nav>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>

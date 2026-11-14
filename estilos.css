@@ -1,0 +1,356 @@
+/* ============================================================
+   estilos.css: todo el aspecto del sitio vive en este archivo.
+   Lo cambias aquí y cambia en todas las páginas, igual que una
+   celda de supuestos en Excel alimenta todas las fórmulas.
+
+   Idea del diseño: un solo tamaño para el texto. Lo importante se
+   marca con negrita, no con letra más grande. El color lo ponen
+   tus gráficos, que se ven junto a su pregunta y su resultado.
+   ============================================================ */
+
+/* Tipografías: se descargan de Google Fonts al abrir la página.
+   Para probar otras, cambia este enlace y las dos líneas --letra-* de abajo. */
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Schibsted+Grotesk:wght@400;500;600&display=swap");
+
+
+/* ============================================================
+   PROCESO 1: Parámetros que puedes personalizar
+   Insumo:    tus preferencias de color, letra y tamaño
+   Resultado: valores que usa el resto de este archivo
+   ============================================================ */
+:root {
+  /* Color */
+  --papel: #ffffff;        /* fondo */
+  --tinta: #0a0a0a;        /* texto principal */
+  --tinta-suave: #666666;  /* datos secundarios */
+  --linea: #d9d9d9;        /* líneas finas entre filas */
+
+  /* Letra */
+  --letra-titulos: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --letra-texto: "Newsreader", Georgia, "Times New Roman", serif;
+
+  /* Tamaños de letra: solo hay estos cuatro en todo el sitio */
+  --texto: 1.125rem;         /* tu nombre, menú, etiquetas, enlaces y títulos de las listas */
+  --texto-serif: 1.3125rem;  /* párrafos: esta letra se ve más chica, por eso su número es mayor */
+  --titulo: clamp(1.5rem, 2vw, 1.6875rem);           /* título de cada proyecto */
+  --titulo-seccion: clamp(1.75rem, 3vw, 2.5rem);     /* títulos de sección y de cada página */
+
+  /* Medidas */
+  --ancho-sitio: 1320px;   /* ancho máximo del contenido */
+  --columna-texto: 4.25fr;    /* parte del ancho para el texto */
+  --columna-grafico: 7.75fr;  /* parte del ancho para gráficos y foto */
+  --alto-grafico: min(80vh, 600px);        /* alto máximo de cada gráfico */
+  --alto-foto: 216px;                      /* alto mínimo de tu foto en computadora */
+  --ancho-bio: 21rem;                      /* ancho del texto de presentación en computadora */
+  --ancho-foto-celular: 62vw;              /* ancho de tu foto en celular */
+  --margen: clamp(16px, 3vw, 40px);        /* borde izquierdo y derecho */
+  --aire-grande: clamp(56px, 6.5vw, 96px); /* espacio entre proyectos y secciones */
+  --aire-medio: clamp(20px, 2.4vw, 32px);  /* espacio dentro de un proyecto */
+  --columnas: clamp(24px, 3vw, 48px);      /* espacio entre columnas */
+
+  /* Calculadas: respetan la zona segura de los celulares con muesca. No hace falta tocarlas. */
+  --borde-izq: max(var(--margen), env(safe-area-inset-left, 0px));
+  --borde-der: max(var(--margen), env(safe-area-inset-right, 0px));
+  color-scheme: light;
+}
+
+
+/* ============================================================
+   PROCESO 2: Base de toda la página
+   Insumo:    el HTML sin estilo
+   Resultado: letra, color y márgenes comunes
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--letra-texto);
+  font-size: var(--texto-serif);
+  line-height: 1.36;
+  font-optical-sizing: auto;
+}
+
+/* Contenedor único: centra el contenido y fija los márgenes laterales */
+.pagina {
+  width: 100%;
+  max-width: calc(var(--ancho-sitio) + 2 * var(--margen));
+  margin-inline: auto;
+  padding-left: var(--borde-izq);
+  padding-right: var(--borde-der);
+}
+
+h1, h2, h3, p, ol, ul, figure { margin: 0; }
+
+h1, h2, h3 {
+  font-family: var(--letra-titulos);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { color: var(--tinta-suave); }
+a:focus-visible { outline: 2px solid var(--tinta); outline-offset: 3px; }
+
+/* Todo lo que usa la letra sin serifa comparte un mismo tamaño */
+.cabecera, .presentacion__texto, .tema, .etiqueta, .enlaces, .fila__titulo, .fila__dato,
+.seccion h2, .bloque-ancho h2, .nota-movil, .tabla table, .pie {
+  font-family: var(--letra-titulos);
+  font-size: var(--texto);
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+}
+
+/* Rejilla de dos columnas: la misma división ordena todo el sitio, así las columnas siempre se alinean */
+.dos-columnas {
+  display: grid;
+  grid-template-columns: var(--columna-texto) var(--columna-grafico);
+  column-gap: var(--columnas);
+}
+.dos-columnas > * { min-width: 0; }
+
+
+/* ============================================================
+   PROCESO 3: Cabecera
+   Insumo:    tu nombre y los enlaces de navegación
+   Resultado: una fila igual en todas las páginas. El nombre tiene
+              el mismo tamaño que el texto; solo lo distingue la negrita.
+   ============================================================ */
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 24px;
+  padding-block: 18px;
+}
+.cabecera a { text-decoration: none; }
+.cabecera a:hover { text-decoration: underline; color: inherit; }
+.cabecera__nombre { font: inherit; font-weight: 600; letter-spacing: inherit; }
+.cabecera__menu { display: flex; flex-wrap: wrap; gap: 2px clamp(14px, 2vw, 28px); }
+
+
+/* ============================================================
+   PROCESO 4: Presentación
+   Insumo:    biografía, línea final y foto
+   Resultado: la foto va desde la primera línea del texto hasta la última
+   ============================================================ */
+.presentacion { row-gap: 16px; margin-top: clamp(12px, 2vw, 24px); }
+
+/* El texto fija el alto del bloque: la biografía arriba y la línea final abajo */
+.presentacion__info {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: var(--ancho-bio);
+  min-height: var(--alto-foto);
+  text-wrap: pretty;
+}
+.presentacion__lema { margin-top: auto; padding-top: 14px; }
+.presentacion .enlaces { margin-top: 10px; }
+
+/* La foto toma el alto del texto. Los márgenes descuentan el espacio que la letra deja arriba y abajo,
+   para que la foto empiece en lo alto de la primera línea y termine en la base de la última. */
+.presentacion__marco {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  font-size: var(--texto);
+  margin-block: 0.278em 0.35em;
+}
+.presentacion__foto { position: absolute; top: 0; left: 0; width: auto; height: 100%; aspect-ratio: 2 / 3; }
+
+
+/* ============================================================
+   PROCESO 5: Proyectos
+   Insumo:    título, gráfico, pregunta, resultado y enlaces
+   Resultado: el texto a la izquierda y el gráfico a la derecha,
+              para ver cada proyecto completo casi sin bajar
+   ============================================================ */
+.titulo-seccion {
+  margin-top: var(--aire-grande);
+  font-size: var(--titulo-seccion);
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+}
+
+.proyecto {
+  display: grid;
+  grid-template-columns: var(--columna-texto) var(--columna-grafico);
+  grid-template-rows: auto 1fr;
+  column-gap: var(--columnas);
+  margin-top: clamp(24px, 3vw, 40px);
+}
+.proyecto > * { min-width: 0; }
+.proyecto + .proyecto { margin-top: var(--aire-grande); }
+
+/* Ubicación en la rejilla: el gráfico ocupa las dos filas de la derecha */
+.proyecto__cabeza { grid-column: 1; grid-row: 1; }
+.figura { grid-column: 2; grid-row: 1 / span 2; display: block; }
+.ficha { grid-column: 1; grid-row: 2; }
+
+.tema { color: var(--tinta-suave); }
+
+.proyecto__titulo {
+  margin-top: 6px;
+  font-size: var(--titulo);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+.proyecto__titulo a { text-decoration: none; }
+.proyecto__titulo a:hover { text-decoration: underline; color: inherit; }
+
+/* El gráfico se reduce hasta caber a lo ancho y a lo alto, sin deformarse */
+.figura img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: var(--alto-grafico);
+}
+/* Al pasar el cursor se atenúa, para indicar que se puede hacer clic */
+.figura:hover img { opacity: 0.82; }
+
+/* Leyenda escrita: solo en celular, donde el recorte deja fuera la leyenda del gráfico */
+.nota-movil { display: none; color: var(--tinta-suave); }
+
+.ficha { display: grid; align-content: start; gap: 16px; margin-top: var(--aire-medio); }
+
+.etiqueta { margin-bottom: 2px; font-weight: 600; }
+
+.enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 20px;
+  margin-top: 8px;
+  font-weight: 500;
+}
+/* padding: agranda la zona que se puede tocar con el dedo, sin cambiar el aspecto */
+.enlaces a { display: inline-block; padding-block: 5px; }
+
+
+/* ============================================================
+   PROCESO 6: Listas de otros proyectos y de participación
+   Insumo:    título, resumen y enlaces de cada elemento
+   Resultado: filas simples, alineadas con la misma rejilla de dos columnas
+   ============================================================ */
+.listado { margin-top: clamp(20px, 2.4vw, 32px); }
+
+.fila {
+  padding-block: 20px 22px;
+  border-top: 1px solid var(--linea);
+  row-gap: 8px;
+}
+.fila:last-child { border-bottom: 1px solid var(--linea); }
+
+.fila__titulo { font-weight: 600; }
+.fila p { max-width: 42rem; }
+.fila__dato { margin-top: 6px; color: var(--tinta-suave); }
+
+
+/* ============================================================
+   PROCESO 7: Página de cada proyecto
+   Insumo:    el detalle del proyecto
+   Resultado: título, gráfico, ficha y secciones de lectura
+   ============================================================ */
+.encabezado-proyecto { margin-top: clamp(20px, 3vw, 40px); }
+
+.titulo-pagina {
+  margin-top: 6px;
+  max-width: 34ch;
+  font-size: var(--titulo-seccion);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.proyecto--detalle { margin-top: var(--aire-medio); }
+.proyecto--detalle .ficha { margin-top: 0; }
+
+.seccion { margin-top: clamp(40px, 5vw, 72px); row-gap: 10px; }
+.seccion h2, .bloque-ancho h2 { font-weight: 600; }
+
+.prosa { max-width: 42rem; }
+.prosa > * + * { margin-top: 0.8em; }
+.prosa ol, .prosa ul { padding-left: 1.2em; }
+.prosa li + li { margin-top: 0.6em; }
+.prosa strong { font-weight: 600; font-family: var(--letra-titulos); font-size: 0.87em; letter-spacing: -0.012em; }
+.prosa code { font-family: ui-monospace, Consolas, Menlo, monospace; font-size: 0.78em; }
+
+.bloque-ancho { margin-top: clamp(40px, 5vw, 72px); }
+.bloque-ancho iframe {
+  display: block;
+  width: 100%;
+  height: min(72vh, 720px);
+  margin-top: 14px;
+  border: 1px solid var(--linea);
+  background: var(--papel);
+}
+
+.reel { display: block; width: 100%; max-width: 300px; height: auto; background: var(--tinta); }
+
+.tabla { overflow-x: auto; }
+.tabla table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.tabla th, .tabla td { padding: 9px 16px 9px 0; text-align: left; border-bottom: 1px solid var(--linea); }
+.tabla th { font-weight: 600; }
+
+.siguiente { margin-top: var(--aire-grande); padding-top: 20px; border-top: 1px solid var(--linea); }
+.siguiente a {
+  display: block;
+  max-width: 34ch;
+  font-family: var(--letra-titulos);
+  font-size: var(--titulo);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-decoration: none;
+  text-wrap: balance;
+}
+.siguiente a:hover { text-decoration: underline; color: inherit; }
+
+
+/* ============================================================
+   PROCESO 8: Pie de página
+   Insumo:    una línea de crédito
+   Resultado: cierre discreto
+   ============================================================ */
+.pie { margin-top: var(--aire-grande); padding-block: 18px 26px; color: var(--tinta-suave); }
+
+
+/* ============================================================
+   PROCESO 9: Adaptación a pantallas angostas
+   Insumo:    las reglas anteriores
+   Resultado: una sola columna: título, gráfico y después el texto
+   ============================================================ */
+@media (max-width: 900px) {
+  .proyecto { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .proyecto__cabeza, .figura, .ficha { grid-column: 1; grid-row: auto; }
+  .figura { margin-top: var(--aire-medio); }
+  .proyecto--detalle .figura { margin-top: 0; }
+  .proyecto--detalle .ficha { margin-top: var(--aire-medio); }
+}
+
+/* En celular el gráfico usa todo el ancho de la pantalla, para ganar tamaño */
+@media (max-width: 760px) {
+  .dos-columnas { grid-template-columns: minmax(0, 1fr); }
+
+  .presentacion__info, .presentacion__marco { grid-column: 1; grid-row: auto; }
+  .presentacion__info { max-width: none; min-height: 0; }
+  .presentacion__lema { margin-top: 0.7em; padding-top: 0; }
+  .presentacion__marco { margin-block: 0; }
+  .presentacion__foto { position: static; width: var(--ancho-foto-celular); height: auto; }
+
+  .figura {
+    margin-left: calc(-1 * var(--borde-izq));
+    margin-right: calc(-1 * var(--borde-der));
+  }
+  .figura img { width: 100%; max-height: none; }
+
+  .nota-movil { display: block; margin-top: 8px; }
+
+  .bloque-ancho iframe { height: 72vh; }
+}

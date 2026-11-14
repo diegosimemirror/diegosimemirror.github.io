@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diego Sime</title>
+<meta name="description" content="Proyectos de Diego Sime, cada uno con su pregunta, su resultado y su código.">
+<meta property="og:title" content="Diego Sime">
+<meta property="og:description" content="Proyectos de Diego Sime, cada uno con su pregunta, su resultado y su código.">
+<meta property="og:image" content="https://diegosimemirror.github.io/imagenes/compartir.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- ============================================================
+     PROCESO 1: Cabecera
+     Insumo:    tu nombre y los enlaces de navegación
+     Resultado: el nombre, en negrita y del tamaño del texto, y el menú.
+                Es el único lugar con LinkedIn y GitHub.
+     ============================================================ -->
+<header class="cabecera">
+  <h1 class="cabecera__nombre">Diego Sime, MA</h1>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="#proyectos">Proyectos</a>
+    <a href="#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============================================================
+     PROCESO 2: Presentación
+     Insumo:    foto, biografía y línea final
+     Resultado: el texto a la izquierda y la foto a la derecha, del mismo alto
+     ============================================================ -->
+<section class="presentacion dos-columnas">
+  <div class="presentacion__marco">
+    <img class="presentacion__foto" src="imagenes/foto-diego-sime.jpg" alt="Foto en blanco y negro de Diego Sime, de saco oscuro, camisa blanca y corbata" width="800" height="1200">
+  </div>
+  <div class="presentacion__info">
+    <p class="presentacion__texto">Gestor público, con certificación en gestión de proyectos (PMP) y maestría en Filosofía. Actualmente estudio la Diplomatura de Especialización en Ciencia de Datos para las Ciencias Sociales y la Gestión Pública.</p>
+    <!-- CV: para actualizarlo, reemplaza files/cv-diego-sime.pdf por otro con el mismo nombre. -->
+    <p class="enlaces"><a href="files/cv-diego-sime.pdf">CV en PDF</a></p>
+    <p class="presentacion__texto presentacion__lema">Entusiasta del cine y la música.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROCESO 3: Proyectos
+     Insumo:    título, gráfico, pregunta, resultado y enlaces de cada proyecto
+     Resultado: un bloque por proyecto, con el texto a la izquierda y el gráfico a la derecha
+
+     Para agregar un proyecto: copia desde <article> hasta </article> y cambia sus datos.
+     El href de <a class="figura"> es adónde lleva el clic en el gráfico.
+     La línea <source> es opcional: es un recorte para celular.
+     ============================================================ -->
+<h2 class="titulo-seccion" id="proyectos">Proyectos</h2>
+
+<article class="proyecto">
+  <div class="proyecto__cabeza">
+    <p class="tema">Agentes de IA · Política social · Dashboard</p>
+    <h3 class="proyecto__titulo"><a href="proyectos/politica-social-peru.html">Juntos y la pobreza: a quién protege hoy la política social en el Perú</a></h3>
+  </div>
+  <a class="figura" href="https://diegosimemirror.github.io/tarea4/" target="_blank" rel="noopener" title="Abrir el dashboard">
+    <img src="imagenes/proyectos/politica-social-peru.png" width="1080" height="732" alt="Gráfico del dashboard: índice de precios de Lima con diciembre de 2006 = 100. En octubre de 2026 los alimentos llegan a 229.7 y el total a 194.3.">
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Cuánto poder de compra perdió la transferencia de Juntos y dónde y en qué hogares se concentra hoy la pobreza monetaria?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">Los S/&nbsp;100 de Juntos de octubre de 2026 valen S/&nbsp;51.47 de 2006. El 72.7&nbsp;% de los pobres vive en ciudades, pero solo el 15&nbsp;% de los pobres urbanos vive en un hogar con Juntos.</p>
+      <p class="enlaces">
+        <a href="https://diegosimemirror.github.io/tarea4/" target="_blank" rel="noopener">Abrir el dashboard</a>
+        <a href="https://diegosimemirror.github.io/tarea4/informe.html" target="_blank" rel="noopener">Informe</a>
+        <a href="https://github.com/diegosimemirror/tarea4" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</article>
+
+<article class="proyecto">
+  <div class="proyecto__cabeza">
+    <p class="tema">Gestión pública · Redes · Dashboard</p>
+    <h3 class="proyecto__titulo"><a href="proyectos/designaciones-el-peruano.html">Designaciones de El&nbsp;Peruano: ¿cambia todo para que no cambie nada?</a></h3>
+  </div>
+  <a class="figura" href="https://diegosimemirror.github.io/designaciones/tarea_3/web/" target="_blank" rel="noopener" title="Abrir el dashboard">
+    <picture>
+      <source media="(max-width: 760px)" srcset="imagenes/proyectos/designaciones-red-movil.png" width="965" height="870">
+      <img src="imagenes/proyectos/designaciones-red.png" width="1936" height="1075" alt="Captura del dashboard: red de seguimiento con grupos de personas, donde cada flecha va de un jefe a quien llegó después de él en dos o más instituciones. Las personas aparecen con códigos.">
+    </picture>
+  </a>
+  <p class="nota-movil">Naranja: jefe. Azul: acompañante. Verde: puente entre equipos. Cada flecha va del jefe a quien llegó después que él en dos o más instituciones.</p>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">La alta rotación de cargos de confianza, ¿renueva el elenco de funcionarios o hace circular a las mismas personas?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">El 50&nbsp;% de quienes designó el gobierno de julio de 2026 ya había tenido un cargo entre 2022 y 2026 (61&nbsp;% en cargos altos). Base: 46,892 movimientos.</p>
+      <p class="enlaces">
+        <a href="https://diegosimemirror.github.io/designaciones/tarea_3/web/" target="_blank" rel="noopener">Abrir el dashboard</a>
+        <a href="proyectos/designaciones-el-peruano.html#reel">Ver el reel</a>
+        <a href="https://github.com/diegosimemirror/designaciones/tree/main/tarea_3" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</article>
+
+<article class="proyecto">
+  <div class="proyecto__cabeza">
+    <p class="tema">Salud pública · Mapa interactivo</p>
+    <h3 class="proyecto__titulo"><a href="proyectos/mapa-salud-peru.html">Mapa del Sistema de Salud del Perú</a></h3>
+  </div>
+  <a class="figura" href="https://claude.ai/artifact/3Rfon5qwNZvAXz6VL3TSk9" target="_blank" rel="noopener" title="Abrir el mapa">
+    <picture>
+      <source media="(max-width: 760px)" srcset="imagenes/proyectos/mapa-salud-movil.png" width="1290" height="1290">
+      <img src="imagenes/proyectos/mapa-salud.png" width="1800" height="1188" loading="lazy" alt="Captura del mapa: la arquitectura del sistema de salud según el marco de la OCDE, con sus bloques de contexto, servicios y resultados.">
+    </picture>
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Cómo encajan las piezas del sistema de salud peruano, qué causa cada problema y quién puede actuar sobre él?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">51 problemas y 80 vínculos causales (68 de la OCDE y 12 inferidos, marcados aparte), con 67 indicadores y 22 recomendaciones.</p>
+      <p class="enlaces">
+        <a href="https://claude.ai/artifact/3Rfon5qwNZvAXz6VL3TSk9" target="_blank" rel="noopener">Abrir el mapa</a>
+        <a href="https://claude.ai/artifact/R4vXpcSEh743H6BHVCRzPi" target="_blank" rel="noopener">English version</a>
+      </p>
+    </div>
+  </div>
+</article>
+
+<article class="proyecto">
+  <div class="proyecto__cabeza">
+    <p class="tema">Mapas · Datos satelitales</p>
+    <h3 class="proyecto__titulo"><a href="proyectos/incendios-junin.html">Incendios en Junín: a quién expone el fuego y si la red de salud puede responder</a></h3>
+  </div>
+  <a class="figura" href="demos/incendios-junin/index.html" target="_blank" rel="noopener" title="Abrir la demo">
+    <picture>
+      <source media="(max-width: 760px)" srcset="imagenes/proyectos/incendios-junin-movil.png" width="500" height="500">
+      <img src="imagenes/proyectos/incendios-junin.png" width="1110" height="674" loading="lazy" alt="Mapa de Junín con los incendios forestales probables en rojo, las zonas de 5&nbsp;km y los establecimientos de salud expuestos, del 14 al 21 de octubre de 2026.">
+    </picture>
+  </a>
+  <p class="nota-movil">Rojo: incendios forestales probables. Gris: otros focos. Círculos: zona de 5&nbsp;km. Cruces: establecimientos de salud expuestos. Morado más oscuro: más personas a 5&nbsp;km o menos.</p>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Qué focos de calor son probablemente incendios forestales, a quién exponen y puede responder la red de salud?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">Con criterios de evidencia, las personas a 5&nbsp;km o menos del fuego bajan de 746,046 a 232,748.</p>
+      <p class="enlaces">
+        <a href="proyectos/incendios-junin.html#demo">Probar la demo</a>
+        <a href="https://github.com/diegosimemirror/incendios-2026" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</article>
+
+<article class="proyecto">
+  <div class="proyecto__cabeza">
+    <p class="tema">Agentes de IA · Encuestas</p>
+    <h3 class="proyecto__titulo"><a href="proyectos/skills-enaho.html">Tres skills de Claude Code que limpian, grafican y mapean la ENAHO 2024</a></h3>
+  </div>
+  <a class="figura" href="https://github.com/diegosimemirror/skills" target="_blank" rel="noopener" title="Ver el código">
+    <img src="imagenes/proyectos/pobreza-departamento.png" width="1196" height="1327" loading="lazy" alt="Mapa del Perú con la pobreza monetaria de 2024 por departamento: más oscuro significa más pobreza.">
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Puede un agente de IA limpiar la Encuesta Nacional de Hogares (ENAHO) y replicar la pobreza oficial?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">Pobreza de 27.53&nbsp;% frente a 27.6&nbsp;% del INEI, con los mismos 108,664 residentes. Con las skills resolvió 3&nbsp;de&nbsp;3 pedidos; sin ellas, ninguno.</p>
+      <p class="enlaces">
+        <a href="https://github.com/diegosimemirror/skills" target="_blank" rel="noopener">Código</a>
+        <a href="https://github.com/diegosimemirror/skills/blob/main/evaluacion.md" target="_blank" rel="noopener">Evaluación</a>
+      </p>
+    </div>
+  </div>
+</article>
+
+<!-- ============================================================
+     PROCESO 4: Otros proyectos
+     Insumo:    título, resumen y enlaces
+     Resultado: filas sin imagen. Para agregar una, copia un <article class="fila ..."> completo.
+     ============================================================ -->
+<h2 class="titulo-seccion" id="otros-proyectos">Otros proyectos</h2>
+
+<div class="listado">
+  <article class="fila dos-columnas">
+    <h3 class="fila__titulo">Noticias peruanas: del titular al clasificador</h3>
+    <div>
+      <p>Un modelo de lenguaje clasifica titulares de La República en cuatro categorías y acierta 57&nbsp;de&nbsp;60 que no había visto.</p>
+      <p class="enlaces"><a href="https://github.com/diegosimemirror/Python-Intermedio-QLAB/tree/main/tarea_1" target="_blank" rel="noopener">Código</a></p>
+    </div>
+  </article>
+  <article class="fila dos-columnas">
+    <h3 class="fila__titulo">Voces y documentos peruanos: del archivo escaneado al texto buscable</h3>
+    <div>
+      <p>Convierte escaneos y entrevistas en texto buscable. Funciona con impresos, fotos y voz; todavía no con manuscritos.</p>
+      <p class="enlaces">
+        <a href="https://python-intermedio-qlab-aeod9u3y4jl5hta8gpphg4.streamlit.app/" target="_blank" rel="noopener">Dashboard (puede tardar en abrir)</a>
+        <a href="https://github.com/diegosimemirror/Python-Intermedio-QLAB/tree/main/tarea_2" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </article>
+  <article class="fila dos-columnas">
+    <h3 class="fila__titulo">Distritos bajo emergencia por lluvias</h3>
+    <div>
+      <p>Muestra el alcance territorial de 20 decretos de emergencia de 2024, que abarcaron 873 distritos, el 46.1&nbsp;% del total.</p>
+      <p class="enlaces">
+        <a href="https://assignment-3-individual-dfsygtjtgshrimcn7czyqi.streamlit.app/" target="_blank" rel="noopener">Dashboard (puede tardar en abrir)</a>
+        <a href="https://github.com/diegosimemirror/Assignment-3-Individual" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </article>
+  <article class="fila dos-columnas">
+    <h3 class="fila__titulo">Claude con las series oficiales del Banco Central de Reserva del Perú</h3>
+    <div>
+      <p>Con un servidor propio, Claude acertó 10&nbsp;de&nbsp;10 cifras en una prueba, frente a 7&nbsp;de&nbsp;10 con búsqueda web.</p>
+      <p class="enlaces">
+        <a href="https://github.com/diegosimemirror/mcp-1/blob/main/informe.md" target="_blank" rel="noopener">Informe</a>
+        <a href="https://github.com/diegosimemirror/mcp-1" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </article>
+</div>
+
+<!-- ============================================================
+     PROCESO 5: Participación en estudios internacionales
+     Insumo:    estudio, quién lo publica y tu aporte
+     Resultado: filas que separan al editor del documento de tu participación.
+     «Publicado por» deja claro que el estudio es de la institución, no tuyo.
+     ============================================================ -->
+<h2 class="titulo-seccion" id="participacion">Participación en estudios internacionales</h2>
+
+<div class="listado">
+  <article class="fila dos-columnas">
+    <div>
+      <h3 class="fila__titulo">Estudios de la OCDE sobre los Sistemas de Salud: Perú 2025</h3>
+      <p class="fila__dato">Publicado por la Organización para la Cooperación y el Desarrollo Económicos (OCDE), 2025</p>
+    </div>
+    <div>
+      <p>Conformé el equipo que gestionó la visita de la misión de la OCDE en el Perú y brindó soporte al proceso de recopilación de datos e información del sistema de salud para el informe de adhesión del Comité de Salud de la OCDE, lo que permitió concluir esa evaluación. Como producto de este proceso, la OCDE elaboró este estudio.</p>
+      <p class="enlaces">
+        <a href="https://doi.org/10.1787/262a739e-es" target="_blank" rel="noopener">Leer en español</a>
+        <a href="https://www.oecd.org/en/publications/oecd-reviews-of-health-systems-peru-2025_f3ddb6a4-en.html" target="_blank" rel="noopener">Read in English</a>
+      </p>
+    </div>
+  </article>
+  <article class="fila dos-columnas">
+    <div>
+      <h3 class="fila__titulo">Improving Networks of Community Mental Health Services in the Asia-Pacific Economies</h3>
+      <p class="fila__dato">Publicado por el Foro de Cooperación Económica Asia-Pacífico (APEC), 2020</p>
+    </div>
+    <div>
+      <p>Brindé apoyo a la organización del proyecto «Mejoramiento de las Redes de Servicios Comunitarios de Salud Mental en las Economías de Asia-Pacífico», de APEC y la Dirección de Salud Mental del Ministerio de Salud del Perú. Elaboré el informe final en inglés, que recogió experiencias de más de diez países.</p>
+      <p class="enlaces">
+        <a href="https://www.apec.org/Publications/2020/11/Improving-Networks-of-Community-Mental-Health-Services-in-the-Asia-Pacific-Economies" target="_blank" rel="noopener">Ver la publicación</a>
+        <a href="https://www.apec.org/apecapi/publication/getfile?publicationId=cc98e039-9c02-467a-985e-013f20fb8d23" target="_blank" rel="noopener">Descargar PDF (8 MB)</a>
+      </p>
+    </div>
+  </article>
+</div>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>

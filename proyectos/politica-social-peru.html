@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Juntos y la pobreza · Diego Sime</title>
+<meta name="description" content="Un agente de Claude Code que consulta las series del Banco Central con un servidor MCP propio y analiza la ENAHO 2024 con tres skills, con un dashboard para explorar los resultados.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- PROCESO 1: Cabecera. El nombre vuelve a la portada; el menú es igual en todas las páginas. -->
+<header class="cabecera">
+  <a class="cabecera__nombre" href="../index.html">Diego Sime, MA</a>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="../index.html#proyectos">Proyectos</a>
+    <a href="../index.html#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- PROCESO 2: Título, gráfico y ficha. El clic en el gráfico lleva a la herramienta del proyecto. -->
+<div class="encabezado-proyecto">
+  <p class="tema">Agentes de IA · Política social · Dashboard</p>
+  <h1 class="titulo-pagina">Juntos y la pobreza: a quién protege hoy la política social en el Perú</h1>
+</div>
+
+<div class="proyecto proyecto--detalle">
+  <a class="figura" href="https://diegosimemirror.github.io/tarea4/" target="_blank" rel="noopener" title="Abrir el dashboard">
+    <img src="../imagenes/proyectos/politica-social-peru.png" width="1080" height="732" alt="Gráfico del dashboard: índice de precios de Lima con diciembre de 2006 = 100. En octubre de 2026 los alimentos llegan a 229.7 y el total a 194.3.">
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Cuánto poder de compra perdió la transferencia de Juntos y dónde y en qué hogares se concentra hoy la pobreza monetaria?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">Los S/&nbsp;100 de Juntos de octubre de 2026 valen S/&nbsp;51.47 de 2006. El 72.7&nbsp;% de los pobres vive en ciudades, pero solo el 15&nbsp;% de los pobres urbanos vive en un hogar con Juntos.</p>
+      <p class="enlaces">
+        <a href="https://diegosimemirror.github.io/tarea4/" target="_blank" rel="noopener">Abrir el dashboard</a>
+        <a href="https://diegosimemirror.github.io/tarea4/informe.html" target="_blank" rel="noopener">Informe</a>
+        <a href="https://github.com/diegosimemirror/tarea4" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO 3: Detalle. Cada sección usa la rejilla de dos columnas: título a la izquierda y texto a la derecha. -->
+<section class="seccion dos-columnas">
+  <h2>Qué hice</h2>
+  <div class="prosa">
+    <p>Un agente de investigación con Claude Code que responde una pregunta de política social con dos fuentes oficiales:</p>
+    <ul>
+      <li>Un servidor MCP propio para la API del Banco Central de Reserva del Perú (BCRP), con cinco herramientas. Una de ellas, <code>valor_real</code>, lleva un monto de una fecha a soles de otra con el índice de precios.</li>
+      <li>Tres skills que limpian, grafican y mapean los microdatos de la Encuesta Nacional de Hogares (ENAHO) 2024 del INEI. Si se pide un mapa y la base limpia no existe, el agente la crea primero.</li>
+    </ul>
+    <p>En una sola ejecución, el agente usó cinco herramientas del servidor y las tres skills, cruzó las dos fuentes y escribió el informe. Después se verificaron 9 cifras por otro camino y se corrigió una interpretación.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Hallazgos</h2>
+  <div class="prosa">
+    <ul>
+      <li><strong>Juntos perdió la mitad de su valor.</strong> Paga S/&nbsp;100 al mes desde 2006. En soles de diciembre de 2006, los S/&nbsp;100 de octubre de 2026 valen S/&nbsp;51.47, y S/&nbsp;43.53 si se miden con los precios de los alimentos.</li>
+      <li><strong>Los alimentos subieron más y pesan más en el gasto de los pobres.</strong> Entre 2006 y 2026 subieron 129.7&nbsp;%, frente a 71.4&nbsp;% del resto de precios. Los hogares pobres destinan 44.6&nbsp;% de su gasto a alimentos; los no pobres, 33.2&nbsp;%.</li>
+      <li><strong>La tasa más alta es rural, pero la mayoría de los pobres es urbana.</strong> La pobreza es de 39.30&nbsp;% en el campo y de 24.81&nbsp;% en las ciudades, pero el 72.7&nbsp;% de los pobres vive en ciudades. En los hogares con niños menores de 5 años llega a 43.80&nbsp;%.</li>
+      <li><strong>Juntos casi no llega a los pobres urbanos.</strong> El 48.7&nbsp;% de los pobres rurales vive en un hogar con Juntos; entre los urbanos, el 15.1&nbsp;%.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Evaluación</h2>
+  <div class="prosa">
+    <p>Hice 10 preguntas con respuesta conocida, cada una en una sesión aparte, con y sin las herramientas. Sin ellas, Claude acertó 1&nbsp;de&nbsp;10: en las otras 9 no inventó cifras, pero tampoco respondió. Con ellas, acertó las 10. Las respuestas esperadas quedaron guardadas en Git antes de correr la evaluación.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Limitaciones</h2>
+  <div class="prosa">
+    <ul>
+      <li>La ENAHO es de 2024 y las series del BCRP llegan a 2026. El informe dice cuándo combina periodos y no infiere causalidad.</li>
+      <li>La cobertura de Juntos sale de lo que declaran los hogares. La ENAHO estima 1.04 millones de hogares con Juntos, más que los cerca de 760 mil del padrón.</li>
+      <li>El alza acumulada del costo de vida de un hogar pobre usa la canasta de 2024 para todo el periodo, así que es una aproximación.</li>
+      <li>Los microdatos no están en el repositorio. Se descargan del INEI con los comandos del README.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Fuentes</h2>
+  <div class="prosa">
+    <ul>
+      <li>BCRP, <a href="https://estadisticas.bcrp.gob.pe/estadisticas/series/" target="_blank" rel="noopener">series estadísticas</a> PN38705PM (IPC de Lima), PN39445PM (alimentos y bebidas) y PN38706PM (sin alimentos).</li>
+      <li>INEI, ENAHO 2024, módulos 34 (sumaria) y 02 (miembros del hogar).</li>
+      <li>Trivelli y Mendoza (2026). «Repensar y rearmar la política social para retomar la senda perdida». Documento de Trabajo 309, IEP. Sirvió de marco y de contraste: sus 10 cifras comparables se reprodujeron con diferencias menores a 0.03 puntos.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROCESO 4: Paso al proyecto siguiente. -->
+<nav class="siguiente" aria-label="Proyecto siguiente">
+  <p class="etiqueta">Siguiente proyecto</p>
+  <a href="designaciones-el-peruano.html">Designaciones de El&nbsp;Peruano: ¿cambia todo para que no cambie nada?</a>
+</nav>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>

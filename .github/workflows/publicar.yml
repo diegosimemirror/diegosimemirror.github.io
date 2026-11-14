@@ -1,0 +1,38 @@
+# Publica el sitio en GitHub Pages cada vez que se sube un cambio a la rama master.
+# El sitio es HTML y CSS listo para usar: no hay que construir nada, solo subir los archivos tal como están.
+name: Publicar el sitio
+
+on:
+  push:
+    branches: ["master"]
+  # Permite publicarlo a mano desde la pestaña Actions
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Una publicación a la vez; no cancela la que está en curso
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar los archivos del repositorio
+        uses: actions/checkout@v7.0.1
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v6.0.0
+      - name: Empaquetar el sitio (sin las carpetas .git ni .github)
+        uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: .
+      - name: Publicar
+        id: despliegue
+        uses: actions/deploy-pages@v5

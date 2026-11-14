@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Incendios en Junín · Diego Sime</title>
+<meta name="description" content="Clasificación de focos de calor en Junín, población expuesta y capacidad de respuesta de la red pública de salud, del 14 al 21 de octubre de 2026.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- PROCESO 1: Cabecera. El nombre vuelve a la portada; el menú es igual en todas las páginas. -->
+<header class="cabecera">
+  <a class="cabecera__nombre" href="../index.html">Diego Sime, MA</a>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="../index.html#proyectos">Proyectos</a>
+    <a href="../index.html#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- PROCESO 2: Título, gráfico y ficha. El clic en el gráfico lleva a la herramienta del proyecto. -->
+<div class="encabezado-proyecto">
+  <p class="tema">Mapas · Datos satelitales</p>
+  <h1 class="titulo-pagina">Incendios en Junín: a quién expone el fuego y si la red de salud puede responder</h1>
+</div>
+
+<div class="proyecto proyecto--detalle">
+  <a class="figura" href="../demos/incendios-junin/index.html" target="_blank" rel="noopener" title="Abrir la demo">
+    <picture>
+      <source media="(max-width: 760px)" srcset="../imagenes/proyectos/incendios-junin-movil.png" width="500" height="500">
+      <img src="../imagenes/proyectos/incendios-junin.png" width="1110" height="674" alt="Mapa de Junín con los incendios forestales probables en rojo, las zonas de 5&nbsp;km y los establecimientos de salud expuestos, del 14 al 21 de octubre de 2026.">
+    </picture>
+  </a>
+  <p class="nota-movil">Rojo: incendios forestales probables. Gris: otros focos. Círculos: zona de 5&nbsp;km. Cruces: establecimientos de salud expuestos. Morado más oscuro: más personas a 5&nbsp;km o menos.</p>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Qué focos de calor son probablemente incendios forestales, a quién exponen y puede responder la red de salud?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">Con criterios de evidencia, las personas a 5&nbsp;km o menos del fuego bajan de 746,046 a 232,748.</p>
+      <p class="enlaces">
+        <a href="#demo">Probar la demo</a>
+        <a href="https://github.com/diegosimemirror/incendios-2026" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO 3: Demo incrustada (iframe: una página dentro de otra). -->
+<section class="bloque-ancho" id="demo">
+  <h2>Demo interactiva</h2>
+  <iframe src="../demos/incendios-junin/index.html" title="Demo interactiva de los incendios en Junín" loading="lazy"></iframe>
+  <p class="enlaces"><a href="../demos/incendios-junin/index.html">Abrir la demo en pantalla completa</a></p>
+</section>
+
+<!-- PROCESO 4: Detalle. Cada sección usa la rejilla de dos columnas: título a la izquierda y texto a la derecha. -->
+<section class="seccion dos-columnas">
+  <h2>Qué hice</h2>
+  <div class="prosa">
+    <p>Crucé los focos de calor detectados por satélites de la NASA con datos de cobertura del suelo, luces nocturnas, población, establecimientos de salud, tiempo de viaje y cobertura móvil. Cada grupo de focos se clasifica con cuatro pistas: si persiste entre pasadas del satélite, si lo detectó más de un satélite, qué cubre el suelo y si hay luz nocturna alta. La exposición se calcula solo con los incendios forestales probables.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Tres hallazgos</h2>
+  <div class="prosa">
+    <ol>
+      <li><strong>Los criterios cambian la cifra.</strong> De 746,046 personas cerca de algún foco se pasa a 232,748 cerca de un incendio forestal probable. El 69&nbsp;% estaba cerca de focos sin evidencia de incendio forestal.</li>
+      <li><strong>El incendio más grande no es el que expone a más personas.</strong> El de Río Tambo tuvo 287 focos y unas 1,958 hectáreas, pero solo 399 personas y 1 establecimiento de salud a 5&nbsp;km o menos.</li>
+      <li><strong>El punto débil de la red está en el valle del Ene.</strong> De los 7 establecimientos críticos, 6 están en Río Tambo y Vizcatán del Ene, a 3 o 4 horas estimadas de su hospital de referencia y sin 4G garantizado.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Limitaciones</h2>
+  <div class="prosa">
+    <ul>
+      <li>«Probable» no es «confirmado»: confirmar un incendio requiere imágenes de mayor detalle o un reporte de campo.</li>
+      <li>Estar cerca no significa ser damnificado, y la población es una estimación de un modelo, no un censo.</li>
+      <li>El tiempo de traslado también es modelado y en la selva tiende a quedarse corto.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>También</h2>
+  <div class="prosa">
+    <p><a href="https://github.com/diegosimemirror/ejercicio-reel/blob/main/salidas/reel.mp4" target="_blank" rel="noopener">Reel de 39 segundos sobre este proyecto</a>. <strong>La narración usa mi voz clonada con IA.</strong></p>
+  </div>
+</section>
+
+<!-- PROCESO 5: Paso al proyecto siguiente. -->
+<nav class="siguiente" aria-label="Proyecto siguiente">
+  <p class="etiqueta">Siguiente proyecto</p>
+  <a href="skills-enaho.html">Tres skills de Claude Code que limpian, grafican y mapean la ENAHO 2024</a>
+</nav>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>

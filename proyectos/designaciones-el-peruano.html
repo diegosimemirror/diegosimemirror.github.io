@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Designaciones de El Peruano · Diego Sime</title>
+<meta name="description" content="Análisis de cuatro años de designaciones, conclusiones y renuncias de funcionarios publicadas en el diario oficial del Perú, con un dashboard interactivo.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- PROCESO 1: Cabecera. El nombre vuelve a la portada; el menú es igual en todas las páginas. -->
+<header class="cabecera">
+  <a class="cabecera__nombre" href="../index.html">Diego Sime, MA</a>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="../index.html#proyectos">Proyectos</a>
+    <a href="../index.html#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- PROCESO 2: Título, gráfico y ficha. El clic en el gráfico lleva a la herramienta del proyecto. -->
+<div class="encabezado-proyecto">
+  <p class="tema">Gestión pública · Redes · Dashboard</p>
+  <h1 class="titulo-pagina">Designaciones de El&nbsp;Peruano: ¿cambia todo para que no cambie nada?</h1>
+</div>
+
+<div class="proyecto proyecto--detalle">
+  <a class="figura" href="https://diegosimemirror.github.io/designaciones/tarea_3/web/" target="_blank" rel="noopener" title="Abrir el dashboard">
+    <picture>
+      <source media="(max-width: 760px)" srcset="../imagenes/proyectos/designaciones-red-movil.png" width="965" height="870">
+      <img src="../imagenes/proyectos/designaciones-red.png" width="1936" height="1075" alt="Captura del dashboard: red de seguimiento con grupos de personas, donde cada flecha va de un jefe a quien llegó después de él en dos o más instituciones. Las personas aparecen con códigos.">
+    </picture>
+  </a>
+  <p class="nota-movil">Naranja: jefe. Azul: acompañante. Verde: puente entre equipos. Cada flecha va del jefe a quien llegó después que él en dos o más instituciones.</p>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">La alta rotación de cargos de confianza, ¿renueva el elenco de funcionarios o hace circular a las mismas personas?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">El 50&nbsp;% de quienes designó el gobierno de julio de 2026 ya había tenido un cargo entre 2022 y 2026 (61&nbsp;% en cargos altos). Base: 46,892 movimientos.</p>
+      <p class="enlaces">
+        <a href="https://diegosimemirror.github.io/designaciones/tarea_3/web/" target="_blank" rel="noopener">Abrir el dashboard</a>
+        <a href="#reel">Ver el reel</a>
+        <a href="https://github.com/diegosimemirror/designaciones/tree/main/tarea_3" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO 3: Dashboard incrustado (iframe: una página dentro de otra). -->
+<section class="bloque-ancho" id="demo">
+  <h2>Dashboard interactivo</h2>
+  <iframe src="https://diegosimemirror.github.io/designaciones/tarea_3/web/" title="Dashboard de las designaciones de El&nbsp;Peruano" loading="lazy"></iframe>
+  <p class="enlaces"><a href="https://diegosimemirror.github.io/designaciones/tarea_3/web/" target="_blank" rel="noopener">Abrir en pantalla completa</a></p>
+</section>
+
+<!-- PROCESO 4: Detalle. Cada sección usa la rejilla de dos columnas: título a la izquierda y texto a la derecha. -->
+<section class="seccion dos-columnas">
+  <h2>Qué hice</h2>
+  <div class="prosa">
+    <p>Descargué con código las normas de personal publicadas en el diario oficial entre noviembre de 2022 y octubre de 2026, y leí el PDF oficial de cada una. Con reglas de texto extraje la persona, el cargo, el tipo de movimiento, las fechas y quién firma. El resultado son 27,183 normas y 46,892 movimientos, con cinco presidentes y cuatro cambios de gobierno.</p>
+    <p>Las personas aparecen con un código estable, porque el objetivo es estudiar patrones y no señalar a nadie. Cada cargo de los rankings enlaza a su norma oficial en El&nbsp;Peruano.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Tres hallazgos</h2>
+  <div class="prosa">
+    <ol>
+      <li><strong>La mitad del elenco ya estaba en el Estado.</strong> De quienes designó en sus primeros meses el gobierno que asumió el 28 de julio de 2026, el 50&nbsp;% ya había tenido un cargo entre 2022 y 2026; en los cargos altos, el 61&nbsp;%. Cambia el mando, no tanto el elenco.</li>
+      <li><strong>Lo primero que asegura un ministro es el control administrativo.</strong> En 168 llegadas de ministros, el secretario general se renueva a los 5 días (mediana), antes que asesoría jurídica (13), administración y recursos humanos (14), viceministros (16.5) y planeamiento (18).</li>
+      <li><strong>El «desorden» tiene estructura: gente que sigue a su jefe.</strong> 41 parejas de jefe y acompañante se repiten en 3 o más instituciones, cuando por azar se esperarían 6, y 806 en 2 o más, cuando por azar se esperarían 364.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="seccion dos-columnas" id="reel">
+  <h2>Reel</h2>
+  <div class="prosa">
+    <video class="reel" controls preload="none" playsinline poster="https://diegosimemirror.github.io/designaciones/tarea_3/reel/portada.png" src="https://diegosimemirror.github.io/designaciones/tarea_3/reel/reel.mp4">Tu navegador no puede reproducir este video.</video>
+    <p>La narración es mi voz real, grabada; no es una voz clonada ni sintética. Música: «Clean Soul», de Kevin MacLeod (incompetech.com), licencia CC BY 4.0.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Limitaciones</h2>
+  <div class="prosa">
+    <ul>
+      <li>La red muestra quién se mueve con quién, no por qué: no distingue un equipo técnico cohesionado de una red clientelar.</li>
+      <li>Los datos salen del texto de las normas mediante reglas, y el 4.6&nbsp;% de las normas no se pudo leer completa.</li>
+      <li>La mayoría de normas no trae DNI, así que dos personas con el mismo nombre se cuentan como una y las variantes de un nombre, como personas distintas.</li>
+      <li>Solo se ven las designaciones publicadas en El&nbsp;Peruano, y en cuatro años: quien parece nuevo al inicio pudo tener cargos antes.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROCESO 5: Paso al proyecto siguiente. -->
+<nav class="siguiente" aria-label="Proyecto siguiente">
+  <p class="etiqueta">Siguiente proyecto</p>
+  <a href="mapa-salud-peru.html">Mapa del Sistema de Salud del Perú</a>
+</nav>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>
