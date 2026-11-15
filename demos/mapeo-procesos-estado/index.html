@@ -1,0 +1,1220 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Mapa de procesos en tres niveles de los sistemas de presupuesto, inversiones, contrataciones y endeudamiento del Estado peruano: quién hace qué, en qué orden y según qué norma.">
+<title>Mapeo de procesos del Estado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: matriz de sistemas (filas) x fases del ciclo (columnas); cada caja se abre en procedimientos y estos en actividades. */
+:root{
+  --bg:#f4f5f7; --surface:#ffffff; --ink:#191c20; --muted:#5a626d; --line:#d9dde2; --soft:#eaedf0;
+  --pl:#5a6575; --p:#1c5ca6; --i:#2a7649; --c:#965806; --e:#843676;
+  --focus:#1c5ca6;
+  --font:"Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --s:13px; --m:15px; --l:18px; --xl:22px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111316; --surface:#191c20; --ink:#e7e9ec; --muted:#a2aab4; --line:#2d3239; --soft:#21252a;
+    --pl:#9ca7b6; --p:#80b1ee; --i:#76c596; --c:#e4aa5d; --e:#d78ec9; --focus:#80b1ee;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111316; --surface:#191c20; --ink:#e7e9ec; --muted:#a2aab4; --line:#2d3239; --soft:#21252a;
+  --pl:#9ca7b6; --p:#80b1ee; --i:#76c596; --c:#e4aa5d; --e:#d78ec9; --focus:#80b1ee;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:var(--m);line-height:1.5;margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+header.top{background:var(--surface);border-bottom:1px solid var(--line)}
+header.top .wrap{padding-block:20px 0}
+.eyebrow{margin:0;font-size:var(--s);color:var(--muted);letter-spacing:.02em}
+h1{font-size:var(--xl);margin:4px 0 6px;font-weight:700;text-wrap:balance}
+h2{font-size:var(--l);margin:0 0 8px;font-weight:700;text-wrap:balance}
+h3{font-size:var(--m);margin:0 0 8px;font-weight:700}
+p{margin:0 0 10px}
+.lede{color:var(--muted);max-width:72ch;margin-bottom:14px}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap}
+nav.tabs a{padding:10px 12px;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;font-weight:500}
+nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--ink)}
+nav.tabs a:hover{color:var(--ink)}
+main.wrap{padding-block:22px 48px}
+.muted{color:var(--muted)}
+.small{font-size:var(--s)}
+.mono{font-family:var(--mono);font-size:var(--s)}
+button{font:inherit;color:inherit}
+.btn{border:1px solid var(--line);background:var(--surface);padding:8px 12px;border-radius:6px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--muted)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.row-btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* Selector de ruta */
+.route{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:18px}
+.route .q{margin-bottom:12px}
+.route .q > p{font-weight:600;margin-bottom:8px}
+.route-note{max-width:80ch}
+ol.steps{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+ol.steps li a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;border:1px solid color-mix(in srgb, var(--sc) 45%, var(--line));background:color-mix(in srgb, var(--sc) 7%, var(--surface));border-radius:999px;padding:3px 10px 3px 4px;font-size:var(--s)}
+ol.steps .n{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:12px;font-variant-numeric:tabular-nums;font-weight:600}
+ol.steps .c{font-family:var(--mono);color:var(--sc);font-weight:500}
+
+/* Matriz macro */
+.gridwrap{overflow-x:auto;padding-bottom:4px}
+.mgrid{display:grid;grid-template-columns:132px repeat(5, minmax(150px,1fr));gap:6px;min-width:960px}
+.mrow{display:contents}
+.phead{font-size:var(--s);color:var(--muted);font-weight:600;padding:4px 6px;border-bottom:1px solid var(--line)}
+.phead .k{font-family:var(--mono);margin-right:4px}
+.rlab{padding:8px 6px;border-top:2px solid var(--sc)}
+.rlab b{display:block;color:var(--sc)}
+.rlab span{font-size:var(--s);color:var(--muted)}
+.boxes{display:contents}
+.mcell{display:flex;flex-direction:column;gap:6px;padding-top:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.box{position:relative;display:flex;flex-direction:column;gap:2px;text-decoration:none;background:color-mix(in srgb, var(--sc) 7%, var(--surface));border:1px solid color-mix(in srgb, var(--sc) 38%, var(--line));border-radius:6px;padding:8px 10px 9px;transition:opacity .2s, border-color .2s}
+.box:hover{border-color:var(--sc)}
+.box .bcode{font-family:var(--mono);font-size:12px;color:var(--sc);font-weight:500}
+.box .bname{font-weight:600;line-height:1.3}
+.box .bwho{font-size:var(--s);color:var(--muted)}
+.box .bph{display:none;font-size:12px;color:var(--muted)}
+.box .ord{display:none;position:absolute;top:6px;right:6px;min-width:22px;height:22px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:12px;font-weight:600;place-items:center;font-variant-numeric:tabular-nums}
+.has-route .box{opacity:.3}
+.has-route .box.on{opacity:1}
+.has-route .box.on .ord{display:inline-grid}
+.has-route .box.on .bname{padding-right:24px}
+.legend{margin-top:12px;font-size:var(--s);color:var(--muted);max-width:90ch}
+@media (max-width:760px){
+  .gridwrap{overflow:visible}
+  .mgrid{display:block;min-width:0}
+  .phead{display:none}
+  .mrow{display:block;margin-bottom:16px}
+  .rlab{margin-bottom:6px}
+  .mcell{display:contents}
+  .mrow .boxes{display:grid;gap:6px}
+  .box .bph{display:block}
+}
+
+/* Buscador */
+.search{display:flex;gap:8px;align-items:center;margin:0 0 14px;flex-wrap:wrap}
+.search input{flex:1 1 260px;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:9px 11px;font:inherit;color:inherit}
+.results{list-style:none;margin:0 0 18px;padding:0;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.results li{border-top:1px solid var(--line)}
+.results li:first-child{border-top:0}
+.results a{display:block;padding:9px 12px;text-decoration:none}
+.results a:hover{background:var(--soft)}
+.results .c{font-family:var(--mono);font-size:12px;color:var(--sc)}
+
+/* Migas */
+.crumbs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:var(--s);color:var(--muted);margin-bottom:14px}
+.crumbs a{text-decoration:none;color:var(--muted)}
+.crumbs a:hover{color:var(--ink);text-decoration:underline}
+.crumbs .sep{opacity:.6}
+
+/* Cabecera de caja y de procedimiento */
+.head{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--sc);border-radius:8px;padding:16px;margin-bottom:18px}
+.tag{display:inline-flex;gap:6px;align-items:center;font-size:var(--s);color:var(--muted);margin-bottom:6px;flex-wrap:wrap}
+.tag .c{font-family:var(--mono);color:var(--sc);font-weight:500}
+.facts{display:grid;grid-template-columns:repeat(auto-fit, minmax(220px,1fr));gap:12px 20px;margin:12px 0 0}
+.facts div{min-width:0}
+.facts dt{font-size:var(--s);color:var(--muted);margin-bottom:2px}
+.facts dd{margin:0}
+.srcs{display:flex;flex-wrap:wrap;gap:6px}
+a.src{display:inline-flex;align-items:baseline;gap:4px;font-size:var(--s);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:1px 7px;background:var(--surface);max-width:100%}
+a.src:hover{border-color:var(--muted)}
+a.src .r{color:var(--muted)}
+.lv{font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;font-weight:600;margin:22px 0 8px}
+
+/* Procedimientos (meso) */
+.meso{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill, minmax(250px,1fr));gap:10px}
+.meso a{display:flex;flex-direction:column;gap:4px;height:100%;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px}
+.meso a:hover{border-color:var(--sc)}
+.meso .n{font-family:var(--mono);font-size:12px;color:var(--sc)}
+.meso .t{font-weight:600}
+.meso .m{font-size:var(--s);color:var(--muted)}
+.meso .more{margin-top:auto;font-size:var(--s);font-weight:600;padding-top:6px}
+
+/* Conexiones */
+.links{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.links li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px}
+.pair{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:var(--s)}
+a.chip{display:inline-flex;gap:5px;align-items:baseline;text-decoration:none;border-radius:4px;padding:1px 7px;background:color-mix(in srgb, var(--sc) 9%, var(--surface));border:1px solid color-mix(in srgb, var(--sc) 40%, var(--line))}
+a.chip .c{font-family:var(--mono);color:var(--sc);font-weight:500}
+
+/* Actividades (micro) */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 10px}
+.acts{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.acts li{display:grid;grid-template-columns:4rem minmax(0,2.3fr) minmax(0,1.5fr) minmax(0,1.3fr) minmax(0,1.6fr);gap:14px;padding:12px 14px;border-top:1px solid var(--line)}
+.acts li:first-child{border-top:0}
+.acts li.h{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600;padding-block:8px}
+.acts .n{font-family:var(--mono);font-size:var(--s);color:var(--sc);font-variant-numeric:tabular-nums}
+.acts .cell{min-width:0}
+.who{font-weight:600}
+.alias{display:block;font-size:var(--s);color:var(--muted)}
+.part{display:block;font-size:var(--s);color:var(--muted);margin-top:2px}
+.app{display:block;font-size:var(--s);color:var(--muted);margin-top:4px}
+.kb{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.03em;border-radius:3px;padding:0 5px;margin-left:6px;vertical-align:1px;white-space:nowrap}
+.kb.A{background:var(--ink);color:var(--bg)}
+.kb.O{border:1px solid var(--ink)}
+@media (max-width:760px){
+  .acts li{grid-template-columns:3.6rem minmax(0,1fr);gap:4px 10px}
+  .acts li.h{display:none}
+  .acts .cell{grid-column:2}
+  .acts .cell[data-l]::before{content:attr(data-l);display:block;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:6px}
+  .acts .cell.first{grid-column:2;grid-row:1}
+}
+.pager{display:flex;justify-content:space-between;gap:10px;margin-top:14px;flex-wrap:wrap}
+.pager a{text-decoration:none;font-size:var(--s);border:1px solid var(--line);border-radius:6px;padding:8px 12px;background:var(--surface);max-width:48%}
+.pager a:hover{border-color:var(--muted)}
+
+/* Tablas */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:var(--s)}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+thead th{position:sticky;top:0;background:var(--surface);z-index:1}
+.matrix th.a,.matrix td.a{position:sticky;left:0;background:var(--surface);z-index:2;min-width:220px;max-width:260px}
+.matrix thead th.a{z-index:3}
+.matrix td.x{text-align:center;font-family:var(--mono);font-size:12px;min-width:34px;white-space:nowrap}
+.matrix td.x.on{background:color-mix(in srgb, var(--sc) 11%, var(--surface))}
+.matrix th.b{text-align:center;font-family:var(--mono);font-weight:500;color:var(--sc);font-size:12px}
+.matrix th.g{color:var(--sc);font-weight:700;text-align:center;border-bottom:2px solid var(--sc)}
+.matrix a{text-decoration:none}
+.matrix a:hover{text-decoration:underline}
+.grp td{background:var(--soft);font-weight:700}
+.grp td.a{background:var(--soft)}
+
+/* Actores y normas */
+.cards{display:grid;grid-template-columns:repeat(auto-fill, minmax(260px,1fr));gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;min-width:0}
+.adapt{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:18px}
+.adapt summary{cursor:pointer;font-weight:600}
+.fields{display:grid;grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:10px 16px;margin-top:12px}
+.fields label{display:grid;gap:4px;font-size:var(--s);color:var(--muted)}
+.fields input,.alias-in{border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:7px 9px;font:inherit;font-size:var(--m);color:var(--ink);min-width:0;width:100%}
+.norms{display:grid;gap:8px}
+.norm{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px}
+.norm .t{font-weight:700}
+.norm .open{align-self:start;font-size:var(--s);white-space:nowrap}
+.norm .used{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:var(--s);color:var(--muted)}
+.norm .used a{font-family:var(--mono);font-size:12px;text-decoration:none;border:1px solid var(--line);border-radius:3px;padding:0 4px;color:var(--ink)}
+section.block{margin-bottom:26px}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.guide{max-width:80ch}
+.guide li{margin-bottom:8px}
+.guide table{margin:8px 0 14px}
+.copybox{margin:10px 0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px}
+.copybox textarea{width:100%;height:140px;font-family:var(--mono);font-size:12px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px}
+#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:6px;font-size:var(--s);opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw}
+#toast.show{opacity:1}
+footer .wrap{padding-block:18px 28px;font-size:var(--s);color:var(--muted);border-top:1px solid var(--line)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <p class="eyebrow">Presupuesto · Inversiones · Contrataciones · Endeudamiento</p>
+    <h1>Mapeo de procesos del Estado</h1>
+    <p class="lede">Quién hace qué, en qué orden y según qué norma, en los cuatro sistemas que un gestor público necesita para pasar de una necesidad a un servicio funcionando. Cada caja se abre en procedimientos y cada procedimiento en actividades.</p>
+    <nav class="tabs" aria-label="Secciones">
+      <a href="#mapa" data-tab="mapa">Mapa de procesos</a>
+      <a href="#conexiones" data-tab="conexiones">Interconexiones</a>
+      <a href="#actores" data-tab="actores">Mapa de actores</a>
+      <a href="#normas" data-tab="normas">Anexo: normas</a>
+      <a href="#guia" data-tab="guia">Cómo usarlo</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap" id="app"></main>
+<footer><div class="wrap" id="foot"></div></footer>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ================= DATOS ================= */
+window.MPE = {
+corte:'14 de noviembre de 2026',
+sys:{
+  PL:{n:'Planeamiento', r:'CEPLAN', v:'--pl'},
+  P:{n:'Presupuesto', r:'MEF · DGPP', v:'--p'},
+  I:{n:'Inversiones', r:'MEF · DGPMI', v:'--i'},
+  C:{n:'Contrataciones', r:'MEF · DGA, OECE', v:'--c'},
+  E:{n:'Endeudamiento', r:'MEF · DGTP', v:'--e'}
+},
+ph:['Programar','Formular y preparar','Aprobar y asegurar fondos','Ejecutar','Cerrar y evaluar'],
+
+/* ---------- Actores ---------- */
+actors:{
+  DGPP:{n:'Dirección General de Presupuesto Público (MEF)', g:'nac', d:'Rector del presupuesto: estima la APM, determina la PCA, evalúa.', s:'DL1440@art. 5'},
+  DGPMI:{n:'Dirección General de Programación Multianual de Inversiones (MEF)', g:'nac', d:'Rector de Invierte.pe: metodologías, opiniones, consolidación del PMI, evaluación ex post de mediano y largo plazo.', s:'DS140@art. 8'},
+  DGA:{n:'Dirección General de Abastecimiento (MEF)', g:'nac', d:'Rector del abastecimiento: directivas de PMBSO, PAC, requerimiento y bases estándar.', s:'LEY32069@art. 10'},
+  DGTP:{n:'Dirección General del Tesoro Público (MEF)', g:'nac', d:'Rector del endeudamiento y la tesorería; único agente financiero del Estado.', s:'DL1437@art. 5'},
+  DGPMACDF:{n:'Dirección General de Política Macroeconómica y Descentralización Fiscal (MEF)', g:'nac', d:'Límites de gasto y proyecciones del MMM; informe de impacto fiscal de cada préstamo.', s:'DL1440@art. 25.1|DCONC@art. 13.5'},
+  OGAJMEF:{n:'Oficina General de Asesoría Jurídica del MEF', g:'nac', d:'Participa en la negociación y emite la opinión legal de la operación de endeudamiento.', s:'DCONC@arts. 11.3 y 13.7'},
+  MEFMIN:{n:'Ministro de Economía y Finanzas', g:'nac', d:'Pide el préstamo a la fuente y suscribe los contratos de endeudamiento del Gobierno Nacional.', s:'DL1437@art. 18|DCONC@art. 10'},
+  CM:{n:'Consejo de Ministros', g:'nac', d:'Aprueba la APM, los proyectos de leyes anuales y los decretos supremos de endeudamiento.', s:'DL1440@art. 26.1|DL1437@art. 28.1'},
+  CONG:{n:'Congreso de la República', g:'nac', d:'Aprueba las leyes anuales de presupuesto, equilibrio financiero y endeudamiento.', s:'CONST@arts. 78 a 80'},
+  CEPLAN:{n:'CEPLAN', g:'nac', d:'Rector del planeamiento estratégico; administra el aplicativo CEPLAN V.01.', s:'DL1088@Ley'},
+  OPMIS:{n:'OPMI del Sector', g:'nac', d:'Define indicadores de brechas del sector y opina sobre proyectos financiados con endeudamiento.', s:'DS140@art. 10'},
+  OECE:{n:'OECE (Organismo Especializado para las Contrataciones Públicas Eficientes)', g:'nac', d:'Administra la Pladicop y el RNP, supervisa y emite pronunciamientos sobre las bases.', s:'LEY32069@art. 11'},
+  TCP:{n:'Tribunal de Contrataciones Públicas', g:'nac', d:'Resuelve apelaciones en procedimientos de más de 50 UIT y sanciona a proveedores.', s:'LEY32069@arts. 16 y 74'},
+  PCOMPRAS:{n:'Perú Compras', g:'nac', d:'Catálogos electrónicos de acuerdos marco, compras corporativas y homologación.', s:'LEY32069@art. 20'},
+  CGR:{n:'Contraloría General de la República', g:'nac', d:'Informe previo de las operaciones de endeudamiento, control simultáneo, INFOBRAS.', s:'L27785@art. 22'},
+  FUENTE:{n:'Fuente crediticia (BID, Banco Mundial, CAF u otra)', g:'ext', d:'Prepara y financia la operación; sus políticas rigen las adquisiciones del préstamo.', s:'DCONC@arts. 10 y 11'},
+  TIT:{n:'Titular de la entidad', g:'dir', d:'Responsable en materia presupuestaria; aprueba PEI, POI y PIA; solicita el endeudamiento.', s:'DL1440@art. 7|LEY32069@art. 25.1'},
+  OR:{n:'Órgano Resolutivo (Ministro, Gobernador o Alcalde)', g:'dir', d:'Aprueba el PMI, los indicadores y criterios de priorización; preside el Comité de Seguimiento de Inversiones.', s:'DS140@art. 9'},
+  CONSEJO:{n:'Consejo Regional o Concejo Municipal', g:'dir', d:'En GR y GL aprueba el PIA, la incorporación de recursos de crédito y la gestión del endeudamiento.', s:'DL1440@arts. 31.3 y 50.4|DL1437@art. 27.2'},
+  AGA:{n:'Autoridad de la gestión administrativa (Secretaría General, Gerencia General o Municipal)', g:'dir', d:'Aprueba el CMN, el PAC y el expediente de contratación; designa evaluadores.', s:'LEY32069@art. 25.1|PMBSO@art. 30.4'},
+  CPMP:{n:'Comisión de Programación Multianual y Formulación Presupuestaria', g:'dir', d:'Reúne presupuesto, PP, administración, abastecimiento, tesorería, personal, UEI, planeamiento, OPMI y UF.', s:'DIR5002@art. 4'},
+  OPL:{n:'Órgano de planeamiento', g:'ent', d:'Conduce el PEI y el POI y los articula con el presupuesto.', s:'DCEPLAN@art. 9'},
+  OPP:{n:'Oficina de Presupuesto (o la que haga sus veces)', g:'ent', d:'Conduce el proceso presupuestario del pliego y opina sobre contrapartidas de endeudamiento.', s:'DL1440@arts. 8 y 75.2'},
+  RPP:{n:'Responsable de Programa Presupuestal', g:'ent', d:'Gestiona la programación de los productos del programa y coordina con presupuesto.', s:'DL1440@art. 10'},
+  UE:{n:'Unidad ejecutora (administración de su presupuesto)', g:'ent', d:'Certifica, compromete y devenga; recibe y ejecuta desembolsos de deuda.', s:'DL1440@arts. 9 y 41.3|DL1437@art. 6'},
+  TES:{n:'Tesorería', g:'ent', d:'Paga las obligaciones devengadas y registra la recepción de fondos.', s:'DL1441@Tesorería'},
+  CONT:{n:'Contabilidad', g:'ent', d:'Registra contablemente las operaciones y los activos.', s:'DL1438@TUO'},
+  OPMI:{n:'OPMI de la entidad (Sector, GR o GL)', g:'ent', d:'Elabora el PMI, verifica ideas de inversión, hace seguimiento y evaluación ex post de corto plazo.', s:'DS140@arts. 10 y 11'},
+  UF:{n:'Unidad Formuladora (UF)', g:'ent', d:'Formula, evalúa y declara viables proyectos; aprueba IOARR; verifica la consistencia del expediente.', s:'DS140@art. 12'},
+  UEI:{n:'Unidad Ejecutora de Inversiones (UEI)', g:'ent', d:'Elabora el expediente técnico, ejecuta, registra avance y cierra la inversión.', s:'DS140@art. 13'},
+  UP:{n:'Unidad a cargo de la Unidad Productora', g:'ent', d:'Opera y mantiene los activos y reporta su inventario.', s:'DS140@art. 18'},
+  DEC:{n:'Dependencia encargada de las contrataciones (Abastecimiento)', g:'ent', d:'Programa el CMN, elabora el PAC y la estrategia, conduce la contratación y el contrato.', s:'LEY32069@art. 25.1|PMBSO@art. 8'},
+  AU:{n:'Área usuaria (o área técnica estratégica)', g:'ent', d:'Identifica la necesidad, formula el requerimiento y otorga la conformidad.', s:'LEY32069@art. 25.1'},
+  EVAL:{n:'Evaluadores (comprador público, comité o jurado)', g:'ent', d:'Conducen el procedimiento de selección: bases, consultas, evaluación y buena pro.', s:'LEY32069@art. 52'},
+  ALM:{n:'Almacén y control patrimonial', g:'ent', d:'Recibe los bienes y registra los activos en el patrimonio.', s:'DALM@Directiva|DBIEN@Directiva'},
+  OCI:{n:'Órgano de Control Institucional', g:'ent', d:'Ejerce control simultáneo y posterior dentro de la entidad.', s:'CSIM@Directiva'},
+  PROV:{n:'Proveedor, postor o contratista', g:'ext', d:'Participa en la selección y ejecuta el contrato.', s:'LEY32069@art. 29'},
+  SUP:{n:'Supervisor o inspector de obra', g:'ext', d:'Controla la ejecución de la obra, valoriza y emite la conformidad técnica.', s:'LEY32069@art. 62|RLGCP@arts. 186 y 187'}
+},
+groups:{nac:'Entes rectores y nivel nacional', dir:'Alta dirección y órganos colegiados de la entidad', ent:'Unidades de la entidad', ext:'Externos'},
+
+/* ---------- Normas (anexo) ---------- */
+norms:{
+  CONST:{t:'Constitución', n:'Constitución Política del Perú (21.ª edición oficial, MINJUSDH, dic. 2025)', u:'https://cdn.www.gob.pe/uploads/document/file/9139522/7498785-constitucion-politica_2025-final-dic-2025.pdf', g:'T', d:'Arts. 77 a 80: presupuesto, envío de los proyectos de ley hasta el 30 de agosto y aprobación hasta el 30 de noviembre.'},
+  DL1436:{t:'DL 1436', n:'Decreto Legislativo 1436, Marco de la Administración Financiera del Sector Público', u:'https://www.gob.pe/institucion/presidencia/normas-legales/201356-1436', g:'T', d:'Integra presupuesto, tesorería, endeudamiento, contabilidad, abastecimiento e inversiones.'},
+  DL1441:{t:'DL 1441', n:'Decreto Legislativo 1441, Sistema Nacional de Tesorería', u:'https://www.gob.pe/institucion/mef/normas-legales/201361-1441', g:'T', d:'Devengado, pago y Cuenta Única del Tesoro (modificado por el DL 1645).'},
+  DEV:{t:'Directiva 001-2024-EF/52.06', n:'Directiva para la formalización, sustento y registro del gasto devengado (RD 001-2024-EF/52.01, modificada por RD 012-2025-EF/52.01)', u:'https://cdn.www.gob.pe/uploads/document/file/5863211/5195844-rd001_2024ef5201.pdf', g:'T', d:'Punto en que la contratación pasa a presupuesto y tesorería: conformidad, devengado y pago.'},
+  DL1438:{t:'TUO DL 1438', n:'TUO del Decreto Legislativo 1438, Sistema Nacional de Contabilidad (DS 057-2022-EF)', u:'https://cdn.www.gob.pe/uploads/document/file/2981281/DS057_2022EF.pdf.pdf', g:'T', d:'Registro contable del gasto y de los activos que genera la inversión.'},
+  NT002:{t:'NT 002-2025-PCM/SGP', n:'Norma Técnica para la Gestión por Procesos (RSGP 002-2025-PCM/SGP)', u:'https://cdn.www.gob.pe/uploads/document/file/7676819/6501954-publicacion-en-el-peruano-de-rsgp-norma-tecnica-de-gestion-por-procesos.pdf', g:'T', d:'Método oficial para el mapa de procesos, niveles y fichas.'},
+  GUIAPROC:{t:'Guía de Gestión por Procesos', n:'Guía práctica para la Gestión por Procesos en las entidades de la Administración Pública (PCM-SGP)', u:'https://cdn.www.gob.pe/uploads/document/file/8783245/7260049-guia-practica-para-la-gestion-por-procesos.pdf', g:'T', d:'Nivel 0 (macroproceso), niveles 1 y 2, procedimientos y tareas.'},
+  FONAFE:{t:'Directiva Corporativa FONAFE', n:'Directiva Corporativa de Gestión Empresarial de FONAFE (AD 003-2021/003-FONAFE)', u:'https://cdn.www.gob.pe/uploads/document/file/2661221/Directiva%20Corporativa%20de%20Gesti%C3%B3n%20de%20Fonafe.pdf', g:'T', d:'Planeamiento y presupuesto de las empresas del ámbito de FONAFE y de EsSalud en lo aplicable.'},
+  L29626:{t:'Ley 29626', n:'Ley de Presupuesto 2011, 55.ª DCF (incorpora a EsSalud al ámbito de FONAFE)', u:'https://www.leyes.congreso.gob.pe/Documentos/Leyes/29626.pdf', g:'T', d:'Base del régimen presupuestario FONAFE de EsSalud.'},
+  DL1088:{t:'DL 1088', n:'Decreto Legislativo 1088, Ley del SINAPLAN y del CEPLAN', u:'https://cdn.www.gob.pe/uploads/document/file/1904112/Decreto%20Legislativo%201088%20LEY%20SISTEMA%20PLANEAMIENTO.pdf.pdf', g:'PL', d:'Sistema Nacional de Planeamiento Estratégico.'},
+  DCEPLAN:{t:'Directiva 001-2024-CEPLAN/PCD', n:'Directiva General de Planeamiento Estratégico del SINAPLAN (versión modificada)', u:'https://cdn.www.gob.pe/uploads/document/file/6380197/5373394-directiva-001-2024-ceplan-pcd-modificada-directiva-general-de-planeamiento-estrategico-del-sinaplan-pdf.pdf', g:'PL', d:'PEI (5 años), POI multianual (3 años) y anual; articulación con los sistemas administrativos (art. 26).'},
+  GUIAPEI:{t:'Guía PEI y POI', n:'Guía para el Planeamiento Institucional (anexo de la RPCD 0055-2024/CEPLAN/PCD)', u:'https://cdn.www.gob.pe/uploads/document/file/6483994/5658978-rs_pcd_0552024_anexo1.pdf', g:'PL', d:'Metodología del PEI y del POI.'},
+  DL1440:{t:'DL 1440', n:'Decreto Legislativo 1440, Sistema Nacional de Presupuesto Público', u:'https://www.gob.pe/institucion/mef/normas-legales/201360-1440', g:'P', d:'Fases del proceso presupuestario, certificación, compromiso, devengado, modificaciones y evaluación.'},
+  R22:{t:'RD 0022-2025-EF/50.01', n:'Aprueba la PCA 2026 y difiere al 1 de enero de 2029 el art. 47 del DL 1440', u:'https://www.gob.pe/institucion/mef/normas-legales/7567682-0022-2025-ef-50-01', g:'P', d:'Hasta 2028, habilitaciones y anulaciones siguen el art. 40 del TUO de la Ley 28411.'},
+  DIR5002:{t:'Directiva 0002-2024-EF/50.01', n:'Directiva de Programación Multianual Presupuestaria y Formulación Presupuestaria (RD 0021-2024-EF/50.01 y modificatorias)', u:'https://www.gob.pe/institucion/mef/normas-legales/5516162-0021-2024-ef-50-01', g:'P', d:'Etapas de la programación y formulación; Comisión de Programación (art. 4).'},
+  DIR5001:{t:'Directiva 0001-2024-EF/50.01', n:'Directiva para la Ejecución Presupuestaria (RD 0009-2024-EF/50.01 y modificatorias)', u:'https://www.gob.pe/institucion/mef/normas-legales/5189042-0009-2024-ef-50-01', g:'P', d:'PIA, PCA, certificación, previsión, compromiso, devengado, contrapartidas y modificaciones.'},
+  DIR5003:{t:'Directiva 0003-2024-EF/50.01', n:'Directiva de Evaluación en el marco de la fase de Evaluación Presupuestaria', u:'https://www.gob.pe/institucion/mef/normas-legales/6056320-0032-2024-ef-50-01', g:'P', d:'Evaluaciones independientes e Informe Global de la Gestión Presupuestaria.'},
+  DIRPP:{t:'Directiva 0001-2026-EF/50.01', n:'Directiva de los Programas Presupuestales en el marco del PpR', u:'https://www.gob.pe/institucion/mef/normas-legales/8237957-0018-2026-ef-50-01', g:'P', d:'Diseño e implementación de programas presupuestales.'},
+  LEY32513:{t:'Ley 32513', n:'Ley de Presupuesto del Sector Público para el Año Fiscal 2026', u:'https://www.gob.pe/institucion/mef/normas-legales/7475743-32513', g:'P', d:'Reglas del año: art. 11 (anulaciones en inversiones), art. 12 (certificación y previsión), art. 14 (márgenes de contratación), 92.ª DCF (EsSalud).'},
+  LEY32514:{t:'Ley 32514', n:'Ley de Equilibrio Financiero del Presupuesto del Sector Público 2026', u:'https://www.gob.pe/institucion/mef/normas-legales/7475759-32514', g:'P', d:'Recursos que financian el presupuesto 2026.'},
+  CLAS:{t:'RD 0021-2025-EF/50.01', n:'Clasificadores presupuestarios y cuadro de plazos de la ejecución 2026', u:'https://www.gob.pe/institucion/mef/normas-legales/7562162-0021-2025-ef-50-01', g:'P', d:'Clasificadores de ingresos, gastos y fuentes; plazos trimestrales.'},
+  MMM:{t:'MMM 2027-2030', n:'Marco Macroeconómico Multianual 2027-2030', u:'https://www.gob.pe/institucion/mef/informes-publicaciones/8533022-marco-macroeconomico-multianual-2027-2030', g:'P', d:'Proyecciones y límites fiscales que enmarcan la programación.'},
+  DL1276:{t:'DL 1276', n:'Marco de la Responsabilidad y Transparencia Fiscal del Sector Público No Financiero', u:'https://www.gob.pe/institucion/mef/normas-legales/226856-1276', g:'P', d:'Reglas macrofiscales y Consejo Fiscal.'},
+  DL1252:{t:'DL 1252', n:'Decreto Legislativo 1252, crea el Sistema Nacional de Programación Multianual y Gestión de Inversiones', u:'https://www.gob.pe/institucion/mef/normas-legales/200981-1252', g:'I', d:'Ley de Invierte.pe: ciclo de inversión y órganos del sistema.'},
+  DS140:{t:'DS 140-2026-EF', n:'Reglamento del DL 1252 (vigente desde el 18-07-2026; modificado por el DS 199-2026-EF)', u:'https://www.gob.pe/institucion/mef/normas-legales/8402978-140-2026-ef', g:'I', d:'Funciones de DGPMI, OR, OPMI, UF y UEI; fases del ciclo de inversión.'},
+  DS199:{t:'DS 199-2026-EF', n:'Modifica la 3.ª DCF del Reglamento del DL 1252 (inversiones ante estados de emergencia)', u:'https://www.gob.pe/institucion/mef/normas-legales/8635078-199-2026-ef', g:'I', d:'Las inversiones en zonas en emergencia se atienden como IOARR.'},
+  DIR6301:{t:'Directiva 001-2019-EF/63.01', n:'Directiva General del Sistema Nacional de Programación Multianual y Gestión de Inversiones (texto actualizado del MEF)', u:'https://www.mef.gob.pe/es/normatividad-inv-publica/instrumento/directivas/19114-resolucion-directoral-n-001-2019-ef-63-01-2/file', g:'I', d:'Procedimientos y formatos del ciclo de inversión. El sitio del MEF solo descarga desde el navegador.'},
+  ANEXO05:{t:'RD 0007-2026-EF/63.01', n:'Lineamientos para las modificaciones de la cartera de inversiones del PMI (Anexo 05)', u:'https://www.gob.pe/institucion/mef/normas-legales/8734145-007-2026-ef-63-01', g:'I', d:'Cómo y quién modifica la cartera del PMI.'},
+  GUIAPMI:{t:'Guía PMI 2026', n:'Guía metodológica de la fase de Programación Multianual de Inversiones (RD 0001-2026-EF/63.01)', u:'https://www.gob.pe/institucion/mef/normas-legales/7868911-0001-2026-ef-63-01', g:'I', d:'Brechas, criterios de priorización y cartera.'},
+  LPNIP:{t:'DS 020-2025-EF', n:'Lineamientos de Política Nacional de Inversión Pública', u:'https://www.gob.pe/institucion/mef/normas-legales/6486754-020-2025-ef', g:'I', d:'Marco orientador de la programación de inversiones.'},
+  GUIAGEN:{t:'Guía General de PI', n:'Guía General para la Identificación, Formulación y Evaluación de Proyectos de Inversión', u:'https://www.mef.gob.pe/contenidos/inv_publica/docs/Metodologias_Generales_PI/GUIA_EX_ANTE_InviertePe.pdf', g:'I', d:'Metodología de formulación y evaluación ex ante.'},
+  IOARR:{t:'Lineamientos IOARR', n:'Lineamientos para la identificación y registro de las IOARR (versión vigente)', u:'https://www.mef.gob.pe/contenidos/inv_publica/docs/Metodologias_Generales_PI/Lineamientos_IOARR.pdf', g:'I', d:'Optimización, ampliación marginal, rehabilitación y reposición.'},
+  CIERRE:{t:'RD 0005-2026-EF/63.01', n:'Nota Técnica para el cierre de inversiones', u:'https://www.gob.pe/institucion/mef/normas-legales/8189849-0005-2026-ef-63-01', g:'I', d:'Cierre de inversiones culminadas y no culminadas.'},
+  EXPOST:{t:'RD 0002-2026-EF/63.01', n:'Lineamientos para la Evaluación Ex Post de Largo Plazo', u:'https://www.gob.pe/institucion/mef/normas-legales/8114603-0002-2026-ef-63-01', g:'I', d:'Evaluación de impacto en la fase de Funcionamiento.'},
+  SEGEXP:{t:'RD 0003-2026-EF/63.01', n:'Lineamientos Metodológicos para el Seguimiento Ex Post', u:'https://www.gob.pe/institucion/mef/normas-legales/8115471-0003-2026-ef-63-01', g:'I', d:'Seguimiento de la inversión ya en funcionamiento.'},
+  DL1439:{t:'DL 1439', n:'Decreto Legislativo 1439, Sistema Nacional de Abastecimiento', u:'https://www.gob.pe/institucion/mef/normas-legales/201359-1439', g:'C', d:'Programación multianual de bienes, servicios y obras; adquisiciones; administración de bienes.'},
+  LEY32069:{t:'Ley 32069', n:'Ley General de Contrataciones Públicas (compendio oficial del OECE con texto actualizado)', u:'https://www.gob.pe/institucion/oece/colecciones/45029-ley-n-32069-ley-general-de-contrataciones-publicas-y-su-reglamento', g:'C', d:'Actores, fases (actuaciones preparatorias, selección, ejecución), exclusiones (art. 7) y controversias.'},
+  RLGCP:{t:'Reglamento Ley 32069', n:'Ley 32069 y su Reglamento (DS 009-2025-EF), texto actualizado de El Peruano al 21-10-2026', u:'https://diariooficial.elperuano.pe/Normas/obtenerDocumento?idNorma=25', g:'C', d:'Procedimientos, plazos, requisitos, garantías y ejecución contractual.'},
+  PMBSO:{t:'Directiva 0007-2025-EF/54.01', n:'Directiva para la Programación Multianual de Bienes, Servicios y Obras', u:'https://cdn.www.gob.pe/uploads/document/file/8209539/6861651-directiva0007_2025ef5401.pdf', g:'C', d:'Fases de la programación y aprobación del Cuadro Multianual de Necesidades (CMN).'},
+  DREQ:{t:'Directiva 0001-2025-EF/54.01', n:'Directiva de compatibilización del requerimiento', u:'https://www.gob.pe/institucion/mef/normas-legales/6588441-0007-2025-ef-54-01', g:'C', d:'Cómo se formula y compatibiliza el requerimiento.'},
+  DPAC:{t:'Directiva 0002-2025-EF/54.01', n:'Directiva del Plan Anual de Contrataciones (modificada por RD 0041-2025-EF/54.01)', u:'https://www.gob.pe/institucion/mef/normas-legales/6641094-0010-2025-ef-54-01', g:'C', d:'Elaboración, aprobación, publicación y modificación del PAC.'},
+  DBASES:{t:'Directiva 0005-2025-EF/54.01', n:'Bases estándar de los procedimientos de selección (modificada por RD 001-2026-EF/54.01)', u:'https://www.gob.pe/institucion/mef/normas-legales/6683111-0015-2025-ef-54-01', g:'C', d:'Modelos obligatorios de bases.'},
+  GUIAAP:{t:'Guía de Actuaciones Preparatorias', n:'Guía de Actuaciones Preparatorias y formatos de estrategia de contratación (RD 0019-2026-EF/54.01)', u:'https://www.gob.pe/institucion/mef/normas-legales/8173033-0019-2026-ef-54-01', g:'C', d:'Interacción con el mercado, cuantía y estrategia.'},
+  DELEV:{t:'Directiva 003-2025-OECE-CD', n:'Elevación de cuestionamientos, pronunciamiento e integración definitiva de bases', u:'https://www.gob.pe/institucion/oece/normas-legales/6682396-003-2025-oece-cd', g:'C', d:'Cuándo y cómo se eleva al OECE.'},
+  DSEACE:{t:'Directiva 007-2025-OECE-CD', n:'Acceso y registro de información en el SEACE', u:'https://www.gob.pe/institucion/oece/normas-legales/6682412-007-2025-oece-cd', g:'C', d:'Perfiles, registro y publicación.'},
+  DCUAD:{t:'Directiva 017-2025-OECE-CD', n:'Cuaderno de Incidencias de obra', u:'https://www.gob.pe/institucion/oece/normas-legales/7281401-017-2025-oece-cd', g:'C', d:'Registro de incidencias durante la obra.'},
+  DCAT:{t:'Directiva 005-2025-PERÚ COMPRAS', n:'Catálogos Electrónicos de Acuerdos Marco', u:'https://www.gob.pe/institucion/perucompras/normas-legales/6695137-000052-2025-peru-compras-jefatura', g:'C', d:'Compras por catálogo electrónico.'},
+  GUIAEM:{t:'Guía de emergencias', n:'Guía para el abastecimiento en situación de emergencia (RD 0026-2026-EF/54.01)', u:'https://www.gob.pe/institucion/mef/normas-legales/8326277-0026-2026-ef-54-01', g:'C', d:'Contrataciones ante emergencias.'},
+  DALM:{t:'Directiva 0004-2021-EF/54.01', n:'Gestión de almacenamiento y distribución de bienes muebles (con modificatorias)', u:'https://cdn.www.gob.pe/uploads/document/file/2149387/RD0011_2021EF5401.pdf.pdf', g:'C', d:'Recepción en almacén y distribución.'},
+  DBIEN:{t:'Directiva 0006-2021-EF/54.01', n:'Gestión de bienes muebles patrimoniales (con modificatorias)', u:'https://cdn.www.gob.pe/uploads/document/file/2652575/2589656-directiva-n-0006-2021-ef54-01-modificatorias.pdf', g:'C', d:'Alta, inventario y baja de bienes.'},
+  TABLERO:{t:'Tablero Normativo OECE', n:'Tablero Normativo de Contrataciones Públicas (índice oficial actualizado)', u:'https://www.gob.pe/institucion/oece/informes-publicaciones/6782940-tablero-normativo-de-contrataciones-publicas', g:'C', d:'Índice oficial de todas las directivas vigentes de contrataciones.'},
+  DL1437:{t:'DL 1437', n:'Decreto Legislativo 1437, Sistema Nacional de Endeudamiento Público', u:'https://www.gob.pe/institucion/mef/normas-legales/201357-1437', g:'E', d:'Concertación, desembolso y pago. Texto original de 2018: leer con el DL 1645 y las leyes 32187 y 32515.'},
+  DCONC:{t:'Directiva 001-2019-EF/52.04', n:'Concertación de operaciones de endeudamiento, financiamientos contingentes y garantías en APP (RD 015-2019-EF/52.01)', u:'https://www.gob.pe/institucion/mef/normas-legales/2194445-015-2019-ef-52-01', g:'E', d:'Requisitos, negociación, informe previo, decreto supremo y convenios de traspaso.'},
+  DDES:{t:'Directiva 002-2021-EF/52.04', n:'Desembolso de operaciones de endeudamiento (RD 014-2021-EF/52.01)', u:'https://www.gob.pe/institucion/mef/normas-legales/2387221-014-2021-ef-52-01', g:'E', d:'Programación, solicitud, recepción, conciliación y devolución de desembolsos.'},
+  LEY32515:{t:'Ley 32515', n:'Ley de Endeudamiento del Sector Público para el Año Fiscal 2026', u:'https://www.gob.pe/institucion/mef/normas-legales/7475764-32515', g:'E', d:'Montos máximos de endeudamiento externo e interno de 2026.'},
+  EGIAP:{t:'EGIAP 2026-2029', n:'Estrategia de Gestión Integral de Activos y Pasivos 2026-2029 (RM 575-2025-EF/52)', u:'https://www.gob.pe/institucion/mef/colecciones/24-estrategia-de-gestion-integral-de-activos-y-pasivos', g:'E', d:'Estrategia de deuda del Estado.'},
+  DS246:{t:'DS 246-2026-EF', n:'Ejemplo reciente: aprueba un préstamo del BID de US$ 80 millones (RENIEC)', u:'https://busquedas.elperuano.pe/dispositivo/NL/2571982-1', g:'E', d:'Muestra la secuencia completa de requisitos aplicada a un caso real.'},
+  DL1275:{t:'DL 1275', n:'Marco de Responsabilidad y Transparencia Fiscal de los Gobiernos Regionales y Locales', u:'https://www.gob.pe/institucion/mef/normas-legales/226855-1275', g:'E', d:'Reglas fiscales que condicionan el endeudamiento de GR y GL.'},
+  BM:{t:'Banco Mundial', n:'Regulaciones de Adquisiciones para Prestatarios de Proyectos de Inversión, 7.ª edición (sep. 2025)', u:'https://thedocs.worldbank.org/en/doc/fb0a6f7dfa3de687b72849c79fa73b91-0290012025/original/Procurement-Regulations-7th-Edition-Sep-2025-SPANISH.pdf', g:'E', d:'Adquisiciones en préstamos del BIRF.'},
+  BID:{t:'BID', n:'Marco de adquisiciones para proyectos del BID (GN-2349-15 y GN-2350-15)', u:'https://www.iadb.org/es/como-trabajar-juntos/adquisiciones/adquisiciones-para-proyectos/marco-de-adquisiciones', g:'E', d:'Adquisiciones en préstamos del BID.'},
+  CAF:{t:'CAF', n:'Lineamientos para la adquisición de CAF', u:'https://www.caf.com/es/quienes-somos/que-hacemos/acceso-a-la-informacion/lineamientos-para-la-adquisicion/', g:'E', d:'Adquisiciones en préstamos de CAF (vigencia de la versión 2019 por confirmar).'},
+  L27785:{t:'Ley 27785', n:'Ley Orgánica del Sistema Nacional de Control y de la Contraloría General de la República (texto actualizado)', u:'https://diariooficial.elperuano.pe/Normas/obtenerDocumento?idNorma=24', g:'K', d:'Art. 22, lit. l: informe previo a toda operación que comprometa el crédito del Estado.'},
+  CGRPREV:{t:'Directiva 001-2024-CG/VCST', n:'Informe previo sobre operaciones que comprometan el crédito o la capacidad financiera del Estado (RC 063-2024-CG)', u:'https://www.gob.pe/institucion/contraloria/normas-legales/5182961-063-2024-cg', g:'K', d:'Requisitos, plazos y contenido del informe previo.'},
+  CSIM:{t:'Directiva 013-2022-CG/NORM', n:'Servicio de Control Simultáneo (modificada por RC 219-2025-CG)', u:'https://www.gob.pe/institucion/contraloria/normas-legales/3656507-013-2022-cg-norm', g:'K', d:'Control concurrente, visitas y orientación de oficio.'},
+  INFOBRAS:{t:'Directiva 005-2023-CG/GMPL', n:'Gestión del registro de obras públicas en INFOBRAS (RC 185-2023-CG)', u:'https://www.gob.pe/institucion/contraloria/normas-legales/4251891-185-2023-cg', g:'K', d:'Registro mensual obligatorio de las obras.'},
+  ADMDIR:{t:'Directiva 017-2023-CG/GMPL', n:'Ejecución de obras públicas por administración directa (RC 432-2023-CG)', u:'https://www.gob.pe/institucion/contraloria/normas-legales/4973965-432-2023-cg', g:'K', d:'Requisitos para ejecutar obras sin contratista.'},
+  CI:{t:'Directiva 006-2019-CG/INTEG', n:'Implementación del Sistema de Control Interno en las entidades del Estado', u:'https://cdn.www.gob.pe/uploads/document/file/8005506/6726726-directiva-n-006-2019-cg-integ-implementacion-del-sistema-de-control-interno-en-la-entidades-del-estado.pdf', g:'K', d:'Identificar riesgos y puntos de control en los procesos.'}
+},
+ngroups:{T:'Marco común, tesorería y gestión por procesos', PL:'Planeamiento', P:'Presupuesto', I:'Inversiones (Invierte.pe)', C:'Contrataciones y abastecimiento', E:'Endeudamiento', K:'Control gubernamental'},
+apps:[
+  ['Banco de Inversiones (operadores)','https://ofi5.mef.gob.pe/invierte/'],
+  ['Consulta pública de inversiones','https://www.gob.pe/institucion/mef/pages/917-consultar-las-inversiones-registradas-por-entidades-publicas'],
+  ['Sistema de Seguimiento de Inversiones (SSI)','https://ofi5.mef.gob.pe/ssi/ssi/Index'],
+  ['SEACE: buscador público','https://prod2.seace.gob.pe/seacebus-uiwd-pub/buscadorPublico/buscadorPublico.xhtml'],
+  ['Catálogos Electrónicos de Perú Compras','https://www.catalogos.perucompras.gob.pe/'],
+  ['INFOBRAS (Contraloría)','https://infobras.contraloria.gob.pe/'],
+  ['Buscador de informes de control','https://appbp.contraloria.gob.pe/BuscadorCGR/informes/Avanzado.html'],
+  ['Reportes de deuda pública (MEF)','https://www.gob.pe/institucion/mef/colecciones/25-principales-reportes-de-deuda-publica'],
+  ['El Peruano: buscador de normas','https://busquedas.elperuano.pe/'],
+  ['SPIJ: textos actualizados','https://spij.minjus.gob.pe/']
+],
+
+/* ---------- Macroprocesos, procedimientos y actividades ----------
+   Actividad: [actividad, responsable, resultado, fuentes 'ID@referencia|...', tipo ('A' aprueba/decide, 'O' opina/controla), participan 'ID,ID', aplicativo] */
+boxes:[
+{id:'PL1', s:'PL', ph:0, n:'Planeamiento institucional (PEI y POI)', w:'OPL',
+ f:'Define qué resultados busca la entidad y qué actividades e inversiones hará cada año. Es el punto de partida que leen presupuesto, inversiones y abastecimiento.',
+ i:'Políticas nacionales y planes sectoriales o territoriales (PESEM, PDRC, PDLC)', o:'PEI (5 años), POI multianual (3 años) y POI anual consistente con el PIA',
+ src:'DL1088@Ley|DCEPLAN@arts. 21, 22 y 26|GUIAPEI@Guía',
+ pr:[
+  {n:'Aprobar el Plan Estratégico Institucional (PEI)', w:'OPL', o:'PEI aprobado (5 años)', act:[
+   ['Analizar la situación y definir los objetivos estratégicos (OEI) y las acciones estratégicas (AEI)','OPL','Propuesta de PEI','GUIAPEI@Guía|DCEPLAN@art. 21'],
+   ['Articular los OEI con las categorías presupuestales y las AEI con los productos','OPL','Articulación PEI y presupuesto','DCEPLAN@art. 26.4','','OPP'],
+   ['Emitir opinión técnica sobre el plan cuando la Directiva lo exige','CEPLAN','Opinión técnica','DCEPLAN@arts. 38 y 39','O','OPL'],
+   ['Aprobar el PEI','TIT','Resolución de aprobación','DCEPLAN@art. 21.2','A']
+  ]},
+  {n:'Formular y aprobar el POI multianual', w:'OPL', o:'POI multianual aprobado (3 años)', t:'Antes de la programación multianual presupuestaria', act:[
+   ['Programar las actividades operativas y las inversiones de cada AEI, con metas físicas y costos','UE','Programación física y financiera','DCEPLAN@arts. 22.1 y 22.2','','OPL','Aplicativo CEPLAN V.01'],
+   ['Incorporar los costos del Cuadro Multianual de Necesidades y la cartera del PMI','OPL','Actividades e inversiones costeadas','DCEPLAN@art. 26.4|PMBSO@art. 7','','DEC,OPMI'],
+   ['Aprobar el POI multianual','TIT','POI multianual aprobado','DCEPLAN@arts. 22.2 y 22.3','A','','Aplicativo CEPLAN V.01'],
+   ['Usar el POI multianual para orientar la asignación presupuestal','TIT','Prioridades para la APM','DCEPLAN@art. 22.3','','OPP']
+  ]},
+  {n:'Consistenciar el POI anual con el PIA y hacer seguimiento', w:'OPL', o:'POI anual consistente; reportes de seguimiento', act:[
+   ['Ajustar las metas físicas y financieras del POI anual al PIA aprobado','OPL','POI anual consistente con el PIA','DCEPLAN@art. 22.3','','OPP','Aplicativo CEPLAN V.01'],
+   ['Registrar el seguimiento y la evaluación del PEI y del POI','OPL','Reportes e informes de evaluación','DCEPLAN@arts. 31 a 35','','','Aplicativo CEPLAN V.01']
+  ]}
+ ]},
+
+{id:'P1', s:'P', ph:0, n:'Programación multianual presupuestaria (APM)', w:'OPP',
+ f:'Fija el techo de gasto de cada pliego para tres años: vinculante el primero, indicativo los otros dos.',
+ i:'MMM y reglas fiscales; PMI; costos de bienes, servicios y O&M; costos de personal; desembolsos de deuda previstos', o:'APM aprobada, comunicada y desagregada por el pliego',
+ src:'DL1440@arts. 23 a 26|DIR5002@arts. 4 a 15|MMM@MMM vigente|DL1276@Reglas fiscales|DIRPP@Programas presupuestales',
+ pr:[
+  {n:'Estimar y aprobar la APM', w:'DGPP', o:'APM aprobada por el Consejo de Ministros', t:'Hasta el 31 de mayo', act:[
+   ['Registrar la estimación de ingresos de las fuentes distintas a Recursos Ordinarios','OPP','Estimación de ingresos del pliego','DL1440@art. 24.4|DIR5002@art. 8','','','SIAF-RP'],
+   ['Entregar a la DGPP los insumos: límites de gasto, PMI, costos de bienes, servicios y O&M, y estructuración financiera con los desembolsos de deuda','DGPMACDF','Insumos para estimar la APM','DL1440@art. 25.1|DIR5002@art. 9.2','','DGPMI,DGA,DGTP'],
+   ['Estimar la APM con la línea de base y la asignación diferencial','DGPP','APM estimada por pliego','DL1440@arts. 24.2 y 24.3'],
+   ['Aprobar la APM','CM','APM aprobada','DL1440@art. 26.1','A'],
+   ['Comunicar la APM a los pliegos','DGPP','APM comunicada','DL1440@art. 26.2']
+  ]},
+  {n:'Desagregar la APM en el pliego', w:'OPP', o:'Programación multianual registrada y sustentada', act:[
+   ['Conformar la Comisión de Programación Multianual y Formulación Presupuestaria','TIT','Resolución que designa la Comisión','DIR5002@art. 4.1','A'],
+   ['Revisar resultados, metas de cierre de brechas del PMI y estado de las inversiones (Formato 12-B)','CPMP','Prioridades del pliego','DIR5002@art. 4.3'],
+   ['Desagregar la APM por estructura programática y funcional, priorizando la continuidad de las inversiones y la O&M','OPP','APM desagregada','DL1440@art. 26.3|DIR5002@arts. 13 y 14','','RPP,OPMI','SIAF-RP'],
+   ['Asignar recursos solo a inversiones del PMI con monto mayor a cero en el año','OPP','Inversiones programadas consistentes con el PMI','DIR6301@art. 16.6','O','OPMI'],
+   ['Prever las contrapartidas de las operaciones de endeudamiento en curso','OPP','Contrapartidas programadas','DIR5001@art. 18.2'],
+   ['Registrar y sustentar la programación ante la DGPP','OPP','Programación registrada','DIR5002@arts. 15 y 24','','DGPP','SIAF-RP']
+  ]}
+ ]},
+
+{id:'P2', s:'P', ph:1, n:'Formulación presupuestaria', w:'OPP',
+ f:'Convierte el primer año de la APM en un presupuesto detallado: metas, cadenas de gasto y fuentes de financiamiento.',
+ i:'APM del año 1 desagregada; POI; PMI', o:'Presupuesto formulado del pliego y proyectos de leyes anuales',
+ src:'DL1440@arts. 27 y 29|DIR5002@arts. 16, 17 y 22|CONST@art. 78|CLAS@Clasificadores 2026',
+ pr:[
+  {n:'Formular el presupuesto del pliego', w:'OPP', o:'Formulación registrada y sustentada', act:[
+   ['Distribuir el año 1 de la APM por clasificadores, metas y fuentes','OPP','Cadenas de gasto con metas','DL1440@arts. 27.1 y 27.2','','UE','SIAF-RP'],
+   ['Priorizar planillas, obligaciones, bienes y servicios, mantenimiento y continuidad de inversiones','OPP','Estructura del gasto priorizada','DL1440@art. 27.3','','CPMP'],
+   ['Incluir recursos de endeudamiento solo si hay contrato firmado u opinión favorable de la DGTP','OPP','Fuente de operaciones de crédito sustentada','DL1440@art. 27.4','O','DGTP'],
+   ['Sustentar la formulación y levantar las observaciones de la DGPP','OPP','Formulación conforme','DIR5002@arts. 7.2, 16 y 22','','DGPP']
+  ]},
+  {n:'Elaborar y remitir los proyectos de leyes anuales', w:'DGPP', o:'Proyectos de Ley de Presupuesto, Equilibrio y Endeudamiento en el Congreso', t:'Hasta el 30 de agosto', act:[
+   ['Elaborar los anteproyectos de Ley de Presupuesto y de Equilibrio Financiero','DGPP','Anteproyectos','DL1440@art. 29.1'],
+   ['Aprobar los proyectos y remitirlos al Congreso junto con el de Endeudamiento','CM','Proyectos de ley remitidos','CONST@art. 78|DL1440@art. 29.1','A']
+  ]}
+ ]},
+
+{id:'P3', s:'P', ph:2, n:'Aprobación del presupuesto (Ley anual y PIA)', w:'TIT',
+ f:'Da fuerza legal al gasto del año: el Congreso aprueba la ley y cada pliego aprueba su Presupuesto Institucional de Apertura (PIA).',
+ i:'Proyectos de ley; reporte oficial de la DGPP', o:'Ley de Presupuesto publicada; PIA aprobado y publicado',
+ src:'CONST@arts. 78 a 80|DL1440@arts. 30 y 31|DIR5001@art. 5|LEY32513@Ley 2026',
+ pr:[
+  {n:'Aprobar las leyes anuales', w:'CONG', o:'Leyes de Presupuesto, Equilibrio Financiero y Endeudamiento', t:'Hasta el 30 de noviembre', act:[
+   ['Dictaminar y aprobar las tres leyes; si no se aprueban a tiempo, rige el proyecto del Ejecutivo','CONG','Leyes publicadas','CONST@arts. 78 y 80','A']
+  ]},
+  {n:'Aprobar el PIA del pliego', w:'TIT', o:'PIA aprobado y publicado', t:'Gobierno Nacional: hasta el 31 de diciembre', act:[
+   ['Recibir de la DGPP el reporte oficial del presupuesto desagregado','OPP','Reporte oficial','DL1440@art. 31.1','','DGPP'],
+   ['Aprobar el PIA (GN: resolución del Titular; GR y GL: acuerdo de Consejo o Concejo)','TIT','Resolución o acuerdo de aprobación','DL1440@arts. 31.2 y 31.3|DIR5001@art. 5','A','CONSEJO'],
+   ['Publicar el PIA (5 días calendario) y remitir copia a la Comisión de Presupuesto, la CGR y la DGPP','OPP','PIA publicado y comunicado','DL1440@arts. 31.2 y 31.4'],
+   ['Comunicar el PIA a Abastecimiento para consolidar el CMN','OPP','CMN listo para consolidarse','PMBSO@art. 26','','DEC']
+  ]}
+ ]},
+
+{id:'P4', s:'P', ph:3, n:'Ejecución del gasto: certificación, compromiso, devengado y pago', w:'UE',
+ f:'Es donde el presupuesto se vuelve gasto real. Cada contrato u orden pasa por cuatro etapas y cada una deja un registro en el SIAF.',
+ i:'PIA o PIM; PCA; requerimiento o contrato', o:'Gasto certificado, comprometido, devengado y pagado',
+ src:'DL1440@arts. 33 a 44|DIR5001@arts. 6 a 16|DL1441@Tesorería|DEV@Devengado',
+ pr:[
+  {n:'Programar compromisos (PCA)', w:'DGPP', o:'PCA trimestral del pliego', act:[
+   ['Determinar, revisar y actualizar cada trimestre la PCA de cada pliego','DGPP','PCA vigente','DL1440@art. 37.1|DIR5001@arts. 6 a 9','A'],
+   ['Solicitar la actualización de la PCA cuando la ejecución lo requiera','OPP','Solicitud de actualización','DIR5001@art. 9']
+  ]},
+  {n:'Certificar el crédito presupuestario o emitir previsión', w:'UE', o:'Certificación registrada en el SIAF', act:[
+   ['Solicitar la certificación antes de comprometer un gasto o de convocar','DEC','Solicitud de certificación','DL1440@art. 41.3|DIR5001@art. 12.3','','AU'],
+   ['Emitir y registrar la certificación (en los GL la emite la Oficina de Presupuesto)','UE','Certificación de crédito presupuestario','DL1440@arts. 41.1 a 41.3|DIR5001@art. 12','O','','SIAF-RP'],
+   ['Emitir previsión presupuestaria para contratos que pasan del año o convocatorias del último trimestre (en 2026, de los últimos cuatro meses)','UE','Previsión presupuestaria','DL1440@arts. 41.4 y 41.5|DIR5001@art. 13|LEY32513@art. 12.3','O'],
+   ['Convertir la previsión en certificación en los primeros 30 días hábiles del año siguiente','UE','Certificación del nuevo año','DL1440@art. 41.6','','OPP']
+  ]},
+  {n:'Comprometer', w:'UE', o:'Compromiso registrado', act:[
+   ['Registrar el compromiso cuando nace la obligación (contrato, orden o convenio), por el monto del año y sin exceder lo certificado','UE','Compromiso anual','DL1440@art. 42|DIR5001@art. 14','','','SIAF-RP']
+  ]},
+  {n:'Devengar y pagar', w:'UE', o:'Obligación reconocida y pagada', act:[
+   ['Verificar que el bien ingresó, el servicio se prestó o la obra se ejecutó, y otorgar la conformidad','AU','Conformidad','DL1440@art. 43.2|RLGCP@art. 144','O'],
+   ['Reconocer la obligación (devengado) con la documentación que la sustenta','UE','Devengado registrado','DL1440@art. 43.1|DEV@Directiva|DIR5001@art. 15','','TES','SIAF-RP'],
+   ['Pagar al acreedor (en contrataciones, como máximo 10 días hábiles después de la conformidad)','TES','Pago efectuado','DL1440@art. 44|LEY32069@art. 67.3|DL1441@Tesorería','','','SIAF-RP'],
+   ['Registrar contablemente la operación','CONT','Registro contable','DL1438@TUO']
+  ]}
+ ]},
+
+{id:'P5', s:'P', ph:3, n:'Modificaciones presupuestarias', w:'OPP',
+ f:'Ajusta el presupuesto durante el año: agrega recursos o los mueve entre pliegos o entre metas. El resultado es el Presupuesto Institucional Modificado (PIM).',
+ i:'Mayores ingresos, saldos o necesidades nuevas', o:'PIM actualizado',
+ src:'DL1440@arts. 45 a 50|DIR5001@arts. 20 a 30|R22@Vigencia del art. 47|LEY32513@art. 11',
+ pr:[
+  {n:'Modificar en el nivel institucional', w:'OPP', o:'Crédito suplementario, transferencia de partidas o incorporación aprobada', act:[
+   ['Identificar mayores ingresos, saldos de balance o la necesidad de recursos de otro pliego','OPP','Sustento de la modificación','DL1440@art. 46.1|DIR5001@art. 20'],
+   ['Tramitar créditos suplementarios y transferencias de partidas, que se aprueban por ley','OPP','Norma que aprueba la modificación','DL1440@art. 46.1|DIR5001@art. 20','','DGPP,CONG'],
+   ['Incorporar mayores ingresos de fuentes distintas a Recursos Ordinarios por resolución del Titular, dentro de los límites del MEF','TIT','Resolución de incorporación','DL1440@arts. 50.1 a 50.3','A'],
+   ['GR y GL: incorporar recursos de operaciones de crédito por acuerdo de Consejo Regional o Concejo Municipal','CONSEJO','Acuerdo de incorporación','DL1440@arts. 46.2 y 50.4','A']
+  ]},
+  {n:'Modificar en el nivel funcional programático', w:'OPP', o:'Habilitaciones y anulaciones aprobadas', act:[
+   ['Proponer habilitaciones y anulaciones entre productos y proyectos','OPP','Nota de modificación','DIR5001@art. 21','','','SIAF-RP'],
+   ['Para anular recursos de inversiones, obtener la opinión previa favorable de la OPMI (regla de 2026)','OPMI','Opinión favorable','LEY32513@art. 11.1','O'],
+   ['Aprobar por resolución del Titular o de su delegado (hasta 2028 rige el art. 40 del TUO de la Ley 28411)','TIT','Resolución','DL1440@art. 47.2|R22@RD 0022-2025-EF/50.01','A']
+  ]}
+ ]},
+
+{id:'P6', s:'P', ph:4, n:'Evaluación presupuestaria', w:'DGPP',
+ f:'Mide si el gasto produjo los resultados esperados y devuelve recomendaciones a la programación del año siguiente.',
+ i:'Ejecución e indicadores de desempeño', o:'Informes de evaluación e Informe Global de la Gestión Presupuestaria',
+ src:'DL1440@arts. 55 a 58|DIR5003@Directiva',
+ pr:[
+  {n:'Hacer seguimiento y evaluar', w:'OPP', o:'Recomendaciones para la siguiente programación', act:[
+   ['Hacer seguimiento a los indicadores de desempeño y a la ejecución','OPP','Reportes de seguimiento','DL1440@art. 56','','RPP'],
+   ['Entregar información para las evaluaciones independientes y publicar el informe (15 días calendario)','TIT','Informe publicado','DL1440@art. 57|DIR5003@Directiva','','DGPP'],
+   ['Elaborar el Informe Global de la Gestión Presupuestaria y presentarlo al Congreso y a la CGR en el primer semestre','DGPP','Informe Global','DL1440@art. 58'],
+   ['Usar las recomendaciones en la siguiente programación multianual','CPMP','Prioridades ajustadas','DL1440@art. 55.2|DIR5002@art. 4.3']
+  ]}
+ ]},
+
+{id:'I1', s:'I', ph:0, n:'Programación Multianual de Inversiones (PMI)', w:'OPMI',
+ f:'Elige qué inversiones hará la entidad en al menos tres años, según las brechas de servicios que quiere cerrar y su capacidad de gasto.',
+ i:'Indicadores de brechas; objetivos del planeamiento; LPNIP', o:'Cartera del PMI aprobada y registrada; insumo de la APM',
+ src:'DL1252@art. 4|DS140@arts. 9 a 11 y 14|DIR6301@arts. 9 a 16|GUIAPMI@Guía 2026|LPNIP@Lineamientos',
+ pr:[
+  {n:'Diagnosticar brechas y fijar criterios de priorización', w:'OPMI', o:'Diagnóstico de brechas y criterios aprobados', act:[
+   ['Aprobar los indicadores de brechas y los criterios de priorización sectoriales','OR','Indicadores y criterios publicados','DS140@art. 9.2','A','OPMIS'],
+   ['Elaborar el diagnóstico de brechas con articulación territorial','OPMI','Diagnóstico de brechas','DS140@arts. 10.3, 11.3 y 14.2|DIR6301@art. 12'],
+   ['Establecer metas de cierre de brechas alineadas al planeamiento y a los LPNIP','OPMI','Metas de cierre de brechas','DS140@art. 14.3|LPNIP@Lineamientos','','OPL'],
+   ['Proponer al OR los criterios de priorización de la cartera','OPMI','Criterios propuestos','DS140@arts. 10.3 y 11.3|DIR6301@art. 13']
+  ]},
+  {n:'Elaborar y aprobar la cartera del PMI', w:'OPMI', o:'PMI aprobado y presentado a la DGPMI', act:[
+   ['Seleccionar y priorizar inversiones según la capacidad de gasto de capital y de O&M, dando prioridad a las que están en ejecución','OPMI','Cartera priorizada','DS140@arts. 14.3 y 14.5|DIR6301@arts. 14 y 15','','UF,UEI,OPP,OPL','Módulo PMI'],
+   ['Si una inversión se financiará con endeudamiento, obtener la opinión previa de la DGTP para incluirla en el PMI','DGTP','Opinión de la DGTP','DS140@art. 14.6','O','OPMI'],
+   ['Aprobar el PMI','OR','Resolución de aprobación del PMI','DS140@art. 9.4|DIR6301@art. 16.2','A'],
+   ['Registrar el PMI en el Módulo PMI y presentarlo a la DGPMI','OPMI','PMI registrado','DS140@art. 10.3|DIR6301@arts. 16.3 y 16.4','','','Módulo PMI'],
+   ['Consolidar los PMI, revisar su coherencia y remitirlos a la DGPP como insumo de la APM; publicar el PMIE','DGPMI','PMI consolidado y PMIE','DS140@arts. 14.7 a 14.10','','DGPP']
+  ]},
+  {n:'Modificar la cartera del PMI', w:'OPMI', o:'Cartera modificada y registrada', act:[
+   ['Sustentar técnica y financieramente la modificación, que es excepcional','OPMI','Sustento de la modificación','DS140@art. 14.11|ANEXO05@Anexo 05'],
+   ['Aprobar la modificación: la OPMI si la inversión ya está en la cartera; el OR si se incorpora una inversión no programada','OR','Modificación aprobada','DS140@arts. 9.4, 10.3 y 14.11','A','OPMI','Módulo PMI']
+  ]}
+ ]},
+
+{id:'I2', s:'I', ph:1, n:'Formulación y evaluación (viabilidad o IOARR)', w:'UF',
+ f:'Demuestra que la inversión cierra una brecha, está bien dimensionada, es rentable socialmente y se podrá operar y mantener.',
+ i:'Idea de inversión alineada al PMI', o:'Proyecto viable o IOARR aprobada en el Banco de Inversiones',
+ src:'DS140@arts. 12, 16 y 19|DIR6301@arts. 21 a 28|GUIAGEN@Guía General|IOARR@Lineamientos',
+ pr:[
+  {n:'Registrar la idea y definir el tipo de inversión', w:'UF', o:'Idea registrada y tipo de inversión definido', act:[
+   ['Registrar la idea de inversión','UF','Idea en el Banco de Inversiones','DS140@art. 16.1','','','Banco de Inversiones'],
+   ['Verificar que la idea esté en las competencias de la entidad y contribuya al cierre de brechas','OPMI','Idea validada','DS140@arts. 10.3 y 11.3','O'],
+   ['Definir si es proyecto de inversión o IOARR, sin fraccionar ni financiar gasto corriente','UF','Tipo de inversión definido','DS140@arts. 3, 12.4 y 19.2|IOARR@Lineamientos']
+  ]},
+  {n:'Formular y declarar la viabilidad de un proyecto', w:'UF', o:'Proyecto declarado viable', act:[
+   ['Elaborar la ficha técnica o el estudio de preinversión según la complejidad, con los costos de O&M y las fuentes de financiamiento','UF','Documento técnico','DS140@arts. 12.4 y 16.4|DIR6301@art. 22|GUIAGEN@Guía General'],
+   ['Si se financiará con endeudamiento, pedir opinión a la OPMI y a la OPMI del Sector (20 días hábiles)','OPMIS','Opiniones de las OPMI','DS140@arts. 10.3 y 12.4','O','UF,OPMI'],
+   ['Si el endeudamiento es externo, obtener la opinión favorable de la DGPMI antes de declarar la viabilidad','DGPMI','Opinión favorable','DS140@art. 16.6|DL1437@art. 27.2|DIR6301@art. 26.3','O','UF'],
+   ['En proyectos de alta complejidad o de alto costo, obtener la opinión favorable de la DGPMI o de la OPMI del Sector','DGPMI','Opinión vinculante','DS140@art. 12.4','O','OPMIS,UF'],
+   ['Declarar la viabilidad (vigencia de 3 años para iniciar el expediente técnico)','UF','Viabilidad registrada','DS140@arts. 12.4 y 16.3|DIR6301@arts. 26 y 27','A','','Banco de Inversiones']
+  ]},
+  {n:'Identificar y aprobar una IOARR', w:'UF', o:'IOARR aprobada', act:[
+   ['Identificar y registrar la IOARR según los lineamientos','UF','IOARR registrada','DS140@arts. 12.4 y 19|IOARR@Lineamientos','','','Banco de Inversiones'],
+   ['Aprobar la IOARR con el Formato 07-C (vigencia de 1 año para iniciar la ejecución)','UF','IOARR aprobada','DIR6301@art. 28','A','','Banco de Inversiones'],
+   ['En zonas con estado de emergencia, atender la inversión como IOARR y registrarla en el PMI durante la ejecución','UF','IOARR de emergencia','DS199@3.ª DCF|DS140@3.ª DCF','','UEI']
+  ]}
+ ]},
+
+{id:'I3', s:'I', ph:3, n:'Expediente técnico o documento equivalente', w:'UEI',
+ f:'Convierte el proyecto viable en el documento con el que se contrata y ejecuta la obra o la adquisición.',
+ i:'Inversión viable o aprobada y registrada en el PMI', o:'Expediente técnico aprobado y registrado (Formato 08-A u 08-C)',
+ src:'DS140@arts. 13 y 17|DIR6301@art. 32|RLGCP@arts. 170 a 173',
+ pr:[
+  {n:'Planificar la ejecución', w:'UEI', o:'Plan de ejecución y sistema de entrega definidos', act:[
+   ['Verificar que la inversión tenga viabilidad o aprobación y esté en el PMI','UEI','Requisitos para iniciar la ejecución','DS140@art. 17.3','O'],
+   ['Definir el sistema de entrega; si es por administración directa, justificar que es más eficiente','UEI','Sistema de entrega definido','DS140@art. 13.3|ADMDIR@Directiva'],
+   ['Verificar el saneamiento físico legal y gestionar las certificaciones ambientales y sectoriales','UEI','Terreno y permisos asegurados','DIR6301@arts. 32.1 y 32.2'],
+   ['Asegurar la certificación presupuestal para elaborar o contratar el expediente','UEI','Certificación','DL1440@art. 41','','UE,OPP']
+  ]},
+  {n:'Elaborar y aprobar el expediente técnico', w:'UEI', o:'Expediente técnico aprobado y registrado', act:[
+   ['Elaborar o contratar el expediente técnico, respetando la concepción técnica y el dimensionamiento de la viabilidad','UEI','Expediente técnico','DS140@arts. 13.3 y 17.4|DIR6301@art. 32.2','','DEC'],
+   ['Verificar la consistencia del expediente (Formato 08-A) con la viabilidad (10 días hábiles)','UF','Consistencia aprobada','DS140@art. 12.4|DIR6301@art. 32.3','O','UEI'],
+   ['Aprobar el expediente técnico según la organización interna de la entidad','TIT','Resolución de aprobación','DIR6301@art. 32.4|RLGCP@art. 173','A','UEI'],
+   ['Registrar en el Banco de Inversiones el resultado del expediente','UEI','Formato 08-A u 08-C registrado','DS140@art. 17.8|DIR6301@art. 32.5','','','Banco de Inversiones'],
+   ['Si el costo o el plazo varía más de 30 % respecto de la viabilidad, informarlo a la CGR','DGPMI','Comunicación a la CGR','DS140@art. 17.5','','CGR']
+  ]}
+ ]},
+
+{id:'I4', s:'I', ph:3, n:'Ejecución física y seguimiento de la inversión', w:'UEI',
+ f:'Construye o adquiere los activos, controla avance, costo y plazo, y registra todo en los aplicativos.',
+ i:'Expediente técnico aprobado; contrato o ejecución directa', o:'Activos ejecutados; avance registrado',
+ src:'DS140@arts. 13.3 y 17.9 a 17.11|DIR6301@art. 33|INFOBRAS@Directiva|CSIM@Directiva',
+ pr:[
+  {n:'Ejecutar física y financieramente', w:'UEI', o:'Avance físico y financiero', act:[
+   ['Iniciar la ejecución física después de aprobar el expediente técnico','UEI','Inicio de ejecución','DS140@art. 17.9|DIR6301@art. 33.1'],
+   ['Ejecutar por contrata (ver Contrataciones) o por administración directa','UEI','Prestaciones en curso','DS140@art. 13.3|ADMDIR@Directiva','','DEC'],
+   ['Registrar el avance físico y financiero en los aplicativos del sistema','UEI','Avance registrado','DS140@arts. 13.3 y 17.11','','','SSI y Banco de Inversiones'],
+   ['Registrar la obra en INFOBRAS','UEI','Obra registrada','INFOBRAS@Directiva','','','INFOBRAS']
+  ]},
+  {n:'Gestionar modificaciones durante la ejecución', w:'UEI', o:'Modificaciones registradas antes de ejecutarse', act:[
+   ['Sustentar y registrar las modificaciones antes de ejecutarlas, sin cambiar la concepción técnica ni el dimensionamiento','UEI','Formato 08-A u 08-C actualizado','DS140@arts. 13.3 y 17.10|DIR6301@art. 33.2','','','Banco de Inversiones'],
+   ['Gestionar los recursos presupuestales que demanden las modificaciones','OPP','Modificación presupuestaria','DL1440@arts. 45 a 47','','UEI']
+  ]},
+  {n:'Hacer seguimiento', w:'OPMI', o:'Alertas y acuerdos de mejora', act:[
+   ['Monitorear el avance físico y financiero de las inversiones','OPMI','Reportes de seguimiento','DS140@arts. 10.3, 11.3 y 17.11','','','SSI'],
+   ['Conducir el Comité de Seguimiento de Inversiones (lo preside el OR; la OPMI es secretaría técnica)','OR','Acuerdos y compromisos','DS140@arts. 9.4 y 10.3','A','OPMI,UEI'],
+   ['Hacer control simultáneo de la ejecución','CGR','Informes de control','CSIM@Directiva','O','OCI']
+  ]}
+ ]},
+
+{id:'I5', s:'I', ph:4, n:'Cierre de la inversión', w:'UEI',
+ f:'Termina formalmente la inversión: liquida, registra el cierre y entrega los activos a quien prestará el servicio.',
+ i:'Obra o adquisición culminada y liquidada', o:'Formato 09 registrado; activos en el patrimonio',
+ src:'DS140@arts. 13.3 y 17.12|CIERRE@Nota Técnica|DBIEN@Directiva',
+ pr:[
+  {n:'Cerrar y transferir los activos', w:'UEI', o:'Inversión cerrada', act:[
+   ['Culminar la liquidación física y financiera (en obras por contrata, la liquidación del contrato)','UEI','Liquidación','RLGCP@art. 215','','DEC'],
+   ['Registrar el cierre con el Formato 09 según la Nota Técnica de cierre','UEI','Formato 09','DS140@arts. 13.3 y 17.12|CIERRE@Nota Técnica','A','','Banco de Inversiones'],
+   ['Entregar los activos a la unidad que opera el servicio y darlos de alta en el patrimonio y en la contabilidad','ALM','Activos registrados','DBIEN@Directiva|DL1438@TUO','','UEI,UP,CONT'],
+   ['Elaborar el programa de mantenimiento de los activos','UEI','Programa de mantenimiento','DS140@art. 13.3','','UP']
+  ]}
+ ]},
+
+{id:'I6', s:'I', ph:4, n:'Funcionamiento y evaluación ex post', w:'UP',
+ f:'Opera y mantiene los activos y comprueba, después, si la inversión logró lo que prometió.',
+ i:'Activos entregados; programa de mantenimiento', o:'Servicio en operación; evaluaciones ex post',
+ src:'DS140@arts. 9.3 y 18|SEGEXP@Lineamientos|EXPOST@Lineamientos',
+ pr:[
+  {n:'Operar y mantener', w:'UP', o:'Servicio sostenido', act:[
+   ['Designar a la unidad orgánica a cargo de la Unidad Productora','OR','Designación','DS140@art. 9.3','A'],
+   ['Asegurar presupuesto para la operación y el mantenimiento de los activos','TIT','O&M programada','DS140@art. 18.1|DL1440@art. 27.3','','OPP'],
+   ['Ejecutar el mantenimiento y reportar el inventario de activos','UP','Inventario actualizado','DS140@art. 18.2','','UF']
+  ]},
+  {n:'Evaluar ex post', w:'OPMI', o:'Lecciones para nuevas inversiones', act:[
+   ['Hacer el seguimiento ex post y la evaluación ex post de corto plazo','OPMI','Informe de evaluación','DS140@arts. 10.3 y 11.3|SEGEXP@Lineamientos','','UF,UP'],
+   ['Hacer evaluaciones ex post de mediano y largo plazo y publicar sus resultados','DGPMI','Evaluación publicada','DS140@art. 8.2|EXPOST@Lineamientos','','OPMI']
+  ]}
+ ]},
+
+{id:'C1', s:'C', ph:0, n:'Programación multianual de bienes, servicios y obras (CMN)', w:'DEC',
+ f:'Identifica, cuantifica, valoriza y prioriza lo que la entidad necesitará comprar en al menos tres años. Su producto es el Cuadro Multianual de Necesidades (CMN).',
+ i:'POI, APM, PMI y existencias de almacén', o:'CMN aprobado y publicado',
+ src:'DL1439@SNA|PMBSO@arts. 7 a 33|LEY32069@art. 46.1',
+ pr:[
+  {n:'Identificar necesidades', w:'AU', o:'Necesidades identificadas y valorizadas', t:'Del 1.er trimestre del año anterior al 7.º día hábil de abril', act:[
+   ['Dirigir la programación y orientar a las áreas usuarias','DEC','Lineamientos internos y cronograma','PMBSO@art. 8'],
+   ['Entregar a Abastecimiento la información de planeamiento y presupuesto (POI, metas, APM)','OPP','Información para programar','PMBSO@art. 9','','OPL'],
+   ['Identificar, cuantificar y calendarizar las necesidades, incluida la O&M de activos y lo que demandan las inversiones del PMI','AU','Necesidades del área','PMBSO@arts. 10 y 13 a 17','','DEC','SIAF-RP']
+  ]},
+  {n:'Clasificar y priorizar', w:'AU', o:'Necesidades priorizadas', t:'De julio al último día hábil de setiembre del año anterior', act:[
+   ['Clasificar y priorizar las necesidades según la APM','AU','Necesidades priorizadas','PMBSO@arts. 20 a 24','','DEC']
+  ]},
+  {n:'Consolidar y aprobar el CMN', w:'DEC', o:'CMN aprobado y publicado', t:'Dentro de los 15 días hábiles siguientes a la aprobación del PIA', act:[
+   ['Ajustar la priorización con el PIA que comunica la Oficina de Presupuesto','AU','Reporte de necesidades actualizado','PMBSO@arts. 26 a 28','','OPP,DEC'],
+   ['Consolidar el CMN sin superar el PIA ni la APM','DEC','CMN consolidado','PMBSO@arts. 29 y 30.3'],
+   ['Aprobar el CMN','AGA','CMN aprobado','PMBSO@art. 30.4','A'],
+   ['Publicar el CMN en la sede digital (5 días hábiles)','DEC','CMN publicado','PMBSO@art. 30.5'],
+   ['Modificar el CMN cuando aparezcan necesidades no programadas','DEC','CMN modificado','PMBSO@art. 32|RLGCP@art. 42.3','','AU,AGA']
+  ]}
+ ]},
+
+{id:'C2', s:'C', ph:2, n:'Plan Anual de Contrataciones (PAC)', w:'DEC',
+ f:'Ordena las contrataciones del año que salen del CMN y las hace públicas.',
+ i:'CMN aprobado; PIA', o:'PAC aprobado, publicado y segmentado',
+ src:'DPAC@art. 8|RLGCP@arts. 41 y 42 y 1.ª DCT',
+ pr:[
+  {n:'Aprobar, publicar y segmentar el PAC', w:'DEC', o:'PAC vigente y cronograma de requerimientos', t:'Dentro de los 15 días hábiles siguientes a la aprobación del PIA', act:[
+   ['Elaborar el PAC con las contrataciones del año previstas en el CMN','DEC','Proyecto de PAC','DPAC@Directiva|RLGCP@1.ª DCT'],
+   ['Aprobar el PAC','AGA','PAC aprobado','DPAC@art. 8.1','A'],
+   ['Publicar el PAC en la Pladicop (5 días hábiles)','DEC','PAC publicado','DPAC@Directiva','','','Pladicop (SEACE)'],
+   ['Segmentar las contrataciones y comunicar a las áreas usuarias el cronograma de requerimientos','DEC','Segmentación y cronograma','RLGCP@art. 42','','AU'],
+   ['Modificar el PAC para incluir o excluir contrataciones','AGA','PAC modificado','DPAC@Directiva','A','DEC']
+  ]}
+ ]},
+
+{id:'C3', s:'C', ph:3, n:'Actuaciones preparatorias', w:'DEC',
+ f:'Prepara la compra: define qué se necesita, cuánto cuesta en el mercado, cómo se contratará y asegura el presupuesto.',
+ i:'PAC; requerimiento del área usuaria; expediente técnico (en obras)', o:'Expediente de contratación aprobado y bases',
+ src:'LEY32069@arts. 45 a 52|RLGCP@arts. 41 a 61|DREQ@Directiva|GUIAAP@Guía|DBASES@Directiva',
+ pr:[
+  {n:'Formular el requerimiento', w:'AU', o:'Requerimiento final', act:[
+   ['Formular el requerimiento: especificaciones técnicas (bienes), términos de referencia (servicios) o expediente técnico (obras)','AU','Requerimiento','LEY32069@arts. 46.1 y 46.4|RLGCP@art. 44','','DEC'],
+   ['En obras, usar como requerimiento el expediente técnico aprobado en la fase de Ejecución de Invierte.pe','UEI','Expediente técnico como requerimiento','LEY32069@art. 46.4|DS140@art. 17.9','','DEC'],
+   ['Compatibilizar el requerimiento cuando corresponda','DEC','Requerimiento compatibilizado','DREQ@Directiva|RLGCP@art. 54.2','','AU']
+  ]},
+  {n:'Interactuar con el mercado y definir la estrategia', w:'DEC', o:'Estrategia de contratación y cuantía', act:[
+   ['Indagar o consultar al mercado para verificar oferta y competencia y estimar el presupuesto','DEC','Informe de interacción con el mercado','LEY32069@art. 47|RLGCP@arts. 47 a 50|GUIAAP@Guía'],
+   ['Determinar la cuantía y pedir la certificación o previsión presupuestal','DEC','Cuantía y certificación','LEY32069@art. 48|RLGCP@art. 53.1','','UE,OPP'],
+   ['Elaborar la estrategia de contratación: procedimiento, modalidad de pago, riesgos y, en obras, sistema de entrega','DEC','Estrategia de contratación','LEY32069@art. 49|RLGCP@art. 46|GUIAAP@Formato'],
+   ['Verificar que no haya fraccionamiento y usar catálogos o compras corporativas cuando sean obligatorios','DEC','Mecanismo de contratación definido','LEY32069@art. 50|RLGCP@arts. 45 y 278|DCAT@Directiva']
+  ]},
+  {n:'Aprobar el expediente y preparar las bases', w:'AGA', o:'Expediente aprobado y bases', act:[
+   ['Designar a los evaluadores (comprador público, comité o jurado)','AGA','Documento de designación','LEY32069@art. 52|RLGCP@arts. 56 a 60','A','DEC'],
+   ['Aprobar el expediente de contratación; la necesidad debe estar en el CMN','AGA','Expediente aprobado','RLGCP@arts. 54.2 y 54.3','A','DEC'],
+   ['Elaborar las bases con las bases estándar','EVAL','Bases','RLGCP@arts. 55 y 63.1|DBASES@Directiva']
+  ]}
+ ]},
+
+{id:'C4', s:'C', ph:3, n:'Selección del proveedor', w:'EVAL',
+ f:'Elige la oferta con mejor valor por dinero mediante un procedimiento público y termina con el contrato firmado.',
+ i:'Expediente aprobado y bases', o:'Buena pro consentida y contrato perfeccionado',
+ src:'LEY32069@arts. 53 a 57 y 72 a 75|RLGCP@arts. 62 a 103|DELEV@Directiva|DSEACE@Directiva',
+ pr:[
+  {n:'Convocar y absolver cuestionamientos', w:'EVAL', o:'Bases integradas', act:[
+   ['Convocar en la Pladicop con aviso, cronograma y bases','EVAL','Convocatoria publicada','RLGCP@art. 63','','DEC','Pladicop (SEACE)'],
+   ['Registrarse como participante','PROV','Participantes registrados','RLGCP@art. 65','','','Pladicop (SEACE)'],
+   ['Absolver consultas y observaciones e integrar las bases','EVAL','Pliego de absolución y bases integradas','RLGCP@art. 66'],
+   ['Emitir pronunciamiento si se eleva el pliego de absolución','OECE','Pronunciamiento','RLGCP@art. 67|DELEV@Directiva','O']
+  ]},
+  {n:'Evaluar ofertas y otorgar la buena pro', w:'EVAL', o:'Buena pro consentida', act:[
+   ['Presentar ofertas','PROV','Ofertas','RLGCP@arts. 68 y 69','','','Pladicop (SEACE)'],
+   ['Admitir, calificar y evaluar las ofertas técnicas y económicas','EVAL','Cuadro de evaluación','RLGCP@arts. 71 a 75'],
+   ['En obras, si la oferta supera la cuantía, gestionar más certificación o negociar con el postor','DEC','Certificación ampliada o negociación','RLGCP@art. 167','','OPP,EVAL'],
+   ['Otorgar y publicar la buena pro','EVAL','Buena pro','RLGCP@art. 80','A','','Pladicop (SEACE)'],
+   ['Resolver apelaciones: el TCP si la cuantía supera 50 UIT; en los demás casos, la autoridad de la gestión administrativa','TCP','Resolución del recurso','LEY32069@arts. 72 a 75|RLGCP@arts. 302 a 317','A','AGA,PROV'],
+   ['Registrar el consentimiento de la buena pro','EVAL','Buena pro consentida','RLGCP@art. 82','','','Pladicop (SEACE)']
+  ]},
+  {n:'Perfeccionar el contrato', w:'DEC', o:'Contrato firmado u orden recibida', act:[
+   ['Presentar los requisitos para perfeccionar el contrato (8 días hábiles; 5 si no hay garantía)','PROV','Requisitos','RLGCP@arts. 88 y 90'],
+   ['Revisar los requisitos y perfeccionar el contrato (3 días hábiles)','DEC','Contrato','RLGCP@arts. 87 y 90.3'],
+   ['Registrar el compromiso presupuestal','UE','Compromiso','DL1440@art. 42','','','SIAF-RP']
+  ]},
+  {n:'Usar otras vías de contratación', w:'DEC', o:'Contratación por la vía que corresponda', act:[
+   ['Contratos menores (hasta 8 UIT): sin procedimiento de selección y publicados en la Pladicop','DEC','Orden de compra o de servicio','LEY32069@art. 34|RLGCP@arts. 226 a 229','','AU','Pladicop (SEACE)'],
+   ['Comprar por catálogos electrónicos de acuerdos marco de Perú Compras','DEC','Orden por catálogo','LEY32069@arts. 39 y 43|RLGCP@arts. 277 a 279|DCAT@Directiva','','PCOMPRAS','Catálogos Perú Compras'],
+   ['Contratar directamente en los supuestos de ley, con aprobación de la autoridad de la gestión administrativa o del Titular','AGA','Aprobación de la contratación directa','LEY32069@art. 55|RLGCP@arts. 100 a 103','A','TIT'],
+   ['Atender emergencias con las reglas especiales','DEC','Contratación de emergencia','LEY32069@art. 40|RLGCP@arts. 282 a 292|GUIAEM@Guía']
+  ]}
+ ]},
+
+{id:'C5', s:'C', ph:3, n:'Ejecución contractual', w:'AU',
+ f:'Asegura que el contratista entregue lo pactado, en plazo y con calidad, y que la entidad pague a tiempo.',
+ i:'Contrato perfeccionado', o:'Prestaciones con conformidad y pagadas',
+ src:'LEY32069@arts. 58 a 69|RLGCP@arts. 104 a 124, 141 a 145 y 185 a 212|DCUAD@Directiva',
+ pr:[
+  {n:'Ejecutar y supervisar', w:'DEC', o:'Prestaciones en curso y controladas', act:[
+   ['Ejecutar las prestaciones; gestionar garantías y adelantos','PROV','Prestaciones','LEY32069@arts. 61 y 66|RLGCP@arts. 113 a 118 y 178 a 181','','DEC'],
+   ['En obras, supervisar o inspeccionar y llevar el cuaderno de incidencias','SUP','Cuaderno de incidencias e informes','LEY32069@art. 62|RLGCP@arts. 186 a 188|DCUAD@Directiva','O','PROV,UEI'],
+   ['Aplicar penalidades si hay retraso o incumplimiento','DEC','Penalidades','RLGCP@arts. 119 y 120']
+  ]},
+  {n:'Modificar el contrato', w:'DEC', o:'Modificación aprobada', act:[
+   ['Sustentar y aprobar adicionales, reducciones o ampliaciones de plazo, con certificación presupuestal','TIT','Resolución de modificación','LEY32069@arts. 63 y 64|RLGCP@arts. 141, 142 y 193 a 200','A','AU,DEC,OPP'],
+   ['Si la modificación cambia la inversión, registrarla en el Banco de Inversiones antes de ejecutarla','UEI','Registro de la modificación','DS140@arts. 13.3 y 17.10','','','Banco de Inversiones']
+  ]},
+  {n:'Recibir, dar conformidad y pagar', w:'AU', o:'Conformidad y pago', act:[
+   ['Recibir los bienes en almacén según las reglas del abastecimiento','ALM','Ingreso a almacén','RLGCP@art. 144.2|DALM@Directiva'],
+   ['Otorgar la conformidad (7 días; 20 días en consultorías)','AU','Conformidad','RLGCP@arts. 144.1 y 144.3','O'],
+   ['En obras, valorizar mensualmente con el supervisor','SUP','Valorización','RLGCP@art. 210','','PROV,DEC'],
+   ['Devengar y pagar dentro de los 10 días hábiles posteriores a la conformidad','TES','Pago','LEY32069@art. 67.3|DL1440@arts. 43 y 44','','UE','SIAF-RP']
+  ]}
+ ]},
+
+{id:'C6', s:'C', ph:4, n:'Cierre del contrato', w:'DEC',
+ f:'Cierra la relación con el contratista: recepción de obra, liquidación, constancia y solución de controversias.',
+ i:'Prestaciones culminadas', o:'Liquidación o constancia de prestación; controversias resueltas',
+ src:'RLGCP@arts. 124, 212 y 215|LEY32069@arts. 76 a 86',
+ pr:[
+  {n:'Recibir, liquidar y cerrar', w:'DEC', o:'Contrato cerrado', act:[
+   ['En obras, emitir el certificado de conformidad técnica (5 días) cuando la obra está culminada','SUP','Certificado de conformidad técnica','RLGCP@art. 212.1','O','PROV'],
+   ['Recibir la obra mediante un comité de recepción que la verifica en sitio (hasta 15 días)','UEI','Acta de recepción','RLGCP@arts. 212.2 y 212.3','','SUP,PROV'],
+   ['Presentar y aprobar la liquidación de la obra o de la consultoría','PROV','Liquidación aprobada','RLGCP@art. 215','','DEC,UEI'],
+   ['Emitir la constancia de prestación','DEC','Constancia','RLGCP@art. 124'],
+   ['Resolver controversias por junta de disputas, conciliación o arbitraje','DEC','Acuerdo o laudo','LEY32069@arts. 76 a 84','','PROV']
+  ]}
+ ]},
+
+{id:'E1', s:'E', ph:0, n:'Programación del endeudamiento y Ley anual', w:'DGTP',
+ f:'Decide cuánto puede endeudarse el Estado en el año y para qué. Solo caben las operaciones previstas dentro del monto máximo de la ley.',
+ i:'MMM; EGIAP; PMI; necesidades de financiamiento de los sectores', o:'Ley anual de endeudamiento con monto máximo y destino',
+ src:'DL1437@arts. 9 y 26|CONST@art. 78|LEY32515@Ley 2026|EGIAP@Estrategia',
+ pr:[
+  {n:'Programar las concertaciones', w:'DGTP', o:'Programación multianual de concertaciones, desembolsos y servicio de deuda', act:[
+   ['Identificar que la inversión requiere endeudamiento y pedir la opinión de la DGTP para incluirla en el PMI','OPMI','Solicitud de opinión','DS140@arts. 10.3, 11.3 y 14.6','','DGTP,TIT'],
+   ['Elaborar la programación multianual de concertaciones, desembolsos y pago de la deuda, en armonía con el MMM, la EGIAP y el PMI','DGTP','Programación multianual','DL1437@art. 26|EGIAP@Estrategia']
+  ]},
+  {n:'Aprobar la Ley anual de endeudamiento', w:'CONG', o:'Ley de Endeudamiento del año', t:'Proyecto hasta el 30 de agosto; aprobación hasta el 30 de noviembre', act:[
+   ['Remitir el proyecto de Ley de Endeudamiento junto con el de Presupuesto','CM','Proyecto de ley','CONST@art. 78','','DGTP'],
+   ['Aprobar el monto máximo de endeudamiento y su destino, y el de las garantías','CONG','Ley anual publicada','DL1437@art. 9|LEY32515@Ley 2026','A']
+  ]}
+ ]},
+
+{id:'E2', s:'E', ph:1, n:'Preparación y solicitud de la operación', w:'TIT',
+ f:'Arma el expediente que justifica el préstamo y lo presenta al MEF; luego la DGTP negocia con la fuente.',
+ i:'Proyecto en el PMI; estudio de preinversión', o:'Minuta de negociación firmada',
+ src:'DL1437@arts. 17 y 27|DCONC@arts. 6 a 11|DS140@art. 16.6|DL1440@art. 75.2',
+ pr:[
+  {n:'Reunir los requisitos de la entidad', w:'UF', o:'Expediente de solicitud completo', act:[
+   ['Obtener la opinión favorable de la DGPMI antes de declarar la viabilidad','DGPMI','Opinión favorable','DL1437@art. 27.2|DCONC@art. 7|DS140@art. 16.6','O','UF'],
+   ['Declarar la viabilidad y acreditar que el proyecto está en el PMI','UF','Viabilidad y constancia del PMI','DCONC@art. 7','','OPMI'],
+   ['Emitir opinión favorable sobre el financiamiento de las contrapartidas y del servicio de la deuda','OPP','Opinión de presupuesto','DL1440@art. 75.2|DCONC@art. 8.2|DIR5001@art. 18','O'],
+   ['Preparar el cronograma de ejecución financiera y, si la entidad pagará la deuda, el análisis de capacidad de pago','UEI','Cronograma y análisis','DCONC@arts. 7 y 8.1','','OPP'],
+   ['Enviar la solicitud del Titular del Sector al Ministro de Economía (GR y GL: con acuerdo de Consejo o Concejo)','TIT','Solicitud de concertación','DL1437@art. 27.2|DCONC@arts. 7 y 9','A','CONSEJO']
+  ]},
+  {n:'Gestionar con la fuente y negociar', w:'DGTP', o:'Minuta de negociación', act:[
+   ['Pedir a la fuente el préstamo y las misiones de preparación','MEFMIN','Carta a la fuente','DCONC@art. 10','','DGTP'],
+   ['Preparar el programa con la entidad y remitir el proyecto de contrato','FUENTE','Proyecto de contrato','DCONC@art. 11.1','','UEI,DGTP'],
+   ['Conducir la negociación con la OGAJ del MEF, la DGPMI, el sector y la fuente, y firmar la minuta','DGTP','Minuta de negociación','DL1437@art. 17|DCONC@arts. 11.3 y 11.4','A','OGAJMEF,DGPMI,TIT,FUENTE']
+  ]}
+ ]},
+
+{id:'E3', s:'E', ph:2, n:'Aprobación y suscripción del préstamo', w:'DGTP',
+ f:'Convierte la negociación en una obligación del Estado: informe previo de la Contraloría, decreto supremo y contrato.',
+ i:'Minuta de negociación y expediente', o:'Decreto supremo publicado y contrato suscrito',
+ src:'DL1437@arts. 18, 28, 36 y 43|DCONC@arts. 12 a 16|L27785@art. 22, lit. l|CGRPREV@Directiva|DS246@Ejemplo',
+ pr:[
+  {n:'Obtener los informes y aprobar por decreto supremo', w:'DGTP', o:'Decreto supremo de aprobación', act:[
+   ['Armar el expediente de la operación y solicitar el informe previo de la CGR','DGTP','Solicitud de informe previo','DCONC@art. 12'],
+   ['Emitir el informe previo (5 días hábiles de recibido el expediente)','CGR','Informe previo','L27785@art. 22, lit. l|DL1437@art. 43|CGRPREV@Directiva','O'],
+   ['Emitir los informes del MEF: impacto fiscal y reglas (DGPMACDF), límites de la ley y servicio de deuda (DGTP) y opinión legal (OGAJ)','DGTP','Informes del MEF','DCONC@arts. 13.5 a 13.7','','DGPMACDF,OGAJMEF'],
+   ['Aprobar la operación por decreto supremo con el voto del Consejo de Ministros','CM','Decreto supremo','DL1437@art. 28.1|DCONC@art. 13.1|DS246@Ejemplo','A']
+  ]},
+  {n:'Suscribir el contrato y los convenios', w:'MEFMIN', o:'Contrato de préstamo vigente', act:[
+   ['Suscribir el contrato después de publicado el decreto supremo','MEFMIN','Contrato suscrito','DL1437@art. 18.1|DCONC@art. 14','A','DGTP,FUENTE'],
+   ['Suscribir el convenio de traspaso de recursos si la deuda la atiende la entidad (GR, GL o entidad del GN con fuente distinta a RO)','DGTP','Convenio de traspaso aprobado por RM','DL1437@art. 36|DCONC@art. 15','','TIT']
+  ]}
+ ]},
+
+{id:'E4', s:'E', ph:3, n:'Desembolsos y ejecución del préstamo', w:'UE',
+ f:'Hace llegar los recursos al proyecto: se incorporan al presupuesto, se contrata con las reglas del financiador y se piden los desembolsos.',
+ i:'Contrato de préstamo vigente', o:'Recursos desembolsados, registrados y conciliados',
+ src:'DL1437@arts. 39 y 40|DDES@arts. 6 a 19|DL1440@arts. 27.4, 50 y 75.1|LEY32069@art. 7.1, lit. f',
+ pr:[
+  {n:'Incorporar los recursos al presupuesto', w:'OPP', o:'Recursos de operaciones de crédito en el PIA o el PIM', act:[
+   ['Presupuestar la fuente Recursos por Operaciones Oficiales de Crédito cuando hay contrato u opinión favorable de la DGTP','OPP','Créditos presupuestarios del préstamo','DL1440@art. 27.4','','','SIAF-RP'],
+   ['Incorporar los recursos durante el año con la modificación que corresponda según el nivel de gobierno','OPP','Modificación aprobada','DL1440@arts. 46 y 50|DIR5001@art. 20','','TIT,CONSEJO']
+  ]},
+  {n:'Contratar con las reglas del financiador', w:'DEC', o:'Contratos del préstamo', act:[
+   ['Aplicar las políticas de adquisiciones del financiador; la Ley 32069 se aplica solo en sus principios','DEC','Procesos según el contrato de préstamo','LEY32069@art. 7.1, lit. f|DL1440@art. 75.1|BM@Regulaciones|BID@Políticas|CAF@Lineamientos','','UEI,FUENTE']
+  ]},
+  {n:'Solicitar, recibir y conciliar desembolsos', w:'UE', o:'Desembolsos registrados y conciliados', act:[
+   ['Programar los desembolsos multianuales y anuales','DGTP','Programa de desembolsos','DDES@arts. 6 a 8','','UE'],
+   ['Acreditar a los representantes de la unidad ejecutora ante la DGTP','UE','Representantes acreditados','DDES@art. 10'],
+   ['Pedir a la DGTP la autorización de cada solicitud de desembolso, sin superar lo programado en el año','UE','Autorización de la DGTP','DL1437@art. 39.1|DDES@art. 12','','DGTP'],
+   ['Recibir el desembolso en la Cuenta Única del Tesoro y registrarlo en el SIAF','TES','Desembolso registrado','DL1437@art. 39.2|DDES@art. 14','','DGTP','SIAF-RP'],
+   ['Informar la recepción y conciliar con la DGTP al 30 de junio y al 31 de diciembre','UE','Conciliación','DL1437@arts. 40.2 y 40.3|DDES@art. 18'],
+   ['Ampliar el plazo de desembolso o devolver los saldos no usados','UE','Enmienda o devolución','DDES@arts. 17 y 19','','DGTP,FUENTE']
+  ]}
+ ]},
+
+{id:'E5', s:'E', ph:4, n:'Servicio de la deuda y cierre del préstamo', w:'DGTP',
+ f:'Paga intereses y amortizaciones durante la vida del préstamo y cierra la operación cuando termina el proyecto.',
+ i:'Contrato y convenios vigentes', o:'Deuda atendida y préstamo cerrado',
+ src:'DL1437@arts. 26.3 y 41|DDES@art. 19',
+ pr:[
+  {n:'Pagar la deuda y cerrar', w:'DGTP', o:'Servicio de deuda atendido', act:[
+   ['Programar el pago del servicio de la deuda','DGTP','Programación del servicio','DL1437@art. 26.3','','DGPP'],
+   ['Pagar el servicio con el presupuesto del MEF; si la entidad usa una fuente distinta a RO, transferir los fondos a la DGTP según el convenio','DGTP','Pago de cuotas','DL1437@arts. 41.1 y 41.2','','UE'],
+   ['Entidades fuera del Gobierno Nacional con garantía: pagar directamente e informar a la DGTP','TIT','Pago directo informado','DL1437@art. 41.3','','TES'],
+   ['Al cierre del proyecto, devolver a la fuente los montos no utilizados y cerrar la inversión','UE','Préstamo cerrado','DDES@art. 19.1','','UEI,DGTP']
+  ]}
+ ]}
+],
+
+/* ---------- Interconexiones entre sistemas: [desde, hacia, qué pasa, fuentes] ---------- */
+links:[
+ ['PL1','P1','El POI multianual orienta la asignación presupuestal; los objetivos del PEI se articulan con categorías y productos del presupuesto.','DCEPLAN@arts. 22.3 y 26.4'],
+ ['PL1','I1','Las metas de cierre de brechas del PMI se alinean con los objetivos del planeamiento estratégico.','DS140@art. 14.3'],
+ ['C1','PL1','El CMN aporta el costo de bienes y servicios para las actividades e inversiones del POI multianual.','DCEPLAN@art. 26.4'],
+ ['I1','P1','El PMI consolidado es insumo de la APM; solo se asigna presupuesto a inversiones del PMI.','DS140@art. 14.8|DL1440@art. 25.1|DIR6301@art. 16.6'],
+ ['C1','P1','La programación de bienes, servicios y O&M informa los costos que la DGA entrega para estimar la APM.','DL1440@art. 25.1|PMBSO@art. 7'],
+ ['I1','E1','Para incluir en el PMI una inversión que se financiará con deuda se necesita la opinión previa de la DGTP.','DS140@art. 14.6'],
+ ['E1','P1','La DGTP informa el cronograma de desembolsos de deuda para estimar los ingresos de la APM.','DIR5002@art. 9.2|DL1440@art. 25.1'],
+ ['I2','E2','En endeudamiento externo, la opinión favorable de la DGPMI se pide antes de declarar la viabilidad.','DL1437@art. 27.2|DS140@art. 16.6'],
+ ['P1','E2','La Oficina de Presupuesto opina sobre el financiamiento de las contrapartidas y lo prevé en la programación.','DL1440@art. 75.2|DIR5001@art. 18'],
+ ['E3','P2','Los recursos de un préstamo solo se presupuestan si hay contrato firmado u opinión favorable de la DGTP.','DL1440@art. 27.4'],
+ ['P3','C1','Con el PIA aprobado se consolida y aprueba el CMN en 15 días hábiles.','PMBSO@arts. 26 y 30.4'],
+ ['P3','C2','El PAC se aprueba dentro de los 15 días hábiles siguientes al PIA.','DPAC@art. 8.1'],
+ ['I3','C3','En obras, el expediente técnico aprobado es el requerimiento de la contratación.','LEY32069@art. 46.4|DS140@art. 17.9'],
+ ['P4','C3','Sin certificación o previsión presupuestal no se aprueba el expediente de contratación ni se convoca.','RLGCP@arts. 54.2 y 63.1|DL1440@art. 41.2'],
+ ['C4','P4','El contrato perfeccionado permite registrar el compromiso.','DL1440@art. 42'],
+ ['C5','P4','La conformidad del área usuaria permite el devengado y el pago en 10 días hábiles.','DL1440@art. 43.2|LEY32069@art. 67.3'],
+ ['C5','I4','Una modificación del contrato que cambia la inversión se registra antes en el Banco de Inversiones.','DS140@arts. 13.3 y 17.10'],
+ ['E4','C3','Lo que se compra con un préstamo externo sigue las reglas del financiador.','LEY32069@art. 7.1, lit. f|DL1440@art. 75.1'],
+ ['E4','P5','Los desembolsos se incorporan al presupuesto mediante modificaciones presupuestarias.','DL1440@arts. 46 y 50'],
+ ['I1','P5','Para anular recursos de inversiones se requiere la opinión previa favorable de la OPMI (regla de 2026).','LEY32513@art. 11.1'],
+ ['I6','P1','La operación y el mantenimiento de los activos nuevos deben estar previstos en el presupuesto.','DS140@arts. 14.3 y 18.1|DL1440@art. 27.3'],
+ ['C6','I5','La liquidación del contrato permite cerrar la inversión con el Formato 09.','RLGCP@art. 215|DS140@art. 17.12'],
+ ['P6','P1','Las recomendaciones de la evaluación se usan en la siguiente programación.','DL1440@art. 55.2']
+],
+
+/* ---------- Rutas según la pregunta inicial ---------- */
+routes:{
+ proc:{n:'Un proceso: comprar un bien o servicio para operar',
+   d:'Para funcionar (insumos, servicios, mantenimiento) el centro es Contrataciones y el dinero lo pone Presupuesto. No pasa por Invierte.pe.',
+   b:['PL1','C1','P1','P2','P3','C2','C3','P4','C4','C5','C6','P6']},
+ proy:{n:'Un proyecto de inversión con recursos de la entidad',
+   d:'Para crear, ampliar, mejorar o recuperar la capacidad de un servicio: Invierte.pe define qué y cómo, Presupuesto financia y Contrataciones ejecuta.',
+   b:['PL1','I1','C1','P1','I2','P2','P3','C2','I3','C3','P4','C4','C5','I4','C6','I5','I6']},
+ deuda:{n:'Un proyecto de inversión que requiere endeudamiento',
+   d:'Si los recursos no alcanzan, Endeudamiento entra desde la programación: la DGTP opina para incluir la inversión en el PMI, la DGPMI opina antes de la viabilidad y la operación debe caber en la ley anual. Las compras del préstamo siguen las reglas del financiador.',
+   b:['PL1','I1','E1','P1','I2','E2','E3','P2','P3','E4','I3','P4','C3','C4','C5','I4','C6','I5','E5','I6']}
+}
+};
+</script>
+
+<script>
+/* ================= APLICACIÓN ================= */
+(function(){
+const D = window.MPE;
+const $app = document.getElementById('app');
+const KEY_ALIAS = 'mpe-alias-v1', KEY_Q = 'mpe-ruta-v1';
+const TIPO = {A:'Aprueba o decide', O:'Opina o controla', '':'Ejecuta'};
+
+function store(k, v){ try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)||'null'); localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
+let alias = store(KEY_ALIAS) || {};
+let q = store(KEY_Q) || {q1:'', q2:''};
+
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const sysVar = s => 'var(' + D.sys[s].v + ')';
+
+function parseSrc(str){ return String(str||'').split('|').filter(Boolean).map(x => { const i = x.indexOf('@'); return i<0 ? {id:x, ref:''} : {id:x.slice(0,i), ref:x.slice(i+1)}; }); }
+
+/* Índices */
+const BOX = {}, PROC = {}, ALL = [];
+D.boxes.forEach(b => {
+  BOX[b.id] = b; b.srcs = parseSrc(b.src);
+  b.pr.forEach((p, i) => {
+    p.id = b.id + '-' + (i+1); p.code = b.id + '.' + (i+1); p.box = b; p.i = i;
+    p.acts = p.act.map((t, j) => ({n:j+1, a:t[0], w:t[1], o:t[2], s:parseSrc(t[3]), k:t[4]||'', p:(t[5]||'').split(',').filter(Boolean), ap:t[6]||'', proc:p}));
+    PROC[p.id] = p; p.acts.forEach(a => ALL.push(a));
+  });
+});
+D.links.forEach(l => { l.s = parseSrc(l[3]); });
+
+/* Citas por norma (para el anexo) */
+const CITED = {};
+function cite(id, where){ (CITED[id] = CITED[id] || new Set()).add(where); }
+D.boxes.forEach(b => { b.srcs.forEach(s => cite(s.id, b.id)); b.pr.forEach(p => p.acts.forEach(a => a.s.forEach(s => cite(s.id, p.id)))); });
+
+/* Utilidades de render */
+function srcChip(s){
+  const n = D.norms[s.id]; if(!n) return '<span class="src">' + esc(s.id) + '</span>';
+  return '<a class="src" href="' + esc(n.u) + '" target="_blank" rel="noopener" title="' + esc(n.n) + '">' + esc(n.t) + (s.ref ? '<span class="r">· ' + esc(s.ref) + '</span>' : '') + ' ↗</a>';
+}
+function srcList(arr){ return '<div class="srcs">' + arr.map(srcChip).join('') + '</div>'; }
+function actorName(id){ const a = D.actors[id]; return a ? a.n : id; }
+function actorHTML(id, link){
+  const nm = esc(actorName(id));
+  const main = link ? '<a class="who" href="#actor-' + id + '">' + nm + '</a>' : '<span class="who">' + nm + '</span>';
+  return main + (alias[id] ? '<span class="alias">En tu entidad: ' + esc(alias[id]) + '</span>' : '');
+}
+function shortActor(id){ return esc(alias[id] || actorName(id)); }
+function boxChip(id){ const b = BOX[id]; return '<a class="chip" href="#' + id + '" style="--sc:' + sysVar(b.s) + '"><span class="c">' + id + '</span>' + esc(b.n) + '</a>'; }
+function crumbs(parts){ return '<nav class="crumbs" aria-label="Ruta de navegación"><a href="#mapa">Mapa general</a>' + parts.map(p => '<span class="sep">/</span>' + (p.h ? '<a href="#' + p.h + '">' + esc(p.t) + '</a>' : '<span>' + esc(p.t) + '</span>')).join('') + '</nav>'; }
+function toast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2600); }
+function currentRoute(){ return q.q1 === 'proc' ? 'proc' : q.q1 === 'inv' ? (q.q2 === 'deuda' ? 'deuda' : 'proy') : ''; }
+
+/* ---------- Vista: mapa macro ---------- */
+function viewMapa(){
+  const r = currentRoute(), R = r ? D.routes[r] : null;
+  const order = {}; if(R) R.b.forEach((id, i) => order[id] = i+1);
+  let h = '<section class="route" aria-labelledby="rq"><h2 id="rq">¿Qué vas a gestionar?</h2>';
+  h += '<div class="q"><div class="row-btns">' +
+       btn('q1','proc','Un bien o servicio para operar (proceso)') +
+       btn('q1','inv','Una inversión (proyecto o IOARR)') +
+       btn('q1','','Ver todo el mapa') + '</div></div>';
+  if(q.q1 === 'inv'){
+    h += '<div class="q"><p>¿Tienes los recursos para financiarla?</p><div class="row-btns">' +
+         btn('q2','','Sí, con el presupuesto de la entidad') + btn('q2','deuda','No, se requiere endeudamiento') + '</div></div>';
+  }
+  if(R){
+    h += '<p class="route-note"><b>' + esc(R.n) + '.</b> ' + esc(R.d) + '</p><ol class="steps">' +
+      R.b.map((id, i) => { const b = BOX[id]; return '<li><a href="#' + id + '" style="--sc:' + sysVar(b.s) + '"><span class="n">' + (i+1) + '</span><span class="c">' + id + '</span>' + esc(b.n) + '</a></li>'; }).join('') + '</ol>';
+  } else {
+    h += '<p class="route-note muted">Un <b>proceso</b> es una actividad permanente para que la entidad funcione. Un <b>proyecto de inversión</b> es una intervención temporal para crear, ampliar, mejorar o recuperar la capacidad de producir bienes o servicios (DS 140-2026-EF, art. 3). Elige una opción y el mapa marca la ruta en orden.</p>';
+  }
+  h += '</section>';
+  h += '<div class="search"><label class="small muted" for="buscar">Buscar en el mapa</label><input id="buscar" type="search" placeholder="Ej.: certificación, viabilidad, conformidad, desembolso, PAC" autocomplete="off"></div><ul class="results" id="res" hidden></ul>';
+  h += '<div class="gridwrap"><div class="mgrid' + (R ? ' has-route' : '') + '">';
+  h += '<div class="phead"></div>' + D.ph.map((p, i) => '<div class="phead"><span class="k">' + (i+1) + '</span>' + esc(p) + '</div>').join('');
+  Object.keys(D.sys).forEach(s => {
+    const S = D.sys[s];
+    h += '<div class="mrow" style="--sc:' + sysVar(s) + '"><div class="rlab"><b>' + esc(S.n) + '</b><span>' + esc(S.r) + '</span></div><div class="boxes">';
+    D.ph.forEach((p, i) => {
+      const bs = D.boxes.filter(b => b.s === s && b.ph === i);
+      h += '<div class="mcell">' + bs.map(b => boxHTML(b, order[b.id])).join('') + '</div>';
+    });
+    h += '</div></div>';
+  });
+  h += '</div></div>';
+  h += '<p class="legend">Cada caja es un macroproceso. Ábrela para ver sus procedimientos (nivel meso) y, dentro de cada procedimiento, las actividades con su responsable, resultado y fuente (nivel micro). Las columnas son las fases genéricas del ciclo de gestión; cada sistema las nombra a su manera. La pestaña <a href="#conexiones">Interconexiones</a> muestra dónde un sistema necesita del otro.</p>';
+  $app.innerHTML = h;
+  $app.querySelectorAll('[data-q]').forEach(el => el.addEventListener('click', () => {
+    const k = el.dataset.q, v = el.dataset.v; q[k] = v; if(k === 'q1' && v !== 'inv') q.q2 = ''; store(KEY_Q, q); viewMapa();
+  }));
+  const inp = document.getElementById('buscar'), res = document.getElementById('res');
+  inp.addEventListener('input', () => {
+    const t = norm(inp.value.trim()); if(t.length < 3){ res.hidden = true; res.innerHTML = ''; return; }
+    const hits = [];
+    D.boxes.forEach(b => { if(norm(b.n + ' ' + b.f).includes(t)) hits.push('<li><a href="#' + b.id + '" style="--sc:' + sysVar(b.s) + '"><span class="c">' + b.id + '</span> <b>' + esc(b.n) + '</b></a></li>'); });
+    Object.values(PROC).forEach(p => { if(norm(p.n).includes(t)) hits.push('<li><a href="#' + p.id + '" style="--sc:' + sysVar(p.box.s) + '"><span class="c">' + p.code + '</span> <b>' + esc(p.n) + '</b></a></li>'); });
+    ALL.forEach(a => { if(norm(a.a + ' ' + a.o + ' ' + actorName(a.w)).includes(t)) hits.push('<li><a href="#' + a.proc.id + '" style="--sc:' + sysVar(a.proc.box.s) + '"><span class="c">' + a.proc.code + '.' + a.n + '</span> ' + esc(a.a) + ' <span class="muted small">· ' + esc(actorName(a.w)) + '</span></a></li>'); });
+    res.innerHTML = hits.length ? hits.slice(0, 40).join('') : '<li><a href="#guia">Sin resultados. Prueba con otra palabra.</a></li>';
+    res.hidden = false;
+  });
+  function btn(k, v, label){ return '<button type="button" class="btn" data-q="' + k + '" data-v="' + v + '" aria-pressed="' + (q[k] === v) + '">' + esc(label) + '</button>'; }
+}
+function boxHTML(b, ord){
+  return '<a class="box' + (ord ? ' on' : '') + '" href="#' + b.id + '" style="--sc:' + sysVar(b.s) + '">' +
+    '<span class="bcode">' + b.id + '</span><span class="bname">' + esc(b.n) + '</span>' +
+    '<span class="bwho">' + shortActor(b.w) + '</span><span class="bph">' + esc(D.ph[b.ph]) + '</span>' +
+    (ord ? '<span class="ord" aria-label="Paso ' + ord + '">' + ord + '</span>' : '') + '</a>';
+}
+
+/* ---------- Vista: caja (meso) ---------- */
+function viewBox(id){
+  const b = BOX[id], S = D.sys[b.s];
+  const rel = D.links.filter(l => l[0] === id || l[1] === id);
+  let h = crumbs([{t: b.id + ' ' + b.n}]);
+  h += '<section class="head" style="--sc:' + sysVar(b.s) + '"><div class="tag"><span class="c">' + b.id + '</span><span>' + esc(S.n) + ' · Fase ' + (b.ph+1) + ': ' + esc(D.ph[b.ph]) + '</span><span>· Nivel macro</span></div>' +
+       '<h2>' + esc(b.n) + '</h2><p>' + esc(b.f) + '</p><dl class="facts">' +
+       '<div><dt>Responsable principal</dt><dd>' + actorHTML(b.w, true) + '</dd></div>' +
+       '<div><dt>Insumo</dt><dd>' + esc(b.i) + '</dd></div>' +
+       '<div><dt>Resultado</dt><dd>' + esc(b.o) + '</dd></div>' +
+       '<div><dt>Fuentes</dt><dd>' + srcList(b.srcs) + '</dd></div></dl></section>';
+  h += '<p class="lv">Procedimientos · nivel meso</p><ol class="meso" style="--sc:' + sysVar(b.s) + '">' + b.pr.map(p =>
+       '<li><a href="#' + p.id + '"><span class="n">' + p.code + '</span><span class="t">' + esc(p.n) + '</span>' +
+       '<span class="m">Responsable: ' + shortActor(p.w) + '</span><span class="m">Resultado: ' + esc(p.o) + '</span>' +
+       (p.t ? '<span class="m">Plazo: ' + esc(p.t) + '</span>' : '') +
+       '<span class="more">' + p.acts.length + ' actividades →</span></a></li>').join('') + '</ol>';
+  if(rel.length){
+    h += '<p class="lv">Se conecta con otros sistemas</p><ul class="links">' + rel.map(linkHTML).join('') + '</ul>';
+  }
+  $app.innerHTML = h;
+}
+function linkHTML(l){
+  return '<li><div class="pair">' + boxChip(l[0]) + '<span aria-hidden="true">→</span><span class="sr">hacia</span>' + boxChip(l[1]) + '</div><div>' + esc(l[2]) + '</div>' + srcList(l.s) + '</li>';
+}
+
+/* ---------- Vista: procedimiento (micro) ---------- */
+function viewProc(id){
+  const p = PROC[id], b = p.box, S = D.sys[b.s];
+  const srcs = []; const seen = {};
+  p.acts.forEach(a => a.s.forEach(s => { const k = s.id + s.ref; if(!seen[k]){ seen[k] = 1; srcs.push(s); } }));
+  let h = crumbs([{t: b.id + ' ' + b.n, h: b.id}, {t: p.code + ' ' + p.n}]);
+  h += '<section class="head" style="--sc:' + sysVar(b.s) + '"><div class="tag"><span class="c">' + p.code + '</span><span>' + esc(S.n) + ' · ' + esc(b.n) + '</span><span>· Nivel meso</span></div>' +
+       '<h2>' + esc(p.n) + '</h2><dl class="facts">' +
+       '<div><dt>Responsable del procedimiento</dt><dd>' + actorHTML(p.w, true) + '</dd></div>' +
+       '<div><dt>Resultado</dt><dd>' + esc(p.o) + '</dd></div>' +
+       (p.t ? '<div><dt>Plazo</dt><dd>' + esc(p.t) + '</dd></div>' : '') + '</dl></section>';
+  h += '<p class="lv">Actividades · nivel micro</p><div class="toolbar"><button type="button" class="btn" id="cp">Copiar para Excel</button><span class="small muted">Copia este procedimiento como tabla, con los nombres de tu entidad si los registraste en <a href="#actores">Mapa de actores</a>.</span></div><div id="cpbox"></div>';
+  h += '<ol class="acts" style="--sc:' + sysVar(b.s) + '"><li class="h" aria-hidden="true"><span>N.°</span><span>Actividad</span><span>Responsable</span><span>Resultado</span><span>Fuente</span></li>' +
+    p.acts.map(a => '<li><span class="n">' + p.code + '.' + a.n + '</span>' +
+      '<div class="cell first">' + esc(a.a) + (a.k ? '<span class="kb ' + a.k + '">' + TIPO[a.k] + '</span>' : '') + (a.ap ? '<span class="app">Aplicativo: ' + esc(a.ap) + '</span>' : '') + '</div>' +
+      '<div class="cell" data-l="Responsable">' + actorHTML(a.w, true) + (a.p.length ? '<span class="part">Participan: ' + a.p.map(shortActor).join(', ') + '</span>' : '') + '</div>' +
+      '<div class="cell" data-l="Resultado">' + esc(a.o) + '</div>' +
+      '<div class="cell" data-l="Fuente">' + srcList(a.s) + '</div></li>').join('') + '</ol>';
+  const prev = b.pr[p.i-1], next = b.pr[p.i+1];
+  h += '<div class="pager">' + (prev ? '<a href="#' + prev.id + '">← ' + prev.code + ' ' + esc(prev.n) + '</a>' : '<a href="#' + b.id + '">← Volver a ' + b.id + '</a>') +
+       (next ? '<a href="#' + next.id + '">' + next.code + ' ' + esc(next.n) + ' →</a>' : '<a href="#' + b.id + '">Volver a ' + b.id + ' →</a>') + '</div>';
+  $app.innerHTML = h;
+  document.getElementById('cp').addEventListener('click', () => copyTSV([p], document.getElementById('cpbox')));
+}
+
+/* ---------- Copiar a Excel ---------- */
+function clean(s){ return String(s||'').replace(/[\t\r\n]+/g, ' '); }
+function buildTSV(procs){
+  const rows = [['Sistema','Fase','Macroproceso','Procedimiento','N.°','Actividad','Tipo','Responsable','Responsable en mi entidad','Participan','Resultado','Aplicativo','Fuentes','Enlaces']];
+  procs.forEach(p => p.acts.forEach(a => {
+    rows.push([D.sys[p.box.s].n, D.ph[p.box.ph], p.box.id + ' ' + p.box.n, p.code + ' ' + p.n, p.code + '.' + a.n, a.a, TIPO[a.k], actorName(a.w), alias[a.w] || '',
+      a.p.map(x => alias[x] || actorName(x)).join('; '), a.o, a.ap,
+      a.s.map(s => (D.norms[s.id] ? D.norms[s.id].t : s.id) + (s.ref ? ' (' + s.ref + ')' : '')).join('; '),
+      a.s.map(s => D.norms[s.id] ? D.norms[s.id].u : '').join(' ')].map(clean));
+  }));
+  return rows.map(r => r.join('\t')).join('\n');
+}
+function copyTSV(procs, box){
+  const txt = buildTSV(procs);
+  const fallback = () => { box.innerHTML = '<div class="copybox"><p class="small">El navegador no permitió copiar. Selecciona todo el texto (Ctrl+A) y cópialo (Ctrl+C):</p><textarea id="cpta" readonly></textarea></div>'; const ta = document.getElementById('cpta'); ta.value = txt; ta.focus(); ta.select(); };
+  try{
+    navigator.clipboard.writeText(txt).then(() => toast('Copiado. Pégalo en Excel con Ctrl+V.'), fallback);
+  }catch(e){ fallback(); }
+}
+
+/* ---------- Vista: interconexiones ---------- */
+let linkFilter = '';
+function viewConexiones(){
+  let h = '<section class="block"><h2>Interconexiones entre sistemas</h2><p class="guide">Ningún sistema funciona solo. Estos son los puntos en que un sistema entrega a otro el insumo que necesita, o le pone una condición. Son los lugares donde más se traba la gestión, porque los resuelven oficinas distintas.</p>';
+  h += '<div class="filters" role="group" aria-label="Filtrar por sistema">' + [['', 'Todos']].concat(Object.keys(D.sys).map(s => [s, D.sys[s].n])).map(([k, n]) =>
+    '<button type="button" class="btn" data-f="' + k + '" aria-pressed="' + (linkFilter === k) + '">' + esc(n) + '</button>').join('') + '</div>';
+  const ls = D.links.filter(l => !linkFilter || BOX[l[0]].s === linkFilter || BOX[l[1]].s === linkFilter);
+  h += '<p class="small muted">' + ls.length + ' interconexiones</p><ul class="links">' + ls.map(linkHTML).join('') + '</ul></section>';
+  $app.innerHTML = h;
+  $app.querySelectorAll('[data-f]').forEach(el => el.addEventListener('click', () => { linkFilter = el.dataset.f; viewConexiones(); }));
+}
+
+/* ---------- Vista: actores ---------- */
+const RANK = ['E','A','O'];
+function roleCell(actor, b){
+  const set = new Set(); let part = false;
+  b.pr.forEach(p => p.acts.forEach(a => { if(a.w === actor) set.add(a.k || 'E'); else if(a.p.includes(actor)) part = true; }));
+  const letters = RANK.filter(x => set.has(x)).join('');
+  return letters || (part ? 'P' : '');
+}
+function viewActores(){
+  const ids = Object.keys(D.actors);
+  let h = '<section class="block"><h2>Mapa de actores</h2><p class="guide">Quién interviene en cada macroproceso. <b>E</b> ejecuta una actividad, <b>A</b> aprueba o decide, <b>O</b> opina o controla antes de que se siga, <b>P</b> participa. Haz clic en un actor para ver todas sus actividades.</p>';
+  h += '<details class="adapt"' + (Object.keys(alias).length ? '' : ' open') + '><summary>Adaptar a tu entidad</summary><p class="small muted" style="margin-top:8px">Escribe cómo se llama cada unidad en tu organigrama (por ejemplo, “Gerencia de Presupuesto” para la Oficina de Presupuesto). El mapa y la copia para Excel usarán esos nombres. Se guardan solo en este navegador.</p><div class="fields">' +
+    ids.filter(id => ['dir','ent'].includes(D.actors[id].g)).map(id => '<label for="al-' + id + '">' + esc(D.actors[id].n) + '<input id="al-' + id + '" data-al="' + id + '" value="' + esc(alias[id] || '') + '" placeholder="Nombre en tu entidad"></label>').join('') +
+    '</div><div class="row-btns" style="margin-top:12px"><button type="button" class="btn" id="cpall">Copiar todas las actividades para Excel</button><button type="button" class="btn" id="clr">Borrar nombres</button></div><div id="cpbox"></div></details>';
+  h += '<div class="tablewrap"><table class="matrix"><thead><tr><th class="a" rowspan="2">Actor</th>' +
+    Object.keys(D.sys).map(s => { const n = D.boxes.filter(b => b.s === s).length; return '<th class="g" colspan="' + n + '" style="--sc:' + sysVar(s) + '">' + esc(D.sys[s].n) + '</th>'; }).join('') + '</tr><tr>' +
+    D.boxes.map(b => '<th class="b" style="--sc:' + sysVar(b.s) + '" title="' + esc(b.n) + '"><a href="#' + b.id + '">' + b.id + '</a></th>').join('') + '</tr></thead><tbody>';
+  Object.keys(D.groups).forEach(g => {
+    h += '<tr class="grp"><td class="a">' + esc(D.groups[g]) + '</td><td colspan="' + D.boxes.length + '"></td></tr>';
+    ids.filter(id => D.actors[id].g === g).forEach(id => {
+      h += '<tr><td class="a"><a href="#actor-' + id + '">' + esc(actorName(id)) + '</a>' + (alias[id] ? '<span class="alias">' + esc(alias[id]) + '</span>' : '') + '</td>' +
+        D.boxes.map(b => { const r = roleCell(id, b); return '<td class="x' + (r ? ' on' : '') + '" style="--sc:' + sysVar(b.s) + '"' + (r ? ' title="' + esc(actorName(id) + ' en ' + b.id + ' ' + b.n) + '"' : '') + '>' + r + '</td>'; }).join('') + '</tr>';
+    });
+  });
+  h += '</tbody></table></div></section>';
+  $app.innerHTML = h;
+  bindAlias();
+  document.getElementById('cpall').addEventListener('click', () => copyTSV(Object.values(PROC), document.getElementById('cpbox')));
+  document.getElementById('clr').addEventListener('click', () => { alias = {}; store(KEY_ALIAS, alias); viewActores(); toast('Nombres borrados.'); });
+}
+function bindAlias(){
+  $app.querySelectorAll('[data-al]').forEach(el => el.addEventListener('change', () => {
+    const v = el.value.trim(); if(v) alias[el.dataset.al] = v; else delete alias[el.dataset.al]; store(KEY_ALIAS, alias); toast('Guardado en este navegador.');
+  }));
+}
+function viewActor(id){
+  const A = D.actors[id]; if(!A){ go('actores'); return; }
+  const mine = ALL.filter(a => a.w === id), part = ALL.filter(a => a.p.includes(id));
+  let h = '<nav class="crumbs"><a href="#actores">Mapa de actores</a><span class="sep">/</span><span>' + esc(A.n) + '</span></nav>';
+  h += '<section class="head" style="--sc:var(--ink)"><div class="tag">' + esc(D.groups[A.g]) + '</div><h2>' + esc(A.n) + '</h2><p>' + esc(A.d) + '</p><dl class="facts"><div><dt>Base de su rol</dt><dd>' + srcList(parseSrc(A.s)) + '</dd></div>' +
+       (['dir','ent'].includes(A.g) ? '<div><dt><label for="al-' + id + '">Nombre en tu entidad</label></dt><dd><input class="alias-in" id="al-' + id + '" data-al="' + id + '" value="' + esc(alias[id] || '') + '" placeholder="Escribe el nombre de tu unidad"></dd></div>' : '') +
+       '<div><dt>Actividades</dt><dd>' + mine.length + ' como responsable · ' + part.length + ' como participante</dd></div></dl></section>';
+  h += group(mine, 'Responsable de') + group(part, 'Participa en');
+  $app.innerHTML = h;
+  bindAlias();
+  function group(list, title){
+    if(!list.length) return '';
+    let out = '<p class="lv">' + title + '</p><ul class="links">';
+    D.boxes.forEach(b => {
+      const xs = list.filter(a => a.proc.box === b); if(!xs.length) return;
+      out += '<li><div class="pair">' + boxChip(b.id) + '</div><ul style="margin:0;padding-left:18px">' + xs.map(a => '<li><a href="#' + a.proc.id + '">' + a.proc.code + '.' + a.n + '</a> ' + esc(a.a) + (a.k ? '<span class="kb ' + a.k + '">' + TIPO[a.k] + '</span>' : '') + '</li>').join('') + '</ul></li>';
+    });
+    return out + '</ul>';
+  }
+}
+
+/* ---------- Vista: normas ---------- */
+let normFilter = '';
+function viewNormas(){
+  let h = '<section class="block"><h2>Anexo: normas y fuentes</h2><p class="guide">Las reglas que respaldan cada caja. Úsalas cuando haya dudas de interpretación; para el trabajo diario, empieza por el mapa. Cada enlace abre la fuente oficial. Corte: ' + esc(D.corte) + '. Antes de aplicar un artículo, confirma su texto vigente en El Peruano o en el SPIJ.</p>';
+  h += '<div class="search"><label class="small muted" for="fn">Filtrar</label><input id="fn" type="search" value="' + esc(normFilter) + '" placeholder="Ej.: 1440, viabilidad, OECE" autocomplete="off"></div><div id="nl"></div></section>';
+  h += '<section class="block"><h2>Aplicativos y buscadores oficiales</h2><div class="cards">' + D.apps.map(a => '<div class="card"><a href="' + esc(a[1]) + '" target="_blank" rel="noopener"><b>' + esc(a[0]) + '</b> ↗</a></div>').join('') + '</div></section>';
+  $app.innerHTML = h;
+  const inp = document.getElementById('fn');
+  const draw = () => {
+    const t = norm(normFilter);
+    let out = '';
+    Object.keys(D.ngroups).forEach(g => {
+      const ids = Object.keys(D.norms).filter(id => D.norms[id].g === g && (!t || norm(D.norms[id].t + ' ' + D.norms[id].n + ' ' + D.norms[id].d).includes(t)));
+      if(!ids.length) return;
+      out += '<h3 style="margin-top:18px">' + esc(D.ngroups[g]) + '</h3><div class="norms">' + ids.map(id => {
+        const n = D.norms[id], used = CITED[id] ? Array.from(CITED[id]) : [];
+        return '<div class="norm"><div><span class="t">' + esc(n.t) + '</span> · ' + esc(n.n) + '<div class="small muted">' + esc(n.d) + '</div></div><a class="open" href="' + esc(n.u) + '" target="_blank" rel="noopener">Abrir fuente ↗</a>' +
+          (used.length ? '<div class="used">Se cita en: ' + used.map(w => '<a href="#' + w + '">' + (PROC[w] ? PROC[w].code : w) + '</a>').join(' ') + '</div>' : '') + '</div>';
+      }).join('') + '</div>';
+    });
+    document.getElementById('nl').innerHTML = out || '<p class="muted">Sin coincidencias.</p>';
+  };
+  inp.addEventListener('input', () => { normFilter = inp.value; draw(); });
+  draw();
+}
+
+/* ---------- Vista: guía ---------- */
+function viewGuia(){
+  const s = (id, ref) => srcChip({id, ref});
+  let h = '<section class="block guide"><h2>Cómo usarlo</h2><ol>' +
+   '<li><b>Empieza por la pregunta.</b> ¿Es un <b>proceso</b> (actividad permanente para operar) o un <b>proyecto de inversión</b> (intervención temporal para crear, ampliar, mejorar o recuperar capacidad)? Si es un proyecto y no hay recursos, se suma el endeudamiento. Elige la opción en el <a href="#mapa">mapa</a> y verás la ruta numerada. ' + s('DS140','art. 3, núms. 18 y 27') + '</li>' +
+   '<li><b>Recorre la ruta caja por caja.</b> Cada caja dice quién responde, qué recibe, qué entrega y con qué sistemas se conecta.</li>' +
+   '<li><b>Baja al detalle.</b> En cada procedimiento verás las actividades en orden, su responsable, quién participa, el resultado, el aplicativo y la fuente. Las marcas <span class="kb A">Aprueba o decide</span> y <span class="kb O">Opina o controla</span> señalan los puntos de control donde el trámite se detiene si falta algo.</li>' +
+   '<li><b>Adáptalo.</b> En <a href="#actores">Mapa de actores</a> escribe el nombre real de cada unidad de tu entidad y copia todas las actividades a Excel para completar plazos internos, formatos y responsables delegados.</li>' +
+   '<li><b>Ante una duda de interpretación,</b> abre la fuente. El mapa resume; la norma publicada en El Peruano es la que vale.</li></ol>';
+  h += '<h3>Los tres niveles y la norma de gestión por procesos</h3><p>La PCM llama nivel 0 (macroproceso) al más agregado y lo desagrega en niveles 1, 2 y siguientes; el procedimiento describe las tareas de un proceso. Este mapa usa la misma lógica:</p>' +
+   '<div class="tablewrap"><table><thead><tr><th>En este mapa</th><th>Equivale a</th><th>Ejemplo</th></tr></thead><tbody>' +
+   '<tr><td>Macro (caja)</td><td>Proceso de nivel 0 o 1</td><td>P4 Ejecución del gasto</td></tr>' +
+   '<tr><td>Meso (procedimiento)</td><td>Proceso de último nivel o procedimiento</td><td>P4.2 Certificar el crédito presupuestario</td></tr>' +
+   '<tr><td>Micro (actividad)</td><td>Actividades y tareas del procedimiento</td><td>P4.2.2 Emitir y registrar la certificación</td></tr></tbody></table></div>' +
+   '<p>En el mapa de procesos de una entidad, planeamiento suele ser un proceso estratégico y los otros cuatro sistemas, procesos de soporte. Cuelga estas cajas del mapa oficial de tu entidad en lugar de crear uno paralelo. ' + s('NT002','') + ' ' + s('GUIAPROC','niveles de proceso') + '</p>';
+  h += '<h3>Qué cambia según el tipo de entidad</h3><ul>' +
+   '<li><b>Gobiernos regionales y locales.</b> El PIA y la incorporación de recursos de crédito los aprueba el Consejo Regional o el Concejo Municipal. La solicitud de endeudamiento va con el acuerdo del Consejo o Concejo; el endeudamiento externo requiere garantía del Gobierno Nacional y respetar las reglas fiscales subnacionales. Un gobierno local que gestione endeudamiento externo debe incorporarse a Invierte.pe. ' + s('DL1440','arts. 31.3 y 50.4') + ' ' + s('DL1437','art. 27.2') + ' ' + s('DCONC','art. 18') + ' ' + s('DL1275','') + ' ' + s('DS140','1.ª DCF') + '</li>' +
+   '<li><b>Empresas bajo FONAFE, incluida EsSalud.</b> El PMI lo aprueba el Directorio o el Gerente General; en EsSalud, el Presidente Ejecutivo, que lo comunica al MTPE y al MINSA. El presupuesto sigue las normas de FONAFE; en 2026 EsSalud aprueba su PIA y PIM por régimen especial. ' + s('DS140','art. 15.1') + ' ' + s('L29626','55.ª DCF') + ' ' + s('FONAFE','') + ' ' + s('LEY32513','92.ª DCF') + '</li>' +
+   '<li><b>Endeudamiento sin garantía del Gobierno Nacional.</b> Las empresas públicas no financieras y los organismos públicos de GR y GL requieren resolución ministerial del MEF; otras formas organizativas no financieras que administran fondos públicos deben informar a la DGTP la concertación, los desembolsos y el servicio de la deuda. ' + s('DCONC','art. 22.1') + ' ' + s('DL1437','art. 63') + '</li>' +
+   '<li><b>Delegaciones.</b> El Titular y la autoridad de la gestión administrativa pueden delegar facultades; registra en el mapa al delegado real, no solo al titular, y revisa las delegaciones cada año. ' + s('DL1440','art. 7.2') + ' ' + s('LEY32069','art. 25.2') + '</li></ul>';
+  h += '<h3>Límites y vigencia</h3><ul>' +
+   '<li>Corte normativo: ' + esc(D.corte) + '. Los plazos marcados como «regla de 2026» vienen de la Ley de Presupuesto del año y cambian cada año.</li>' +
+   '<li>El Reglamento de Invierte.pe vigente es el DS 140-2026-EF, desde el 18 de julio de 2026; algunos documentos anteriores todavía citan el DS 284-2018-EF, que está derogado.</li>' +
+   '<li>Los artículos de la Directiva General de Invierte.pe se citan según su texto de 2019 con modificatorias; confirma la numeración en el texto actualizado del MEF.</li>' +
+   '<li>El MEF no publica textos consolidados de los DL 1437 y 1440: las citas usan el texto original más las modificaciones conocidas.</li>' +
+   '<li>Los procedimientos de selección convocados antes del 22 de abril de 2025 siguen las reglas de la Ley 30225.</li>' +
+   '<li>No se mapean las APP, las Obras por Impuestos, la cooperación no reembolsable ante la APCI ni la gestión de recursos humanos, que tienen sus propios circuitos.</li></ul>' +
+   '<p>Para marcar riesgos y controles en tus propios flujogramas, usa la directiva de control interno de la Contraloría. ' + s('CI','') + '</p></section>';
+  $app.innerHTML = h;
+}
+
+/* ---------- Enrutador ---------- */
+function go(h){ location.hash = h; }
+function setTab(t){ document.querySelectorAll('nav.tabs a').forEach(a => { if(a.dataset.tab === t) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); }); }
+function route(){
+  const h = decodeURIComponent(location.hash.slice(1));
+  if(BOX[h]){ setTab('mapa'); viewBox(h); }
+  else if(PROC[h]){ setTab('mapa'); viewProc(h); }
+  else if(h === 'conexiones'){ setTab('conexiones'); viewConexiones(); }
+  else if(h === 'actores'){ setTab('actores'); viewActores(); }
+  else if(h.indexOf('actor-') === 0){ setTab('actores'); viewActor(h.slice(6)); }
+  else if(h === 'normas'){ setTab('normas'); viewNormas(); }
+  else if(h === 'guia'){ setTab('guia'); viewGuia(); }
+  else { setTab('mapa'); viewMapa(); }
+  if(route.started) window.scrollTo(0, 0);
+  route.started = true;
+}
+document.getElementById('foot').innerHTML = 'Elaborado con fuentes oficiales (gob.pe, El Peruano, MEF, OECE, Contraloría, CEPLAN, PCM). Corte normativo: ' + esc(D.corte) + '. ' + D.boxes.length + ' macroprocesos, ' + Object.keys(PROC).length + ' procedimientos, ' + ALL.length + ' actividades, ' + Object.keys(D.actors).length + ' actores y ' + Object.keys(D.norms).length + ' normas. No sustituye el texto de las normas.';
+window.addEventListener('hashchange', route);
+route();
+})();
+</script>
+</body>
+</html>
