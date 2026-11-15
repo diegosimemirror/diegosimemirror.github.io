@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portafolio de proyectos del Estado · Diego Sime</title>
+<meta name="description" content="Una app web que traduce los datos abiertos de inversión pública del MEF a preguntas simples: cuántos proyectos hay, cuánto cuestan, cuánto se ha ejecutado y cuáles están atrasados.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- PROCESO 1: Cabecera. El nombre vuelve a la portada; el menú es igual en todas las páginas. -->
+<header class="cabecera">
+  <a class="cabecera__nombre" href="../index.html">Diego Sime, MA</a>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="../index.html#proyectos">Proyectos</a>
+    <a href="../index.html#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- PROCESO 2: Título, gráfico y ficha. El clic en el gráfico lleva a la app. -->
+<div class="encabezado-proyecto">
+  <p class="tema">Inversión pública · Datos abiertos · App web</p>
+  <h1 class="titulo-pagina">Portafolio de proyectos del Estado: la cartera de inversiones, en simple</h1>
+</div>
+
+<div class="proyecto proyecto--detalle">
+  <a class="figura" href="https://proyectos-inversiones-peru.streamlit.app/" target="_blank" rel="noopener" title="Abrir la app">
+    <img src="../imagenes/proyectos/portafolio-proyectos-estado.png" width="1380" height="990" alt="Captura de la app: el portafolio total con 26,412 proyectos por S/ 933.7 mil millones y 6,709 atrasados, las seis listas para elegir qué ver y el árbol que divide la cartera en gobierno nacional y gobiernos regionales.">
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Cómo puede ver quien decide, sin ser especialista en Invierte.pe, cuántos proyectos de inversión tiene el Estado, cuánto cuestan y cuáles están atrasados?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">26,412 inversiones del gobierno nacional y de los gobiernos regionales, por S/&nbsp;933.7 mil millones. 6,709 están atrasadas según sus propias fechas, y 519 tienen obras paralizadas según la Contraloría.</p>
+      <p class="enlaces">
+        <a href="https://proyectos-inversiones-peru.streamlit.app/" target="_blank" rel="noopener">Abrir la app (puede tardar en abrir)</a>
+        <a href="https://github.com/diegosimemirror/tarea5" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO 3: Detalle. Cada sección usa la rejilla de dos columnas: título a la izquierda y texto a la derecha. -->
+<section class="seccion dos-columnas">
+  <h2>Qué hice</h2>
+  <div class="prosa">
+    <p>Una app web que traduce los datos abiertos de inversión pública del Ministerio de Economía y Finanzas (MEF) a preguntas simples. Fue el proyecto final de la diplomatura: una idea de startup con software funcionando.</p>
+    <ul>
+      <li>Seis listas para elegir qué ver, cada una con la opción «Todos»: nivel de gobierno, sector o gobierno regional, pliego, unidad ejecutora, tipo de inversión y estado. Para cualquier selección, la app muestra el árbol de la cartera y cinco indicadores: presupuesto por gastar, cambio de costos, financiamiento, problemas reportados y atraso.</li>
+      <li>Una ficha por proyecto con preguntas simples: qué es, qué problema resuelve, cuánto cuesta, cuánto se ha ejecutado, cuándo termina y cómo va. El título lo escribe un modelo de lenguaje (Gemini) a partir de la descripción técnica del MEF. Si la obra está paralizada según la Contraloría, la ficha muestra la causa oficial, con su fuente y su fecha.</li>
+      <li>Portafolios A y B: se marcan proyectos en dos grupos y se comparan con los mismos indicadores. Se guardan en un enlace o en un archivo, sin cuentas.</li>
+      <li>Una lista ordenable, un mapa y el enlace a la ficha oficial del MEF.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Hallazgos</h2>
+  <div class="prosa">
+    <ul>
+      <li><strong>Los costos subieron 27&nbsp;% desde que se aprobaron los proyectos:</strong> S/&nbsp;197.3 mil millones más. 3,391 proyectos más que duplicaron su costo.</li>
+      <li><strong>La mayoría no tiene financiamiento para este año.</strong> Solo el 26&nbsp;% tiene presupuesto 2026. Otros 11,288 no tienen presupuesto ni programación, con S/&nbsp;255.5 mil millones por ejecutar.</li>
+      <li><strong>El atraso típico es de 29 meses.</strong> De los 6,709 proyectos atrasados, 2,810 llevan más de tres años.</li>
+      <li><strong>Las fuentes se complementan.</strong> De los 519 proyectos con obras paralizadas según la Contraloría, 175 parecen avanzar con normalidad si solo se miran las fechas y los montos que registra el MEF.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Revisión</h2>
+  <div class="prosa">
+    <p>Dos especialistas en inversión pública revisaron la app el 11 de noviembre de 2026. Por sus comentarios se usaron los términos oficiales («costo total»), se aclararon tres etiquetas, se rehízo la búsqueda y se ordenó la cartera como la estructura presupuestal: nivel de gobierno, sector, pliego y unidad ejecutora. Una prueba automática recorre las 63 carteras, abre fichas y compara portafolios.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Limitaciones</h2>
+  <div class="prosa">
+    <ul>
+      <li>El estado de cada proyecto se calcula con reglas de ejemplo a partir de las fechas y los montos que registran las entidades. No es una evaluación oficial.</li>
+      <li>Aún no incluye los gobiernos locales, que tienen 124,229 inversiones.</li>
+      <li>Los títulos escritos con IA cubren por ahora 4,418 proyectos del gobierno nacional; el resto muestra su nombre oficial.</li>
+      <li>La comparación de portafolios muestra cómo están hoy. Para medir el desempeño hacen falta datos de varias fechas.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Fuentes</h2>
+  <div class="prosa">
+    <ul>
+      <li>MEF, <a href="https://datosabiertos.mef.gob.pe/" target="_blank" rel="noopener">Datos Abiertos</a>: Detalle de inversiones, Inversiones y brechas y Formato 12-B, al 8 de noviembre de 2026.</li>
+      <li>Contraloría General de la República, <a href="https://www.gob.pe/institucion/contraloria/informes-publicaciones/8489152-informe-de-obras-paralizadas-en-el-territorio-nacional-a-junio-de-2026" target="_blank" rel="noopener">Informe de obras paralizadas en el territorio nacional a junio de 2026</a>, Anexo N.°&nbsp;01. La idea de usarlo viene de <a href="https://github.com/bocchienjoyer/obras-que-esperan" target="_blank" rel="noopener">«Obras que esperan»</a>, de Jose Navarro.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROCESO 4: Paso al proyecto siguiente. -->
+<nav class="siguiente" aria-label="Proyecto siguiente">
+  <p class="etiqueta">Siguiente proyecto</p>
+  <a href="politica-social-peru.html">Juntos y la pobreza: a quién protege hoy la política social en el Perú</a>
+</nav>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>
