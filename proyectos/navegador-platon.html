@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Navegador de textos: Platón · Diego Sime</title>
+<meta name="description" content="Una herramienta web para seguir un concepto de Platón de un diálogo a otro, en griego e inglés, y ver qué pasajes elige un intérprete moderno para leerlo.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- PROCESO 1: Cabecera. El nombre vuelve a la portada; el menú es igual en todas las páginas. -->
+<header class="cabecera">
+  <a class="cabecera__nombre" href="../index.html">Diego Sime, MA</a>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="../index.html#proyectos">Proyectos</a>
+    <a href="../index.html#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- PROCESO 2: Título, gráfico y ficha. El clic en el gráfico lleva al navegador. -->
+<div class="encabezado-proyecto">
+  <p class="tema">Humanidades digitales · Filosofía · Herramienta web</p>
+  <h1 class="titulo-pagina">Navegador de textos: Platón</h1>
+</div>
+
+<div class="proyecto proyecto--detalle">
+  <a class="figura" href="https://diegosimemirror.github.io/plato/" target="_blank" rel="noopener" title="Abrir el navegador">
+    <img src="../imagenes/proyectos/navegador-platon.png" width="1320" height="666" alt="Captura del navegador: los diálogos de Platón en barras horizontales, con las secciones donde aparece ἕν marcadas en azul, y a la derecha el libro de Halfwassen en una barra vertical. Las líneas unen el Parménides 137c con otros diálogos y con las páginas del libro que lo citan.">
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Cómo seguir un concepto de Platón de un diálogo a otro, y ver qué pasajes elige un intérprete moderno para leerlo?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">Los 36 diálogos en griego e inglés, alineados en 8,553 secciones Stephanus. El libro de Halfwassen cita 409 de ellas, pero las dos que más cita, República&nbsp;509b y Sofista&nbsp;248e, no contienen ninguno de los tres términos: su lectura de lo Uno pasa por el Bien y el ser.</p>
+      <p class="enlaces">
+        <a href="https://diegosimemirror.github.io/plato/" target="_blank" rel="noopener">Abrir el navegador</a>
+        <a href="https://github.com/diegosimemirror/plato" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO 3: Detalle. Cada sección usa la rejilla de dos columnas: título a la izquierda y texto a la derecha. -->
+<section class="seccion dos-columnas">
+  <h2>Qué hice</h2>
+  <div class="prosa">
+    <p>Una herramienta web para leer a Platón por conceptos y no solo obra por obra. Tiene dos ejes: en horizontal, cada diálogo es una barra según la paginación de Stephanus, la forma estándar de citar a Platón; en vertical, el libro de Jens Halfwassen sobre Hegel y el neoplatonismo, de la primera a la última página.</p>
+    <ul>
+      <li>Tres términos: ἀρετή (virtud, 611 apariciones), ἕν (lo Uno, 1,251) y νοῦς (intelecto, 409). Al elegir uno, las barras marcan dónde aparece y el libro muestra dónde trata el mismo concepto en alemán.</li>
+      <li>Tres tipos de conexión: las remisiones que los traductores hicieron en sus notas, los ecos de vocabulario entre pasajes de diálogos distintos y las citas de Platón en el libro.</li>
+      <li>Dos formas de leer: obra por obra, en orden, o saltando de un diálogo a otro y del libro a Platón, como en Rayuela. El recorrido queda anotado.</li>
+      <li>Lentes temáticas que muestran con qué aparece cada término; por ejemplo, ἀρετή junto a «enseñar» o ἕν junto a «límite e ilimitado».</li>
+      <li>Cada pasaje se lee en griego y en inglés, con el término resaltado.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Cómo se hizo</h2>
+  <div class="prosa">
+    <p>Los textos son los archivos XML de Perseus Digital Library: la edición griega de Burnet y la traducción inglesa de la Loeb, unidas por sección Stephanus. Las apariciones se cuentan sin distinguir acentos, pero conservando el espíritu áspero para no confundir ἕν («uno») con ἐν («en»). Las remisiones salen de las notas de los traductores, y los ecos comparan el vocabulario poco frecuente de cada par de pasajes (TF-IDF). En el libro, un programa lee las citas de Platón en su formato alemán («Politeia 509 B», «Parm. 137 C») y solo conserva las que corresponden a una sección existente.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Limitaciones</h2>
+  <div class="prosa">
+    <ul>
+      <li>Los ecos comparan palabras, no ideas: no ven la misma idea dicha con otras palabras y a veces unen pasajes por coincidencias de contexto.</li>
+      <li>No usa un lematizador del griego: las raíces de las palabras son aproximadas.</li>
+      <li>La mayoría de las remisiones viene de las notas de Shorey a la República; los demás traductores anotaron menos.</li>
+      <li>El texto del libro viene de un reconocimiento óptico: algunas citas se pierden y el griego del libro no es legible.</li>
+      <li>El libro tiene derechos reservados. La herramienta guarda solo su índice, sus páginas y sus referencias; para leer una página citada hay que vincular un ejemplar propio en PDF.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Fuentes</h2>
+  <div class="prosa">
+    <p>Platón: <a href="https://github.com/PerseusDL/canonical-greekLit" target="_blank" rel="noopener">Perseus Digital Library</a>, Tufts University, con licencia CC BY-SA 4.0. Jens Halfwassen, <i>Hegel und der spätantike Neuplatonismus</i> (Hegel-Studien, Beiheft 40), Felix Meiner Verlag.</p>
+  </div>
+</section>
+
+<!-- PROCESO 4: Paso al proyecto siguiente. -->
+<nav class="siguiente" aria-label="Proyecto siguiente">
+  <p class="etiqueta">Siguiente proyecto</p>
+  <a href="portafolio-proyectos-estado.html">Portafolio de proyectos del Estado: la cartera de inversiones, en simple</a>
+</nav>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>
