@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mapa del Libro Blanco de EsSalud · Diego Sime</title>
+<meta name="description" content="Una página web que traza el Libro Blanco de EsSalud (2019) de la causa a la respuesta: causas raíz, problemas, efectos y las 9 políticas, con cada afirmación enlazada a su página en el PDF oficial.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- PROCESO 1: Cabecera. El nombre vuelve a la portada; el menú es igual en todas las páginas. -->
+<header class="cabecera">
+  <a class="cabecera__nombre" href="../index.html">Diego Sime, MA</a>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="../index.html#proyectos">Proyectos</a>
+    <a href="../index.html#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- PROCESO 2: Título, gráfico y ficha. El clic en el gráfico lleva al mapa con el recorrido del dinero activado. -->
+<div class="encabezado-proyecto">
+  <p class="tema">Gestión pública · Salud · Análisis de documentos</p>
+  <h1 class="titulo-pagina">Mapa del Libro Blanco de EsSalud: de la causa a la respuesta</h1>
+</div>
+
+<div class="proyecto proyecto--detalle">
+  <a class="figura" href="https://diegosimemirror.github.io/libro_blanco/#recorrido-dinero" target="_blank" rel="noopener" title="Abrir el mapa">
+    <img src="../imagenes/proyectos/mapa-libro-blanco.png" width="1060" height="636" alt="Captura del mapa: cuatro columnas con causas raíz, problemas, efectos y políticas del Libro Blanco de EsSalud. El recorrido «Siga el dinero» ilumina la cadena que va de las leyes que recortan aportes y los costos que crecen al déficit, la falta de inversión y el riesgo para la sostenibilidad, con líneas punteadas hacia las políticas 4 y 5.">
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Cómo leer en minutos un estudio de 590 páginas sobre la reforma de EsSalud, y seguir cada recomendación hasta el problema que busca resolver y la página donde se dice?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">11 causas raíz, 9 problemas, 8 efectos y 9 políticas, unidos por 41 relaciones causales y 116 citas verificadas contra el PDF. Cuatro recomendaciones del estudio del Banco Mundial, entre ellas un subsidio público a los regímenes especiales y los copagos, no llegaron a la hoja de ruta 2019-2022.</p>
+      <p class="enlaces">
+        <a href="https://diegosimemirror.github.io/libro_blanco/" target="_blank" rel="noopener">Abrir el mapa</a>
+        <a href="https://github.com/diegosimemirror/libro_blanco" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO 3: Detalle. Cada sección usa la rejilla de dos columnas: título a la izquierda y texto a la derecha. -->
+<section class="seccion dos-columnas">
+  <h2>Qué hice</h2>
+  <div class="prosa">
+    <p>Una página web que convierte los dos tomos del Libro Blanco de EsSalud en un mapa de trazabilidad. El tomo 1 propone 9 políticas y una hoja de ruta 2019-2022; el tomo 2 reúne los estudios que EsSalud encargó al Banco Mundial. La página trata a EsSalud como un subsistema del sistema de salud peruano: buena parte de lo que fija sus ingresos y sus reglas se decide fuera de él.</p>
+    <ul>
+      <li>Un diagrama con 12 relaciones entre EsSalud y el Congreso, el MTPE, Fonafe, el Minsa, Susalud, la Sunat, otros seguros, los prestadores externos y los asegurados.</li>
+      <li>Un mapa en cuatro columnas: causas raíz, problemas, efectos y políticas. Al pulsar un elemento se ilumina su cadena completa y se abren sus citas; cada cita abre el PDF oficial de EsSalud en la página exacta.</li>
+      <li>Cuatro recorridos para explicar el libro en una reunión, cada uno con su propio enlace: el dinero, el paciente, la compra y la confianza.</li>
+      <li>Seis bucles de realimentación que explican por qué el problema persiste; por ejemplo, el hospital se lleva el presupuesto y el presupuesto histórico repite ese reparto cada año.</li>
+      <li>Las 9 políticas con sus hitos, seis decisiones que el libro deja abiertas y una tabla con lo que el tomo 2 recomienda y el tomo 1 no recoge.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Cómo se hizo</h2>
+  <div class="prosa">
+    <p>Extraje el texto de los dos PDF con pdftotext. Leí completo el tomo 1 y, del tomo 2, los resúmenes, diagnósticos, conclusiones y recomendaciones de sus ocho estudios. Clasifiqué cada hallazgo como causa, problema, efecto o respuesta siguiendo la teoría del cambio del propio libro: políticas, objetivos intermedios (acceso, calidad, eficiencia, transparencia) y objetivos finales (salud, satisfacción y protección financiera). Un script en Python comprueba que cada una de las 116 citas literales esté en la página indicada. La página es un solo archivo HTML, sin librerías, hecho con Claude Code.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Limitaciones</h2>
+  <div class="prosa">
+    <ul>
+      <li>La clasificación en causas, problemas y efectos es mía; el libro no la hace. Las relaciones que infiero de sus datos están marcadas con ◇.</li>
+      <li>Los bucles de realimentación son una interpretación: el libro no los dibuja, aunque cada eslabón tiene su cita.</li>
+      <li>Del tomo 2 no leí a fondo el detalle técnico: el cálculo de brechas por red, cada grupo de diagnóstico y el manual de procesos.</li>
+      <li>Los datos son de 2014 a 2018, los años de los estudios; el mapa no los actualiza.</li>
+      <li>El libro tiene derechos reservados de EsSalud. La página cita fragmentos breves y enlaza a los PDF que publica EsSalud; no los reproduce.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Fuentes</h2>
+  <div class="prosa">
+    <p>EsSalud (2019). <i>Hacia la modernización de la seguridad social en el Perú. Libro blanco para el diálogo.</i> <a href="https://www.essalud.gob.pe/transparencia/libro_blanco/libro_blanco_1.pdf" target="_blank" rel="noopener">Tomo 1</a>: Políticas y hoja de ruta para el fortalecimiento del Seguro Social de Salud, EsSalud 2019-2022. <a href="https://www.essalud.gob.pe/transparencia/libro_blanco/libro_blanco_2.pdf" target="_blank" rel="noopener">Tomo 2</a>: Compendio de estudios, elaborados por el Banco Mundial. También en el <a href="https://repositorio.essalud.gob.pe/handle/20.500.12959/830" target="_blank" rel="noopener">repositorio institucional de EsSalud</a>.</p>
+  </div>
+</section>
+
+<!-- PROCESO 4: Paso al proyecto siguiente. -->
+<nav class="siguiente" aria-label="Proyecto siguiente">
+  <p class="etiqueta">Siguiente proyecto</p>
+  <a href="navegador-platon.html">Navegador de textos: Platón</a>
+</nav>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>
