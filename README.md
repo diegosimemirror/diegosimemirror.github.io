@@ -9,7 +9,7 @@ Sitio personal hecho solo con HTML y CSS, sin plantilla: https://diegosimemirror
 | `proyectos/` | Una página por proyecto |
 | `imagenes/` | Foto y gráficos |
 | `files/` | CV en PDF |
-| `demos/` | Herramientas interactivas: incendios en Junín y mapeo de procesos del Estado |
+| `demos/` | Herramientas interactivas: incendios en Junín, mapeo de procesos del Estado e indicadores de salud de la OCDE |
 | `portfolio/` | Redirecciones desde las direcciones de la versión anterior |
 | `.github/workflows/publicar.yml` | Publica el sitio en GitHub Pages con cada cambio en `master` |
 

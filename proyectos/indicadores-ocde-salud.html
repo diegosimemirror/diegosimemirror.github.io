@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Indicadores de salud de la OCDE · Diego Sime</title>
+<meta name="description" content="Los 224 indicadores de salud de la OCDE ubicados en su marco de desempeño, qué tanto los reportan los 38 miembros y qué debería medir primero el Perú para compararse.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- PROCESO 1: Cabecera. El nombre vuelve a la portada; el menú es igual en todas las páginas. -->
+<header class="cabecera">
+  <a class="cabecera__nombre" href="../index.html">Diego Sime, MA</a>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="../index.html#proyectos">Proyectos</a>
+    <a href="../index.html#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- PROCESO 2: Título, gráfico y ficha. El clic en el gráfico lleva a la herramienta. -->
+<div class="encabezado-proyecto">
+  <p class="tema">Salud pública · Adhesión a la OCDE · Datos abiertos</p>
+  <h1 class="titulo-pagina">Indicadores de salud de la OCDE: qué medir primero para que el Perú se compare</h1>
+</div>
+
+<div class="proyecto proyecto--detalle">
+  <a class="figura" href="../demos/indicadores-ocde-salud/index.html" target="_blank" rel="noopener" title="Abrir la herramienta">
+    <img src="../imagenes/proyectos/indicadores-ocde-salud.png" width="1068" height="1122" alt="El marco de desempeño de la OCDE en cinco cajas. Cada caja muestra dos barras: en azul, la parte de los miembros con dato al día, y en naranja, la del Perú. Calidad: 44 % y 30 %. Necesidades y preferencias de las personas: 20 % y 0 %. Tres cajas no tienen indicadores.">
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Qué indicadores de salud reportan al día los 38 países de la OCDE, en qué parte de su marco de desempeño se ubican y cuáles debería medir primero el Perú para compararse?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">224 indicadores en 79 conjuntos de datos. Los miembros no priorizan todo por igual: 35 están al día en casi todos y 54 en menos de un tercio. El Perú tiene 78 de 202 al día, más que Estados Unidos, Costa Rica, México y Colombia, y le faltan 31 que la mayoría sí mide.</p>
+      <p class="enlaces">
+        <a href="../demos/indicadores-ocde-salud/index.html" target="_blank" rel="noopener">Abrir la herramienta</a>
+        <a href="../demos/indicadores-ocde-salud/pipeline.html" target="_blank" rel="noopener">Ver el pipeline</a>
+        <a href="https://github.com/diegosimemirror/oecd_health_ind" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO 3: Detalle. Cada sección usa la rejilla de dos columnas: título a la izquierda y texto a la derecha. -->
+<section class="seccion dos-columnas">
+  <h2>Qué hice</h2>
+  <div class="prosa">
+    <p>Una página web que ordena todos los indicadores del tema Salud de la OCDE dentro del marco renovado de evaluación del desempeño de los sistemas de salud (OCDE, 2024) y los mira desde el Perú, que está en proceso de adhesión.</p>
+    <ul>
+      <li>Cada indicador está en una caja del marco, según los ejemplos que da el propio documento. Tres cajas quedan vacías: social y demográfico, datos y digital, y conocimiento e innovación.</li>
+      <li>Junto al promedio OCDE de cada indicador está el valor del Perú. Si el Perú lo mide de otra forma, se marca y se explica la diferencia: por ejemplo, reporta médicos profesionalmente activos y la OCDE compara médicos en ejercicio.</li>
+      <li>Como reportar a la OCDE no es obligatorio, la parte de los miembros con un dato reciente indica qué priorizan. Lo más reportado es la fuerza laboral (84 % en promedio); lo menos, la experiencia de los pacientes (20 %).</li>
+      <li>Para el Perú, cada indicador recibe una prioridad: 31 por empezar a medir, 13 por alinear su definición y 1 por actualizar, con la fuente peruana que declara la ficha de la OCDE (INFORHUS, RENIPRESS, SIS, ENDES, INEI).</li>
+      <li>Un pipeline al estilo n8n muestra los 20 pasos del trabajo, con los datos que pasan de uno a otro y las dos correcciones que hubo.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Cómo se hizo</h2>
+  <div class="prosa">
+    <p>Los 79 conjuntos de datos se descargaron con la API de la OCDE (4.4 millones de filas), junto con 160 fichas metodológicas. El análisis está en Python, en 14 scripts numerados según un mapa de procesos. «Al día» significa que el último dato del país está a no más de dos años del más reciente disponible para ese indicador. El promedio usa una sola serie comparable por indicador; las 224 series se revisaron una por una.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Limitaciones</h2>
+  <div class="prosa">
+    <ul>
+      <li>Tener un dato al día no garantiza que sea comparable: las fichas detallan las diferencias de cada país.</li>
+      <li>Solo cubre el tema Salud de la OCDE. Hay datos afines en otros temas (población, gobierno digital, investigación) que no se incluyeron.</li>
+      <li>El conteo da el mismo peso a todos los indicadores, y el promedio es simple: no pondera por población.</li>
+      <li>Los datos del Perú vienen de la revisión de adhesión; algunos son estimados o usan definiciones propias.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Fuentes</h2>
+  <div class="prosa">
+    <p>OCDE, <a href="https://data-explorer.oecd.org/" target="_blank" rel="noopener">OECD Data Explorer</a>, tema Salud (OECD Health Statistics 2026, indicadores de calidad, PaRIS y la encuesta de características de los sistemas de salud), descargado el 16 y 17 de noviembre de 2026. OCDE (2024), <i>Rethinking Health System Performance Assessment: A Renewed Framework</i>.</p>
+  </div>
+</section>
+
+<!-- PROCESO 4: Paso al proyecto siguiente. -->
+<nav class="siguiente" aria-label="Proyecto siguiente">
+  <p class="etiqueta">Siguiente proyecto</p>
+  <a href="portafolio-proyectos-estado.html">Portafolio de proyectos del Estado: la cartera de inversiones, en simple</a>
+</nav>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pipeline OCDE salud</title>
+<meta name="description" content="Cómo se construyó el análisis de indicadores de salud de la OCDE: 20 pasos, de la pregunta a la publicación, como un flujo de nodos al estilo n8n.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600&family=Schibsted+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<style>
+/* ---------- Colores: lienzo tipo n8n + paleta de etapas (Technology Review) ---------- */
+:root {
+  color-scheme: light;
+  --page: #fcfcfb; --ink: #111111; --ink-2: #52514e; --muted: #898781; --ring: rgba(11,11,11,.12);
+  --lienzo: #f2f2f0; --punto: #cfcfca; --nodo: #ffffff; --borde: #c9ccd2;
+  --ok: #1f9d55; --cable: #1f9d55; --correccion: #d9692b;
+  --e1: #89F0E1; --e2: #ABF089; --e3: #A6A0F5; --e4: #F5AD6E;
+  --nota: 0.32;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781; --ring: rgba(255,255,255,.12);
+    --lienzo: #202020; --punto: #3a3a38; --nodo: #2b2b2a; --borde: #4a4a47;
+    --ok: #2fbf6b; --cable: #2fbf6b; --correccion: #ec835a; --nota: 0.16;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781; --ring: rgba(255,255,255,.12);
+  --lienzo: #202020; --punto: #3a3a38; --nodo: #2b2b2a; --borde: #4a4a47;
+  --ok: #2fbf6b; --cable: #2fbf6b; --correccion: #ec835a; --nota: 0.16;
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+body { margin: 0; background: var(--page); color: var(--ink); line-height: 1.5;
+  font-family: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: inherit; text-underline-offset: 2px; }
+h1, h2 { font-family: "Newsreader", Georgia, serif; font-weight: 600; margin: 0; line-height: 1.25; }
+h1 { font-size: 1.35rem; }
+h2 { font-size: 1.2rem; margin-bottom: .6rem; }
+.muted { color: var(--muted); }
+
+/* ---------- Barra superior ---------- */
+.barra { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--ring); }
+.barra .estado { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; color: var(--ink-2); }
+.punto-ok { width: 18px; height: 18px; border-radius: 50%; background: var(--ok); color: #fff; display: inline-grid; place-items: center; }
+.punto-ok svg { width: 12px; height: 12px; stroke-width: 3; }
+.volver { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: var(--ink-2); }
+.volver svg { width: 16px; height: 16px; }
+
+/* ---------- Lienzo ---------- */
+.lienzo { position: relative; height: min(78vh, 760px); min-height: 460px; overflow: hidden; cursor: grab; touch-action: none;
+  background-color: var(--lienzo);
+  background-image: radial-gradient(var(--punto) 1.2px, transparent 1.2px); background-size: 22px 22px; }
+.lienzo.arrastrando { cursor: grabbing; }
+#mundo { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.nota { position: absolute; border-radius: 10px; background: color-mix(in srgb, var(--c) calc(var(--nota) * 100%), transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 70%, transparent); }
+.nota .cabeza { display: inline-block; background: var(--c); color: #111; font-weight: 600; padding: 4px 12px; border-radius: 10px 0 10px 0; }
+.nota p { margin: 8px 14px; color: var(--ink-2); max-width: 46ch; }
+svg#cables { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.cable { fill: none; stroke: var(--cable); stroke-width: 2; }
+.cable.correccion { stroke: var(--correccion); stroke-dasharray: 7 6; }
+.etq-cable { font: 600 13px "Schibsted Grotesk", system-ui, sans-serif; fill: var(--ink-2);
+  paint-order: stroke; stroke: var(--lienzo); stroke-width: 5px; stroke-linejoin: round; }
+.etq-cable.correccion { fill: var(--correccion); }
+
+/* ---------- Nodos ---------- */
+.nodo { position: absolute; width: 150px; margin-left: -29px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; }
+.nodo .caja { position: relative; width: 92px; height: 92px; border-radius: 10px; background: var(--nodo);
+  box-shadow: 0 0 0 1px var(--borde), 0 1px 3px rgba(0,0,0,.08); display: grid; place-items: center; transition: box-shadow .12s; }
+.nodo.disparador .caja { border-radius: 46px 10px 10px 46px; }
+.nodo:hover .caja, .nodo:focus-visible .caja { box-shadow: 0 0 0 2px var(--ink), 0 2px 8px rgba(0,0,0,.12); outline: none; }
+.nodo:focus { outline: none; }
+.nodo .icono { width: 52px; height: 52px; border-radius: 10px; background: var(--c); display: grid; place-items: center; color: #111; }
+.nodo .icono svg { width: 28px; height: 28px; stroke-width: 1.8; }
+.nodo .ok { position: absolute; right: 6px; bottom: 6px; width: 18px; height: 18px; border-radius: 50%; background: var(--ok); color: #fff; display: grid; place-items: center; }
+.nodo .ok svg { width: 12px; height: 12px; stroke-width: 3; }
+.nodo .rayo { position: absolute; left: -12px; top: 34px; width: 22px; height: 22px; border-radius: 50%; background: var(--nodo);
+  box-shadow: 0 0 0 1px var(--borde); display: grid; place-items: center; color: var(--correccion); }
+.nodo .rayo svg { width: 13px; height: 13px; }
+/* asas de entrada (izquierda) y salida (derecha), como en n8n */
+.nodo .caja::before, .nodo .caja::after { content: ""; position: absolute; top: 40px; width: 12px; height: 12px; border-radius: 50%; background: var(--borde); }
+.nodo .caja::before { left: -7px; }
+.nodo .caja::after { right: -7px; }
+.nodo.disparador .caja::before { display: none; }
+.nodo .etq { text-align: center; line-height: 1.3; }
+.nodo .etq b { display: block; font-weight: 600; }
+.nodo .etq small { display: block; color: var(--muted); font-size: 13px; }
+.nodo .insignia { position: absolute; top: -10px; right: -10px; background: var(--correccion); color: #fff; border-radius: 10px; padding: 0 7px; font-size: 12px; font-weight: 600; }
+
+/* ---------- Controles y leyenda ---------- */
+.controles { position: absolute; left: 14px; bottom: 14px; display: flex; gap: 6px; }
+.controles button { width: 38px; height: 38px; border-radius: 8px; border: 0; background: var(--nodo); color: var(--ink);
+  box-shadow: 0 0 0 1px var(--borde); cursor: pointer; display: grid; place-items: center; }
+.controles button svg { width: 18px; height: 18px; }
+.leyenda { position: absolute; right: 14px; bottom: 14px; background: var(--nodo); box-shadow: 0 0 0 1px var(--borde); border-radius: 8px;
+  padding: 8px 12px; display: flex; flex-direction: column; gap: 4px; color: var(--ink-2); font-size: 14px; }
+.leyenda span { display: flex; align-items: center; gap: 8px; }
+.ayuda { position: absolute; left: 14px; top: 12px; color: var(--muted); font-size: 14px; background: color-mix(in srgb, var(--lienzo) 85%, transparent); padding: 2px 6px; border-radius: 6px; }
+
+/* ---------- Panel del nodo (Entrada | Nodo | Salida) ---------- */
+.fondo-panel { position: fixed; inset: 0; background: rgba(0,0,0,.28); display: none; z-index: 20; }
+.fondo-panel.abierto { display: block; }
+.panel { position: fixed; z-index: 21; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(1040px, 94vw); max-height: 88vh; overflow: auto;
+  background: var(--page); border-radius: 12px; box-shadow: 0 0 0 1px var(--ring), 0 18px 50px rgba(0,0,0,.25); display: none; }
+.panel.abierto { display: block; }
+.panel header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--ring); }
+.panel header .icono { width: 38px; height: 38px; border-radius: 8px; background: var(--c); display: grid; place-items: center; color: #111; flex: none; }
+.panel header .icono svg { width: 22px; height: 22px; }
+.panel header .cerrar { margin-left: auto; background: none; border: 0; color: var(--ink-2); cursor: pointer; padding: 6px; }
+.panel .cols { display: grid; grid-template-columns: 1fr 1.25fr 1fr; }
+.panel .col { padding: 14px 18px 20px; }
+.panel .col + .col { border-left: 1px solid var(--ring); }
+.panel .col h3 { margin: 0 0 8px; font-size: 1rem; color: var(--muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.panel ul { margin: 0; padding-left: 1.1em; }
+.panel li { margin: 3px 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip { background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--ink); border-radius: 12px; padding: 2px 10px; }
+.correc { margin: 12px 0 0; padding: 8px 10px; border-radius: 8px; background: color-mix(in srgb, var(--correccion) 14%, transparent); }
+
+/* ---------- Vista en lista ---------- */
+.lista { max-width: 1080px; margin: 0 auto; padding: 28px 16px 60px; }
+.lista ol { list-style: none; padding: 0; margin: 0; }
+.lista li { display: grid; grid-template-columns: 44px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--ring); }
+.lista .num { width: 34px; height: 34px; border-radius: 8px; background: var(--c); color: #111; display: grid; place-items: center; font-weight: 600; }
+.lista button { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.lista .flujo { color: var(--ink-2); }
+.etapa-tit { margin: 22px 0 4px; display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.etapa-tit i { width: 14px; height: 14px; border-radius: 4px; background: var(--c); display: inline-block; }
+
+@media (max-width: 760px) {
+  .panel .cols { grid-template-columns: 1fr; }
+  .panel .col + .col { border-left: 0; border-top: 1px solid var(--ring); }
+  .leyenda { display: none; }
+  .barra .estado { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<header class="barra">
+  <a class="volver" href="index.html"><i data-lucide="arrow-left"></i>Resultados</a>
+  <h1>Pipeline: indicadores de salud de la OCDE</h1>
+  <span class="estado"><span class="punto-ok"><i data-lucide="check"></i></span>20 nodos ejecutados · 16 y 17 de noviembre de 2026</span>
+</header>
+
+<div class="lienzo" id="lienzo" aria-label="Diagrama del pipeline. Usa la lista de abajo para una versión en texto.">
+  <div id="mundo"><svg id="cables"></svg></div>
+  <span class="ayuda">Arrastra para moverte · Ctrl + rueda o botones para acercar · clic en un nodo para ver su detalle</span>
+  <div class="controles">
+    <button type="button" id="z-ajustar" title="Ajustar a la pantalla" aria-label="Ajustar a la pantalla"><i data-lucide="maximize"></i></button>
+    <button type="button" id="z-mas" title="Acercar" aria-label="Acercar"><i data-lucide="zoom-in"></i></button>
+    <button type="button" id="z-menos" title="Alejar" aria-label="Alejar"><i data-lucide="zoom-out"></i></button>
+  </div>
+  <div class="leyenda">
+    <span><svg width="34" height="10"><line x1="0" y1="5" x2="34" y2="5" stroke="var(--cable)" stroke-width="2"/></svg>Datos que pasan al siguiente paso</span>
+    <span><svg width="34" height="10"><line x1="0" y1="5" x2="34" y2="5" stroke="var(--correccion)" stroke-width="2" stroke-dasharray="7 6"/></svg>Vuelta atrás para corregir</span>
+    <span><span class="punto-ok"><i data-lucide="check"></i></span>Paso ejecutado</span>
+  </div>
+</div>
+
+<div class="fondo-panel" id="fondo"></div>
+<section class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="p-titulo"></section>
+
+<section class="lista">
+  <h2>El pipeline en lista</h2>
+  <p class="muted">Los mismos 20 pasos, en orden. Cada uno indica qué recibe, qué hace y qué entrega; los números de script corresponden a la carpeta <a href="https://github.com/diegosimemirror/oecd_health_ind/tree/main/3_codigo">3_codigo</a>.</p>
+  <div id="lista"></div>
+</section>
+
+<script>
+// ============================================================
+// Datos del pipeline: etapas, nodos (posición en el lienzo) y cables
+// ============================================================
+const REPO = "https://github.com/diegosimemirror/oecd_health_ind/blob/main/";
+const ETAPAS = {
+  e1: { nombre: "1 · Obtener", texto: "De la pregunta a los datos y las fichas, pasando por el acuerdo del mapa de procesos.", color: "var(--e1)", x: -70, y: -10, w: 1260, h: 720 },
+  e2: { nombre: "2 · Preparar", texto: "Revisar, limpiar y clasificar.", color: "var(--e2)", x: 1230, y: -10, w: 380, h: 720 },
+  e3: { nombre: "3 · Analizar", texto: "Cobertura, rankings, promedios y lo que toca a Perú.", color: "var(--e3)", x: 1650, y: -10, w: 1010, h: 720 },
+  e4: { nombre: "4 · Comunicar", texto: "Página, Excel y publicación.", color: "var(--e4)", x: 2700, y: -10, w: 480, h: 720 },
+};
+const A = 150, B = 370, C = 570;   // filas del lienzo
+const NODOS = [
+  { id: 1, etapa: "e1", x: 0, y: A, icono: "message-circle-question", tipo: "disparador", titulo: "Pregunta", sub: "pedido del usuario",
+    entrada: ["Ordenar los indicadores de salud de la OCDE en su marco de desempeño", "Promedio de cada indicador por parte del sistema", "¿Qué reportan más y menos los países?"],
+    metodo: ["Precisar el tipo: responder una pregunta que informa una decisión", "Destinatario: Perú, en proceso de adhesión a la OCDE"],
+    salida: ["4 preguntas de trabajo", "Estilo de la página: limpio, como Our World in Data"], cifras: ["4 preguntas"] },
+  { id: 2, etapa: "e1", x: 200, y: B, icono: "file-text", titulo: "Leer el marco", sub: "PDF OCDE 2024",
+    entrada: ["Rethinking Health System Performance Assessment (62 páginas)"],
+    metodo: ["Leer la figura del marco (p. 8 y 15) con pymupdf", "Extraer el capítulo 3: tablas 3.1 a 3.14 con ejemplos de indicadores por caja"],
+    salida: ["5 cajas, 14 subcajas y 4 dimensiones transversales", "Ejemplos de indicadores para cada caja"], cifras: ["5 cajas", "14 subcajas", "14 tablas"] },
+  { id: 3, etapa: "e1", x: 200, y: A, icono: "database", titulo: "Catálogo OCDE", sub: "e01 · API SDMX",
+    entrada: ["API pública de la OCDE (sdmx.oecd.org)"],
+    metodo: ["Bajar el catálogo completo de conjuntos de datos", "Quedarse con el tema Health y sus 11 subtemas"],
+    salida: ["Lista de conjuntos del tema Salud, con enlaces a sus fichas"], cifras: ["90 conjuntos"], archivo: "3_codigo/00_exploracion/e01_catalogo_y_disponibilidad.py" },
+  { id: 4, etapa: "e1", x: 400, y: A, icono: "scan-search", titulo: "Disponibilidad", sub: "e01-e02 · sin bajar datos",
+    entrada: ["90 conjuntos"],
+    metodo: ["Preguntar a la API qué medidas, países y años tiene cada conjunto (availableconstraint)", "Contar observaciones y miembros presentes"],
+    salida: ["Informe de exploración del catálogo", "Hallazgo: vistas resumen que repiten datos, conjuntos regionales y dos conjuntos gigantes"], cifras: ["35,4 M observaciones", "1 553 medidas", "Perú en 55 de 84 conjuntos"], archivo: "3_codigo/00_exploracion/e02_resumir_disponibilidad.py" },
+  { id: 5, etapa: "e1", x: 600, y: A, icono: "user-check", titulo: "Acordar", sub: "decisión del usuario",
+    entrada: ["Informe de exploración", "Mapa de procesos propuesto"],
+    metodo: ["«Al día» = a no más de 2 años del dato más reciente del indicador (opción A)", "Base: 38 miembros, con Perú como referencia", "Promedio por indicador, dentro de su caja", "Valor de Perú junto al promedio; vacío si no lo tiene"],
+    salida: ["Mapa de 14 procesos aprobado"], cifras: ["14 procesos"] },
+  { id: 6, etapa: "e1", x: 800, y: A, icono: "filter", titulo: "Definir indicadores", sub: "p02",
+    entrada: ["90 conjuntos y sus medidas"],
+    metodo: ["Excluir 7 vistas resumen (repiten medidas) y 4 conjuntos regionales", "Indicador = conjunto de detalle × medida", "La encuesta HSCS cuenta como 1 indicador por ronda"],
+    salida: ["Tabla de indicadores con su conjunto y enlaces"], cifras: ["79 conjuntos", "224 indicadores", "11 excluidos"], archivo: "3_codigo/p02_definir_indicadores.py" },
+  { id: 7, etapa: "e1", x: 1000, y: A, icono: "download", titulo: "Descargar datos", sub: "p03 · 79 pedidos", insignia: "2 reintentos",
+    entrada: ["79 conjuntos"],
+    metodo: ["Un CSV comprimido por conjunto, con pausas entre pedidos", "Gasto (SHA) y exposición ambiental: solo su serie principal (completos pesan ~2 GB)", "2 conjuntos fallaron por tiempo de espera y se volvieron a pedir"],
+    salida: ["79 archivos en 1_datos_crudos/datos, sin modificar"], cifras: ["4,4 M filas", "25 MB"], archivo: "3_codigo/p03_descargar_datos.py" },
+  { id: 8, etapa: "e1", x: 1000, y: C, icono: "book-open", titulo: "Descargar fichas", sub: "p04",
+    entrada: ["128 enlaces metodológicos de los 79 conjuntos"],
+    metodo: ["Bajar los PDF y Excel de «Sources and Methods»", "Leer los enlaces que hay dentro de cada PDF y bajar las sub-fichas"],
+    salida: ["Fichas con la fuente y las notas de cada país"], cifras: ["78 fichas", "82 sub-fichas", "3 ya no existen"], archivo: "3_codigo/p04_descargar_fichas.py" },
+  { id: 9, etapa: "e2", x: 1280, y: A, icono: "search", titulo: "Explorar", sub: "p05 · 10 puntos",
+    entrada: ["79 archivos descargados"],
+    metodo: ["Tamaño, tipos, duplicados, faltantes (y disfrazados), estadísticos, frecuencias, valores únicos, fechas y atípicos"],
+    salida: ["0 duplicados y 0 archivos dañados", "Negativos y valores >100 = límites de intervalos de confianza y diferencias", "La encuesta HSCS trae respuestas de texto"], cifras: ["15 642 filas sin valor"], archivo: "3_codigo/p05_explorar_datos.py" },
+  { id: 10, etapa: "e2", x: 1480, y: A, icono: "eraser", titulo: "Limpiar y unir", sub: "p07 · parte 1",
+    entrada: ["4,4 M filas"],
+    metodo: ["Quitar: filas sin valor (15 642), límites de confianza (60 530), duplicados de mortalidad semanal (220 657) y países socios (426 467)", "Obtener el año de cada dato (anual, semanal o ronda de encuesta)", "Los archivos originales no se tocan"],
+    salida: ["Una sola tabla de observaciones válidas (Parquet)"], cifras: ["3,68 M observaciones"], archivo: "3_codigo/p07_cobertura.py" },
+  { id: 11, etapa: "e2", x: 1480, y: B, icono: "tags", titulo: "Clasificar", sub: "p06 · marco HSPA", insignia: "corregido",
+    entrada: ["224 indicadores", "Tablas 3.1 a 3.14 del marco"],
+    metodo: ["Caja y subcaja de cada indicador; dimensiones transversales", "Fuente de la asignación: tabla del documento, analogía o criterio propio", "Nombre en español y quién produce el dato"],
+    salida: ["Clasificación completa (CSV y Excel)", "3 subcajas sin indicadores en el tema Salud"], cifras: ["224 clasificados"],
+    correccion: "Al revisar el ranking (nodo 13) se vio que 8 indicadores no los reporta el país: disponibilidad de alimentos (FAO), ausentismo laboral y empleo en salud (calculados por la OCDE). Se reclasificaron como «estimación o fuente internacional».", archivo: "3_codigo/p06_clasificar_marco.py" },
+  { id: 12, etapa: "e3", x: 1700, y: A, icono: "grid-3x3", titulo: "Cobertura", sub: "p07 · país × indicador",
+    entrada: ["3,68 M observaciones", "224 indicadores clasificados"],
+    metodo: ["Último año de cada país en cada indicador", "Frontera = año más reciente de algún miembro", "Al día si el rezago es de 2 años o menos"],
+    salida: ["Estado de cada país en cada indicador: al día, desactualizado o sin dato"], cifras: ["8 736 filas", "14 series no vigentes"], archivo: "3_codigo/p07_cobertura.py" },
+  { id: 13, etapa: "e3", x: 1900, y: A, icono: "list-ordered", titulo: "Ranking de indicadores", sub: "p08",
+    entrada: ["8 736 filas de cobertura"],
+    metodo: ["% de los 38 miembros con dato al día", "Elegibles: series vigentes que el país decide reportar", "4 niveles de priorización"],
+    salida: ["Más y menos reportados; promedio por caja"], cifras: ["202 elegibles", "35 casi universales", "54 minoritarios"], archivo: "3_codigo/p08_ranking_indicadores.py" },
+  { id: 14, etapa: "e3", x: 2100, y: B, icono: "users", titulo: "Ranking de países", sub: "p09",
+    entrada: ["Cobertura de los 202 elegibles"],
+    metodo: ["Contar indicadores al día por país", "Perú como referencia: no ocupa puesto entre los miembros"],
+    salida: ["Países Bajos 159 … Colombia 51", "Perú 78: quedaría en el puesto 34 de 39"], cifras: ["39 países"], archivo: "3_codigo/p09_ranking_paises.py" },
+  { id: 15, etapa: "e3", x: 2100, y: A, icono: "calculator", titulo: "Promedio y Perú", sub: "p10", insignia: "corregido",
+    entrada: ["3,68 M observaciones", "202 elegibles"],
+    metodo: ["Una serie de referencia por indicador: selección por defecto de la OCDE, totales y una unidad comparable", "Promedio simple de los miembros al día", "Valor de Perú en la misma serie; si no, su variante más parecida"],
+    salida: ["Promedio OCDE con unidad, n.º de países y años", "Valor de Perú o «≈ otra variante»"], cifras: ["214 promedios", "Perú en 74", "13 variantes"],
+    correccion: "Al revisar la página (nodo 18) se corrigieron 5 series de referencia (p. ej. egresos tomaba solo enfermedades infecciosas) y se agregó la variante de Perú cuando mide el indicador de otra forma.", archivo: "3_codigo/p10_promedios.py" },
+  { id: 16, etapa: "e3", x: 2300, y: A, icono: "flag", titulo: "Prioridades Perú", sub: "p11",
+    entrada: ["% de miembros al día", "Situación de Perú en cada indicador"],
+    metodo: ["Empezar a medir: ≥60 % de miembros al día y Perú sin dato", "Actualizar: dato antiguo; alinear: otra variante", "Evaluar (30-59 %) y baja prioridad (<30 %)"],
+    salida: ["Lista de prioridades por caja del marco"], cifras: ["31 empezar a medir", "13 alinear", "65 al día"], archivo: "3_codigo/p11_prioridades_peru.py" },
+  { id: 17, etapa: "e3", x: 2500, y: C, icono: "shield-check", titulo: "Comparabilidad Perú", sub: "p12",
+    entrada: ["Datos de Perú y sus marcas de calidad", "Notas sobre Perú en las fichas"],
+    metodo: ["Marcas del último año: estimado, definición distinta, quiebre de serie, provisional", "Extraer la fuente peruana declarada (INFORHUS, RENIPRESS, SIS, ENDES, INEI…)"],
+    salida: ["Qué mide Perú distinto y de dónde sale cada dato"], cifras: ["23 con alertas", "65 con fuente declarada"], archivo: "3_codigo/p12_comparabilidad_peru.py" },
+  { id: 18, etapa: "e4", x: 2760, y: A, icono: "monitor", titulo: "Página web", sub: "p13 + plantilla",
+    entrada: ["Tablas de los procesos 6 a 12"],
+    metodo: ["Diagrama del marco clicable, tabla con promedio OCDE y Perú, gráficos con validación de color", "Revisión en escritorio, móvil y modo oscuro"],
+    salida: ["index.html y este pipeline"], cifras: ["2 páginas"], archivo: "3_codigo/p13_construir_pagina.py" },
+  { id: 19, etapa: "e4", x: 2760, y: B, icono: "file-spreadsheet", titulo: "Libro de Excel", sub: "p13",
+    entrada: ["Todas las tablas"],
+    metodo: ["Una hoja por tabla, con títulos inmovilizados y hoja «Leeme»"],
+    salida: ["indicadores_ocde_salud.xlsx"], cifras: ["9 hojas"], archivo: "4_salidas/indicadores_ocde_salud.xlsx" },
+  { id: 20, etapa: "e4", x: 2960, y: A, icono: "github", titulo: "Publicar", sub: "GitHub Pages",
+    entrada: ["Código, datos crudos, tablas, Excel y páginas"],
+    metodo: ["Subir al repositorio oecd_health_ind", "Publicar la carpeta docs con GitHub Pages"],
+    salida: ["Repositorio y página pública"], cifras: ["1 repositorio"], archivo: "README.md" },
+];
+// [desde, hasta, etiqueta, tipo, posición de la etiqueta en el cable (0 a 1)]
+const CABLES = [
+  [1, 3, "1 pedido"], [1, 2, "PDF", "", 0.35], [3, 4, "90 conjuntos"], [4, 5, "informe"],
+  [5, 6, "mapa ok"], [6, 7, "79 conjuntos"], [6, 8, "128 enlaces", "", 0.8], [6, 11, "224 indicadores", "", 0.55, [30, 200]],
+  [2, 11, "14 subcajas · 14 tablas", "", 0.3], [7, 9, "4,4 M filas"], [9, 10, "79 revisados"],
+  [10, 12, "3,68 M obs."], [11, 12, "224 clasificados", "", 0.35], [12, 13, "8 736 filas"], [13, 14, "202 elegibles", "", 0.6],
+  [13, 15, ""], [15, 16, "214 promedios"], [16, 17, "202 prioridades", "", 0.6], [8, 17, "105 notas sobre Perú"],
+  [16, 18, "tablas p06-p12"], [14, 18, "39 países", "", 0.4], [17, 19, "tablas p02-p12", "", 0.55], [18, 20, "docs/"], [19, 20, "xlsx", "", 0.4],
+  [13, 11, "revisión: 8 no los reporta el país", "correccion"], [18, 15, "revisión: 5 series y variante de Perú", "correccion"],
+];
+
+// ============================================================
+// Dibujo
+// ============================================================
+const mundo = document.getElementById("mundo"), svg = document.getElementById("cables"), lienzo = document.getElementById("lienzo");
+const SVGNS = "http://www.w3.org/2000/svg";
+const ANCHO = 3260, ALTO = 780, N = 92;   // tamaño del mundo y del nodo
+mundo.style.width = ANCHO + "px"; mundo.style.height = ALTO + "px";
+svg.setAttribute("width", ANCHO); svg.setAttribute("height", ALTO);
+const porId = Object.fromEntries(NODOS.map(n => [n.id, n]));
+function el(tag, attrs = {}, ...hijos) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) { if (k === "class") e.className = v; else if (k === "style") e.style.cssText = v; else e.setAttribute(k, v); }
+  hijos.forEach(h => h !== null && h !== undefined && e.append(h instanceof Node ? h : document.createTextNode(h)));
+  return e;
+}
+const icono = nombre => el("i", { "data-lucide": nombre });
+
+// Notas de etapa (fondo)
+Object.values(ETAPAS).forEach(e => mundo.insertBefore(el("div", { class: "nota", style: `--c:${e.color};left:${e.x}px;top:${e.y}px;width:${e.w}px;height:${e.h}px` },
+  el("span", { class: "cabeza" }, e.nombre), el("p", {}, e.texto)), svg));
+
+// Marcadores de flecha
+const defs = document.createElementNS(SVGNS, "defs");
+[["f-ok", "var(--cable)"], ["f-corr", "var(--correccion)"]].forEach(([id, color]) => {
+  const m = document.createElementNS(SVGNS, "marker");
+  Object.entries({ id, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }).forEach(([k, v]) => m.setAttribute(k, v));
+  const p = document.createElementNS(SVGNS, "path"); p.setAttribute("d", "M0,0 L10,5 L0,10 z"); p.setAttribute("fill", color);
+  m.append(p); defs.append(m);
+});
+svg.append(defs);
+
+// Cables: curvas de Bézier desde el asa de salida (derecha) hasta el asa de entrada (izquierda)
+function punto(t, p0, p1, p2, p3) { const u = 1 - t; return u*u*u*p0 + 3*u*u*t*p1 + 3*u*t*t*p2 + t*t*t*p3; }
+CABLES.forEach(([de, a, etiqueta, tipo, posicion, desvio]) => {
+  const n1 = porId[de], n2 = porId[a];
+  const sx = n1.x + N + 6, sy = n1.y + N / 2, tx = n2.x - 8, ty = n2.y + N / 2;
+  let c1x, c1y, c2x, c2y;
+  if (tx > sx) {                       // hacia adelante
+    const dx = Math.max(60, (tx - sx) * 0.45);
+    // si cambia de fila, el cable baja (o sube) pronto para no pasar por encima de otros nodos
+    const salida = Math.abs(ty - sy) > 40 ? Math.min(dx, 20) : dx;
+    [c1x, c1y, c2x, c2y] = [sx + salida, sy, tx - dx, ty];
+    // desvío manual del primer punto de control, para esquivar un nodo que está en el camino
+    if (desvio) [c1x, c1y] = [sx + desvio[0], sy + desvio[1]];
+  } else {                             // vuelta atrás: arco por arriba o por abajo
+    const arriba = ty <= sy, dy = arriba ? -230 : 300;
+    [c1x, c1y, c2x, c2y] = [sx + 160, sy + dy, tx - 160, ty + dy];
+  }
+  const ruta = document.createElementNS(SVGNS, "path");
+  ruta.setAttribute("d", `M${sx},${sy} C${c1x},${c1y} ${c2x},${c2y} ${tx},${ty}`);
+  ruta.setAttribute("class", "cable" + (tipo ? " " + tipo : ""));
+  ruta.setAttribute("marker-end", `url(#${tipo ? "f-corr" : "f-ok"})`);
+  svg.append(ruta);
+  const t = posicion ?? 0.5, lx = punto(t, sx, c1x, c2x, tx), ly = punto(t, sy, c1y, c2y, ty);
+  const txt = document.createElementNS(SVGNS, "text");
+  txt.setAttribute("x", lx); txt.setAttribute("y", ly - 8); txt.setAttribute("text-anchor", "middle");
+  txt.setAttribute("class", "etq-cable" + (tipo ? " " + tipo : ""));
+  txt.textContent = etiqueta; svg.append(txt);
+});
+
+// Nodos
+NODOS.forEach(n => {
+  const caja = el("span", { class: "caja" }, el("span", { class: "icono", style: `--c:${ETAPAS[n.etapa].color}` }, icono(n.icono)),
+    el("span", { class: "ok", title: "Ejecutado" }, icono("check")));
+  if (n.tipo === "disparador") caja.append(el("span", { class: "rayo" }, icono("zap")));
+  if (n.insignia) caja.append(el("span", { class: "insignia" }, n.insignia));
+  const b = el("button", { class: "nodo" + (n.tipo === "disparador" ? " disparador" : ""), type: "button", style: `left:${n.x}px;top:${n.y}px`,
+    "aria-label": `Paso ${n.id}: ${n.titulo}` }, caja, el("span", { class: "etq" }, el("b", {}, `${n.id}. ${n.titulo}`), el("small", {}, n.sub)));
+  b.addEventListener("click", ev => { if (!movido) abrir(n); });
+  mundo.append(b);
+});
+
+// ============================================================
+// Panel del nodo: Entrada | Nodo | Salida (como la vista de detalle de n8n)
+// ============================================================
+const panel = document.getElementById("panel"), fondo = document.getElementById("fondo");
+let ultimoFoco = null;
+function lista(items) { const u = el("ul"); items.forEach(i => u.append(el("li", {}, i))); return u; }
+function abrir(n) {
+  ultimoFoco = document.activeElement;
+  const cerrar = el("button", { class: "cerrar", type: "button", "aria-label": "Cerrar" }, icono("x"));
+  cerrar.addEventListener("click", cerrarPanel);
+  const cab = el("header", {}, el("span", { class: "icono", style: `--c:${ETAPAS[n.etapa].color}` }, icono(n.icono)),
+    el("div", {}, el("h2", { id: "p-titulo", style: "margin:0" }, `${n.id}. ${n.titulo}`),
+      el("span", { class: "muted" }, ETAPAS[n.etapa].nombre + " · ", n.archivo ? el("a", { href: REPO + n.archivo, target: "_blank", rel: "noopener" }, n.archivo) : n.sub)),
+    cerrar);
+  const nodo = el("div", { class: "col" }, el("h3", {}, "Nodo: qué hace"), lista(n.metodo));
+  if (n.correccion) nodo.append(el("p", { class: "correc" }, el("b", {}, "Corrección: "), n.correccion));
+  const salida = el("div", { class: "col" }, el("h3", {}, "Salida"), lista(n.salida));
+  const chips = el("div", { class: "chips" }); n.cifras.forEach(c => chips.append(el("span", { class: "chip" }, c))); salida.append(chips);
+  panel.replaceChildren(cab, el("div", { class: "cols" }, el("div", { class: "col" }, el("h3", {}, "Entrada"), lista(n.entrada)), nodo, salida));
+  lucide.createIcons();
+  panel.classList.add("abierto"); fondo.classList.add("abierto");
+  cerrar.focus();
+}
+function cerrarPanel() { panel.classList.remove("abierto"); fondo.classList.remove("abierto"); if (ultimoFoco) ultimoFoco.focus(); }
+fondo.addEventListener("click", cerrarPanel);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && panel.classList.contains("abierto")) cerrarPanel(); });
+
+// ============================================================
+// Mover y acercar el lienzo
+// ============================================================
+let vista = { x: 0, y: 0, s: 1 }, movido = false;
+function aplicar() { mundo.style.transform = `translate(${vista.x}px, ${vista.y}px) scale(${vista.s})`; }
+function ajustar() {
+  const r = lienzo.getBoundingClientRect(), m = 30;
+  const s = Math.min((r.width - 2 * m) / (ANCHO + 80), (r.height - 2 * m - 30) / ALTO, 1.2);
+  vista = { s, x: (r.width - (ANCHO - 70) * s) / 2 + 70 * s, y: (r.height - ALTO * s) / 2 + 20 * s }; aplicar();
+}
+function zoom(factor, cx, cy) {
+  const r = lienzo.getBoundingClientRect(); cx = cx ?? r.width / 2; cy = cy ?? r.height / 2;
+  const s = Math.min(2.2, Math.max(0.2, vista.s * factor));
+  vista.x = cx - (cx - vista.x) * (s / vista.s); vista.y = cy - (cy - vista.y) * (s / vista.s); vista.s = s; aplicar();
+}
+document.getElementById("z-ajustar").onclick = ajustar;
+document.getElementById("z-mas").onclick = () => zoom(1.2);
+document.getElementById("z-menos").onclick = () => zoom(1 / 1.2);
+// Rueda: solo con Ctrl (o en un trackpad al pellizcar) acerca; si no, la página se desplaza normal
+lienzo.addEventListener("wheel", e => {
+  if (!e.ctrlKey && !e.metaKey) return;
+  e.preventDefault(); const r = lienzo.getBoundingClientRect();
+  zoom(e.deltaY < 0 ? 1.1 : 1 / 1.1, e.clientX - r.left, e.clientY - r.top);
+}, { passive: false });
+// Arrastrar con el mouse o un dedo; pellizcar con dos dedos
+const punteros = new Map(); let inicio = null, distancia0 = null, escala0 = 1;
+lienzo.addEventListener("pointerdown", e => {
+  if (e.target.closest(".controles")) return;
+  punteros.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (punteros.size === 1) { inicio = { px: e.clientX, py: e.clientY, x: vista.x, y: vista.y }; movido = false; }
+  if (punteros.size === 2) { const [a, b] = [...punteros.values()]; distancia0 = Math.hypot(a.x - b.x, a.y - b.y); escala0 = vista.s; }
+});
+window.addEventListener("pointermove", e => {
+  if (!punteros.has(e.pointerId)) return;
+  punteros.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (punteros.size === 2 && distancia0) {
+    const [a, b] = [...punteros.values()], r = lienzo.getBoundingClientRect();
+    zoom((escala0 * Math.hypot(a.x - b.x, a.y - b.y) / distancia0) / vista.s, (a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top);
+    movido = true; return;
+  }
+  if (inicio) {
+    const dx = e.clientX - inicio.px, dy = e.clientY - inicio.py;
+    if (Math.abs(dx) + Math.abs(dy) > 4) { movido = true; lienzo.classList.add("arrastrando"); }
+    vista.x = inicio.x + dx; vista.y = inicio.y + dy; aplicar();
+  }
+});
+window.addEventListener("pointerup", e => {
+  punteros.delete(e.pointerId);
+  if (punteros.size < 2) distancia0 = null;
+  if (punteros.size === 0) { inicio = null; lienzo.classList.remove("arrastrando"); setTimeout(() => { movido = false; }, 0); }
+});
+
+// ============================================================
+// Vista en lista (versión en texto del diagrama)
+// ============================================================
+const contLista = document.getElementById("lista");
+Object.entries(ETAPAS).forEach(([k, e]) => {
+  contLista.append(el("div", { class: "etapa-tit" }, el("i", { style: `--c:${e.color}` }), e.nombre));
+  const ol = el("ol");
+  NODOS.filter(n => n.etapa === k).forEach(n => {
+    const b = el("button", { type: "button" }, n.titulo); b.addEventListener("click", () => abrir(n));
+    ol.append(el("li", {}, el("span", { class: "num", style: `--c:${e.color}` }, String(n.id)),
+      el("div", {}, b, el("span", { class: "muted" }, ` · ${n.sub}`), el("br"),
+        el("span", { class: "flujo" }, `${n.entrada[0]} → ${n.salida[0]}`))));
+  });
+  contLista.append(ol);
+});
+
+lucide.createIcons();
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
+  ajustar();
+  // Enlace directo al detalle de un nodo: pipeline.html#nodo-15
+  const m = location.hash.match(/^#nodo-(\d+)$/);
+  if (m && porId[+m[1]]) abrir(porId[+m[1]]);
+});
+window.addEventListener("resize", ajustar);
+</script>
+</body>
+</html>
