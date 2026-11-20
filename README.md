@@ -10,6 +10,7 @@ Sitio personal hecho solo con HTML y CSS, sin plantilla: https://diegosimemirror
 | `imagenes/` | Foto y gráficos |
 | `files/` | CV en PDF |
 | `demos/` | Herramientas interactivas: incendios en Junín, rutas de gestión del Estado e indicadores de salud de la OCDE |
+| `demos/mapeo-procesos-estado/pipeline.html` | Documento interno: cómo se construyó la herramienta de rutas, proceso por proceso |
 | `portfolio/` | Redirecciones desde las direcciones de la versión anterior |
 | `.github/workflows/publicar.yml` | Publica el sitio en GitHub Pages con cada cambio en `master` |
 

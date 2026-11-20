@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pipeline de Rutas de gestión del Estado</title>
+<meta name="description" content="Cómo se construyó la herramienta Rutas de gestión del Estado: de la biblioteca normativa a la página publicada, paso por paso.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Documento interno: el proceso de trabajo dibujado como un flujo de n8n.
+   Cada ficha es un proceso; el color dice el tramo; el talón dice qué resultado deja. */
+:root{
+  --bg:#ebecf0; --surface:#ffffff; --ink:#111111; --muted:#4a4f58; --line:#c3c6cf; --soft:#dcdee4; --dot:#c0c3cc;
+  --band:#111111; --on-band:#ffffff; --band-muted:#b4b8c2;
+  --d:#89f0e1; --f:#a6a0f5; --m:#abf089; --c:#f5ad6e; --r:#f5abe1; --p:#f6e35c; --on-fill:#111111;
+  --focus:#1d4ed8;
+  --font:"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#08090c; --surface:#16181d; --ink:#f3f4f6; --muted:#a6abb6; --line:#3b3f4a; --soft:#22252c; --dot:#2a2d37; --band:#16181d; --band-muted:#a6abb6; --focus:#9db4ff; color-scheme:dark; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ol,ul{margin:0}
+ol,ul{padding:0;list-style:none}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1240px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.lbl{font:500 10.5px/1.3 var(--mono);letter-spacing:.07em;text-transform:uppercase}
+.sec{font:500 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.t-D{--sc:var(--d)} .t-F{--sc:var(--f)} .t-M{--sc:var(--m)} .t-C{--sc:var(--c)} .t-R{--sc:var(--r)} .t-P{--sc:var(--p)}
+
+.top{background:var(--band);color:var(--on-band)}
+.top .wrap{padding-block:22px 20px}
+.top h1{font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.top p{color:var(--band-muted);max-width:66ch;margin-top:6px}
+.top a{color:var(--on-band)}
+.legend{display:flex;flex-wrap:wrap;gap:4px;margin-top:16px}
+.legend li{background:var(--sc);color:var(--on-fill);font-size:13px;font-weight:700;padding:4px 9px;border-radius:4px}
+main{padding-block:26px 64px;display:grid;gap:34px}
+main>*{min-width:0}
+h2{font-size:19px;font-weight:800;line-height:1.2}
+.lead{color:var(--muted);max-width:72ch;margin-top:4px}
+
+/* Lienzo */
+.canvas{position:relative;padding:24px 22px;margin-inline:-6px;border-radius:12px;background-image:radial-gradient(var(--dot) 1.3px,transparent 1.5px);background-size:22px 22px}
+.canvas>svg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.nodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(188px,1fr));gap:46px 40px}
+.nodes>li{min-width:0}
+.node{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto 1fr auto;grid-template-areas:"num tag" "name name" "who who" "stub stub";height:100%;border-radius:10px;overflow:hidden;background:var(--sc);color:var(--on-fill)}
+.n-num{grid-area:num;font:800 34px/1 var(--font);letter-spacing:-.03em;font-variant-numeric:tabular-nums;padding:13px 0 0 14px}
+.n-tag{grid-area:tag;justify-self:end;align-self:start;padding:15px 14px 0 8px;text-align:right}
+.n-dec{display:inline-flex;gap:6px;align-items:center;background:var(--on-fill);color:var(--sc);padding:2px 7px;border-radius:3px;font-weight:600}
+.n-dec i{width:7px;height:7px;background:currentColor;transform:rotate(45deg)}
+.n-name{grid-area:name;font-weight:700;line-height:1.25;padding:9px 14px 0;text-wrap:balance}
+.n-who{grid-area:who;align-self:end;font-size:13px;line-height:1.3;padding:10px 14px 12px}
+.n-who .lbl,.n-stub .lbl{display:block;opacity:.72;margin-bottom:1px}
+.n-stub{grid-area:stub;position:relative;background:var(--surface);color:var(--ink);border-top:2px dashed var(--bg);padding:9px 14px 12px;font-size:13px;font-weight:700;line-height:1.3}
+.n-stub::before,.n-stub::after{content:"";position:absolute;top:-8px;width:14px;height:14px;border-radius:50%;background:var(--bg)}
+.n-stub::before{left:-7px} .n-stub::after{right:-7px}
+.n-back{display:block;margin-top:5px;font-weight:500;color:var(--muted)}
+.endcap{display:flex;align-items:flex-start;gap:10px}
+.end{flex:none;width:26px;height:26px;margin:17px 0 0 18px;border-radius:50%;border:7px solid var(--ink)}
+.endcap .lbl{margin-top:24px;color:var(--muted)}
+.w{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.port,.ah{fill:var(--ink)}
+
+/* Tablas y listas */
+.tablewrap{overflow-x:auto;background:var(--surface);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:760px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font:500 10.5px/1.3 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+td.n{font:600 12px var(--mono);white-space:nowrap}
+td.n i{display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--sc);margin-right:7px;vertical-align:-1px}
+td b{font-weight:700}
+code{font:500 12px var(--mono);background:var(--soft);padding:1px 5px;border-radius:4px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px 34px}
+.plain{display:grid;gap:8px;max-width:74ch}
+.plain li{padding-left:16px;position:relative}
+.plain li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--ink);border-radius:1px}
+footer .wrap{padding-block:18px 28px;border-top:2px solid var(--ink);font-size:13px;color:var(--muted)}
+@media (max-width:560px){
+  .canvas{padding:8px 0;margin-inline:0}
+  .nodes{grid-template-columns:minmax(0,1fr);gap:34px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1>Pipeline de «Rutas de gestión del Estado»</h1>
+    <p>Documento interno. Muestra cómo se construyó <a href="index.html">la herramienta</a>, desde la biblioteca de normas hasta la página publicada. Está dibujado igual que la herramienta: cada ficha es un proceso, el cable marca el orden y el talón dice qué resultado deja.</p>
+    <ul class="legend" aria-label="El color indica el tramo del trabajo">
+      <li class="t-D">Definir y decidir</li><li class="t-F">Fuentes y lectura</li><li class="t-M">Datos</li><li class="t-C">Construir</li><li class="t-R">Revisar</li><li class="t-P">Publicar</li>
+    </ul>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section aria-labelledby="h-flujo">
+  <h2 id="h-flujo">El flujo, de principio a fin</h2>
+  <p class="lead">Veinte procesos. Los que llevan un rombo son puntos de decisión o de control: si no se cumplen, el trabajo vuelve atrás.</p>
+  <div class="canvas" id="canvas" style="margin-top:12px"><svg aria-hidden="true"></svg><ol class="nodes" id="nodes"></ol></div>
+</section>
+
+<section aria-labelledby="h-mapa">
+  <h2 id="h-mapa">Mapa de procesos</h2>
+  <p class="lead">La misma secuencia, en la forma insumo → método → resultado. El resultado de cada proceso es el insumo del siguiente.</p>
+  <div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>N.º</th><th>Proceso</th><th>Insumo</th><th>Método</th><th>Resultado</th></tr></thead><tbody id="tabla"></tbody></table></div>
+</section>
+
+<div class="cols">
+<section aria-labelledby="h-arch">
+  <h2 id="h-arch">Archivos</h2>
+  <p class="lead" style="margin-bottom:10px">La herramienta es un solo archivo HTML que se arma con cuatro partes y cuatro scripts.</p>
+  <div class="tablewrap"><table style="min-width:0"><thead><tr><th>Archivo</th><th>Qué contiene o hace</th></tr></thead><tbody>
+    <tr><td><code>1_cabecera_y_estilos.html</code></td><td>Título, colores, estilos y cabecera de la página.</td></tr>
+    <tr><td><code>2_datos_base.js</code></td><td>Datos de los cuatro sistemas y del planeamiento: 24 pasos y 189 actividades.</td></tr>
+    <tr><td><code>3_datos_ampliacion.js</code></td><td>Datos de los seis mecanismos: 30 pasos y 148 actividades.</td></tr>
+    <tr><td><code>4_aplicacion.js</code></td><td>La lógica: árbol de preguntas, cables, vistas y copia a Excel.</td></tr>
+    <tr><td><code>1_ensamblar.sh</code></td><td>Une las cuatro partes en <code>rutas-gestion-estado.html</code>.</td></tr>
+    <tr><td><code>2_validar.js</code></td><td>Comprueba la sintaxis y que todo lo citado exista.</td></tr>
+    <tr><td><code>3_copia_para_web.sh</code></td><td>Agrega el esqueleto HTML para publicar en GitHub Pages.</td></tr>
+    <tr><td><code>4_capturas.sh</code></td><td>Toma capturas en computadora, celular y modo oscuro.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section aria-labelledby="h-herr">
+  <h2 id="h-herr">Herramientas</h2>
+  <p class="lead" style="margin-bottom:10px">No se instaló ningún paquete. Todo se hizo con programas que ya estaban en la computadora.</p>
+  <div class="tablewrap"><table style="min-width:0"><thead><tr><th>Herramienta</th><th>Para qué se usó</th></tr></thead><tbody>
+    <tr><td><b>pdftotext, iconv y unzip</b></td><td>Convertir PDF y Word a texto en UTF-8 para buscar artículos.</td></tr>
+    <tr><td><b>Node.js</b></td><td>Validar los datos sin abrir un navegador.</td></tr>
+    <tr><td><b>Google Chrome sin ventana</b></td><td>Tomar capturas de la página para revisarla.</td></tr>
+    <tr><td><b>git y curl</b></td><td>Subir los cambios a GitHub y comprobar el sitio publicado.</td></tr>
+    <tr><td><b>HTML, CSS y JavaScript</b></td><td>La herramienta, sin librerías. Las letras vienen de Google Fonts.</td></tr>
+    <tr><td><b>Claude Code</b></td><td>Agente de IA que leyó las normas, escribió los datos y el código, y ejecutó los pasos, con las decisiones del autor.</td></tr>
+  </tbody></table></div>
+</section>
+</div>
+
+<div class="cols">
+<section aria-labelledby="h-dec">
+  <h2 id="h-dec">Decisiones que marcaron el resultado</h2>
+  <ul class="plain" style="margin-top:10px">
+    <li>El orden es el de la gestión, no el de las normas: las normas van como fuente de cada actividad.</li>
+    <li>Los datos se separan de la forma. Por eso se pudo cambiar de la matriz a la ruta cableada sin tocar el contenido.</li>
+    <li>Los datos base no se modifican al ampliar: los seis mecanismos van en un bloque aparte.</li>
+    <li>Cada nivel tiene su forma: ficha para el paso, flecha para el procedimiento y nota para la actividad.</li>
+    <li>El color dice el sistema que gobierna el paso. Solo se agregó un color, para la inversión privada.</li>
+    <li>Cuando la norma decía algo distinto a lo esperado, se siguió la norma y se anotó la diferencia.</li>
+  </ul>
+</section>
+<section aria-labelledby="h-lim">
+  <h2 id="h-lim">Límites del proceso</h2>
+  <ul class="plain" style="margin-top:10px">
+    <li>Dos mecanismos, el contrato de Gobierno a Gobierno y el convenio de apoyo presupuestario, se armaron con los resúmenes de los índices y no con el texto completo de sus normas.</li>
+    <li>La validación automática comprueba que las referencias existan, no que el contenido jurídico sea correcto. Eso requiere la revisión de un especialista.</li>
+    <li>La revisión visual se hizo con capturas, no probando cada clic.</li>
+    <li>El orden de los pasos y el producto corto de cada ficha son una lectura de las normas y deben validarse.</li>
+  </ul>
+</section>
+</div>
+
+</main>
+<footer><div class="wrap">Pipeline de trabajo al 20 de noviembre de 2026. La herramienta tiene 9 rutas, 54 pasos, 111 procedimientos, 337 actividades, 58 actores y 84 normas.</div></footer>
+
+<script>
+/* ============================================================
+   PROCESO A: Datos del pipeline
+   Insumo:    lo que se hizo en cada etapa del trabajo
+   Resultado: una lista; de ella salen las fichas del flujo y la tabla
+   Cada fila: t = tramo (color), n = nombre, con = quién o con qué, ins = insumo,
+   met = método, res = resultado, dec = punto de decisión o control, back = a dónde vuelve si falla
+   ============================================================ */
+const PASOS = [
+ {t:'D', n:'Pedido y lector', con:'El autor', ins:'Una necesidad: los gestores públicos deben saber a quién le toca hacer qué.', met:'Definir la pregunta, el lector y el alcance: tres niveles, con responsable, actividad y fuente enlazada.', res:'Encargo con alcance definido'},
+ {t:'F', n:'Biblioteca normativa', con:'El autor', ins:'Normas oficiales de El Peruano, el MEF, el OECE, el CEPLAN, la Contraloría y ProInversión.', met:'Reunirlas en once carpetas, cada una con un índice que resume la norma, su vigencia y su enlace oficial.', res:'Once carpetas con índice'},
+ {t:'F', n:'Lectura de índices', con:'Agente de IA', ins:'Los índices de las carpetas.', met:'Ubicar las normas vigentes, los cambios recientes y los puntos marcados «por verificar».', res:'Lista de normas por leer'},
+ {t:'F', n:'Extracción de texto', con:'pdftotext, iconv y unzip', ins:'Leyes, reglamentos y directivas en PDF y Word.', met:'Convertirlos a texto plano en UTF-8 para poder buscar artículos.', res:'Texto buscable de cada norma'},
+ {t:'F', n:'Lectura de artículos', con:'Agente de IA', ins:'El texto de cada norma.', met:'Buscar los artículos que fijan responsable, requisito, plazo y producto, y anotar la referencia exacta.', res:'Notas por paso, con su artículo'},
+ {t:'M', n:'Modelo de datos', con:'Agente de IA', ins:'Las notas de lectura.', met:'Definir una sola estructura: sistemas, fases, actores, normas, pasos, procedimientos, actividades, conexiones y rutas.', res:'Estructura única de datos'},
+ {t:'M', n:'Datos base', con:'Agente de IA', ins:'Notas de presupuesto, inversiones, contrataciones, endeudamiento y planeamiento.', met:'Escribir cada actividad como una fila: qué se hace, quién, qué resulta y según qué norma.', res:'24 pasos y 189 actividades'},
+ {t:'C', n:'Versión A: matriz', con:'HTML, CSS y JavaScript', ins:'Los datos base.', met:'Mostrar los sistemas en filas y las fases en columnas, con tres niveles que se abren con un clic.', res:'Primera herramienta publicada'},
+ {t:'D', n:'Decisión: otra forma de mostrarlo', con:'El autor', dec:true, ins:'La versión A y tres referencias: un flujo de n8n, flechas con notas y la paleta de Technology Review.', met:'Pedir una alternativa que cambie solo la forma de comunicar, no el contenido.', res:'Criterios de la versión B'},
+ {t:'C', n:'Versión B: ruta cableada', con:'HTML, CSS y JavaScript', ins:'Los datos base y los criterios.', met:'Dibujar cada gestión como fichas unidas por un cable, con una forma por nivel y un color sólido por sistema.', res:'Cabecera, estilos y aplicación'},
+ {t:'D', n:'Decisión: seis mecanismos más', con:'El autor', dec:true, ins:'La versión B y las carpetas de CAR, APP, Obras por Impuestos, PpR, CAP y G2G.', met:'Fijar cuatro definiciones antes de trabajar: árbol de preguntas, tres niveles, color por sistema y notas de EsSalud.', res:'Alcance de la ampliación'},
+ {t:'M', n:'Datos de ampliación', con:'Agente de IA', ins:'La lectura de las seis carpetas (procesos 3 a 5, repetidos).', met:'Escribir los pasos nuevos con el mismo formato y agregarlos en un bloque aparte, sin tocar los datos base.', res:'30 pasos y 148 actividades'},
+ {t:'C', n:'Ensamblar', con:'1_ensamblar.sh', ins:'Las cuatro partes.', met:'Unirlas en orden en un solo archivo.', res:'Un solo archivo HTML'},
+ {t:'R', n:'Validar referencias', con:'Node.js (2_validar.js)', dec:true, back:'Si hay errores, vuelve al 12', ins:'El archivo ensamblado.', met:'Comprobar la sintaxis y que cada actor, norma, paso y ruta citados existan.', res:'54 pasos y 337 actividades, sin errores'},
+ {t:'R', n:'Revisión visual', con:'Chrome sin ventana (4_capturas.sh)', dec:true, back:'Si algo se ve mal, vuelve al 10', ins:'El archivo ensamblado.', met:'Tomar capturas en computadora, celular y modo oscuro, y buscar textos encimados o desbordes.', res:'Capturas revisadas'},
+ {t:'P', n:'Publicar el artifact', con:'Claude', ins:'El archivo validado.', met:'Publicarlo en el mismo enlace, para que la dirección no cambie.', res:'Enlace actualizado'},
+ {t:'P', n:'Copia para la web', con:'3_copia_para_web.sh', ins:'El archivo validado.', met:'Agregar el esqueleto HTML que el visor de artifacts pone por su cuenta.', res:'index.html del sitio'},
+ {t:'P', n:'Subir a GitHub', con:'git', ins:'El index.html, la imagen y los textos de la página del proyecto.', met:'Traer los cambios, confirmarlos y subirlos. GitHub Pages publica solo.', res:'Sitio publicado'},
+ {t:'R', n:'Verificar en línea', con:'curl', dec:true, back:'Si no aparece, espera y repite', ins:'Las direcciones del sitio.', met:'Descargar las páginas y comprobar que muestran la versión nueva.', res:'Sitio verificado'},
+ {t:'D', n:'Registro', con:'Agente de IA y el autor', ins:'Las decisiones, los hallazgos y los pendientes.', met:'Anotar qué se decidió, en qué corrigió la norma a la intuición y qué falta revisar.', res:'Notas del proyecto y este pipeline'}
+];
+
+/* ============================================================
+   PROCESO B: Dibujar las fichas y la tabla
+   Insumo:    la lista PASOS
+   Resultado: el flujo y el mapa de procesos en la página
+   ============================================================ */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dos = n => String(n).padStart(2, '0');
+document.getElementById('nodes').innerHTML = PASOS.map((p, i) =>
+  '<li><div class="node t-' + p.t + '"><span class="n-num">' + dos(i + 1) + '</span>' +
+  '<span class="n-tag lbl">' + (p.dec ? '<span class="n-dec"><i></i>' + (p.t === 'D' ? 'Decisión' : 'Control') + '</span>' : '') + '</span>' +
+  '<span class="n-name">' + esc(p.n) + '</span>' +
+  '<span class="n-who"><span class="lbl">Con</span>' + esc(p.con) + '</span>' +
+  '<span class="n-stub"><span class="lbl">Resultado</span>' + esc(p.res) + (p.back ? '<span class="n-back">' + esc(p.back) + '</span>' : '') + '</span></div></li>').join('') +
+  '<li class="endcap"><i class="end"></i><span class="lbl">Herramienta publicada</span></li>';
+document.getElementById('tabla').innerHTML = PASOS.map((p, i) =>
+  '<tr class="t-' + p.t + '"><td class="n"><i></i>' + dos(i + 1) + '</td><td><b>' + esc(p.n) + '</b><br>' + esc(p.con) + '</td><td>' + esc(p.ins) + '</td><td>' + esc(p.met) + '</td><td><b>' + esc(p.res) + '</b></td></tr>').join('');
+
+/* ============================================================
+   PROCESO C: Trazar los cables
+   Insumo:    la posición real de cada ficha en la pantalla
+   Resultado: líneas con flecha entre fichas; se vuelven a trazar si cambia el ancho
+   ============================================================ */
+const f1 = n => Math.round(n * 10) / 10;
+function caja(el, base){ const a = el.getBoundingClientRect(), b = base.getBoundingClientRect(), l = a.left - b.left, t = a.top - b.top; return {l, t, r:l + a.width, b:t + a.height}; }
+function camino(pts, rad){   // une los puntos con tramos rectos y esquinas redondeadas
+  let d = 'M' + f1(pts[0][0]) + ' ' + f1(pts[0][1]);
+  for(let i = 1; i < pts.length; i++){
+    const p = pts[i], a = pts[i - 1], c = pts[i + 1];
+    if(!c){ d += 'L' + f1(p[0]) + ' ' + f1(p[1]); break; }
+    const r = Math.min(rad, (Math.abs(p[0] - a[0]) + Math.abs(p[1] - a[1])) / 2, (Math.abs(c[0] - p[0]) + Math.abs(c[1] - p[1])) / 2);
+    d += 'L' + f1(p[0] + Math.sign(a[0] - p[0]) * r) + ' ' + f1(p[1] + Math.sign(a[1] - p[1]) * r) + 'Q' + f1(p[0]) + ' ' + f1(p[1]) + ' ' + f1(p[0] + Math.sign(c[0] - p[0]) * r) + ' ' + f1(p[1] + Math.sign(c[1] - p[1]) * r);
+  }
+  return d;
+}
+function trazar(){
+  const cv = document.getElementById('canvas'), svg = cv.querySelector('svg'), lis = Array.from(cv.querySelectorAll('.nodes > li')), PY = 30;
+  let out = '';
+  for(let i = 0; i < lis.length - 1; i++){
+    const LA = caja(lis[i], cv), LB = caja(lis[i + 1], cv), A = caja(lis[i].firstElementChild, cv), B = caja(lis[i + 1].firstElementChild, cv);
+    const ya = LA.t + PY, yb = LB.t + PY; let pts, abajo = false;
+    if(Math.abs(LA.t - LB.t) < 3 && LB.l > LA.l) pts = [[A.r, ya], [B.l - 8, yb]];                       // misma fila
+    else if(Math.abs(LA.l - LB.l) < 3){ const x = LA.l + 31; pts = [[x, A.b], [x, B.t - 8]]; abajo = true; } // una sola columna
+    else { const my = LA.b + (LB.t - LA.b) / 2, x1 = A.r + 16, x2 = B.l - 18; pts = [[A.r, ya], [x1, ya], [x1, my], [x2, my], [x2, yb], [B.l - 8, yb]]; } // salto de fila
+    const e = pts[pts.length - 1], s = pts[0];
+    const punta = abajo ? [[e[0] - 5.5, e[1]], [e[0] + 5.5, e[1]], [e[0], e[1] + 8]] : [[e[0], e[1] - 5.5], [e[0], e[1] + 5.5], [e[0] + 8, e[1]]];
+    out += '<path class="w" d="' + camino(pts, 10) + '"/><circle class="port" cx="' + f1(s[0]) + '" cy="' + f1(s[1]) + '" r="4.5"/><polygon class="ah" points="' + punta.map(p => f1(p[0]) + ',' + f1(p[1])).join(' ') + '"/>';
+  }
+  svg.innerHTML = out;
+}
+let cuadro = 0;
+const alCambiar = () => { cancelAnimationFrame(cuadro); cuadro = requestAnimationFrame(trazar); };
+if(window.ResizeObserver) new ResizeObserver(alCambiar).observe(document.getElementById('canvas')); else window.addEventListener('resize', alCambiar);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(trazar);
+trazar();
+</script>
+</body>
+</html>
