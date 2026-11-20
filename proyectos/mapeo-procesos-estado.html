@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mapeo de procesos del Estado · Diego Sime</title>
-<meta name="description" content="Una herramienta web que muestra, en tres niveles, quién hace qué en los sistemas de presupuesto, inversiones, contrataciones y endeudamiento del Estado peruano.">
+<title>Rutas de gestión del Estado · Diego Sime</title>
+<meta name="description" content="Una herramienta web con nueve rutas de gestión pública del Estado peruano: con quién se coordina, por qué y qué producto se obtiene en cada paso.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../estilos.css">
 </head>
@@ -27,21 +27,21 @@
 <!-- PROCESO 2: Título, gráfico y ficha. El clic en el gráfico lleva a la herramienta. -->
 <div class="encabezado-proyecto">
   <p class="tema">Gestión pública · Mapa de procesos</p>
-  <h1 class="titulo-pagina">Mapeo de procesos del Estado: quién hace qué en presupuesto, inversiones, contrataciones y endeudamiento</h1>
+  <h1 class="titulo-pagina">Rutas de gestión del Estado: quién hace qué en presupuesto, inversiones, contrataciones y endeudamiento</h1>
 </div>
 
 <div class="proyecto proyecto--detalle">
   <a class="figura" href="../demos/mapeo-procesos-estado/index.html" target="_blank" rel="noopener" title="Abrir la herramienta">
-    <img src="../imagenes/proyectos/mapeo-procesos-estado.png" width="1200" height="1358" alt="Matriz de la herramienta: cinco sistemas en filas (planeamiento, presupuesto, inversiones, contrataciones y endeudamiento) y cinco fases en columnas. Los números marcan los 20 pasos de un proyecto financiado con endeudamiento.">
+    <img src="../imagenes/proyectos/mapeo-procesos-estado.png" width="1280" height="1190" alt="Árbol de decisión de la herramienta: cuatro preguntas llevan a nueve rutas (proceso, programa presupuestal, apoyo presupuestario, proyecto, administración de recursos, Gobierno a Gobierno, endeudamiento, Obras por Impuestos y asociación público-privada). Debajo, los primeros pasos de la ruta elegida, como fichas de colores unidas por un cable.">
   </a>
   <div class="ficha">
     <div>
       <p class="etiqueta">Pregunta</p>
-      <p class="pregunta">Cuando una entidad necesita comprar algo, ejecutar un proyecto o financiarlo con deuda, ¿a quién le toca hacer qué, en qué orden y según qué norma?</p>
+      <p class="pregunta">Cuando una entidad necesita comprar algo, sostener una estrategia o ejecutar una inversión, ¿qué ruta le corresponde, con quién debe coordinar en cada paso y qué debe llevarse?</p>
     </div>
     <div>
       <p class="etiqueta">Resultado</p>
-      <p class="resultado">189 actividades en tres niveles, cada una con su responsable y su norma enlazada. Comprar un bien o servicio pasa por 12 macroprocesos; un proyecto financiado con deuda, por 20, y cruza los cuatro sistemas.</p>
+      <p class="resultado">Nueve rutas, desde una compra hasta una asociación público-privada, con 54 pasos y 337 actividades. Cada paso dice con quién se coordina, por qué y qué producto se obtiene, con su norma enlazada.</p>
       <p class="enlaces">
         <a href="../demos/mapeo-procesos-estado/index.html" target="_blank" rel="noopener">Abrir la herramienta</a>
         <a href="https://github.com/diegosimemirror/diegosimemirror.github.io/blob/master/demos/mapeo-procesos-estado/index.html" target="_blank" rel="noopener">Código</a>
@@ -54,13 +54,13 @@
 <section class="seccion dos-columnas">
   <h2>Qué hice</h2>
   <div class="prosa">
-    <p>Una herramienta web que ordena los sistemas que un gestor público usa para pasar de una necesidad a un servicio funcionando: Presupuesto Público, Invierte.pe, Contrataciones y Endeudamiento, más el planeamiento del CEPLAN. Sigue el orden de la gestión, no el de las normas.</p>
+    <p>Una herramienta web que muestra cada gestión pública como una ruta: una fila de pasos unidos por un cable. Reúne los sistemas de Presupuesto, Invierte.pe, Contrataciones y Endeudamiento, el planeamiento del CEPLAN y seis mecanismos especiales. Sigue el orden de la gestión, no el de las normas.</p>
     <ul>
-      <li>Empieza por una pregunta: ¿es un bien o servicio para operar (un proceso) o una inversión? Si es una inversión, ¿hay recursos o se necesita endeudamiento? Según la respuesta, el mapa numera la ruta: 12, 17 o 20 macroprocesos.</li>
-      <li>Tres niveles: 24 macroprocesos en una matriz de sistemas por fases; al hacer clic, 55 procedimientos; y dentro de cada uno, sus actividades, con responsable, participantes, resultado, aplicativo (SIAF, Banco de Inversiones, Pladicop) y la norma enlazada.</li>
-      <li>23 interconexiones: los puntos donde un sistema necesita a otro. Por ejemplo, solo se asigna presupuesto a las inversiones que están en el Programa Multianual de Inversiones.</li>
-      <li>Un mapa de 38 actores que muestra, en cada macroproceso, quién ejecuta, aprueba, opina o participa. Se calcula a partir de las actividades, así que no puede contradecirlas.</li>
-      <li>Cada entidad puede escribir el nombre de sus propias unidades y el mapa las usa. Las actividades se copian a Excel para completar plazos y delegaciones internas.</li>
+      <li>Empieza con cuatro preguntas encadenadas: qué se va a gestionar, si hay recursos, quién ejecuta y quién financia. Llevan a una de nueve rutas: proceso, programa presupuestal, convenio de apoyo presupuestario, proyecto de inversión, convenio con organismo internacional, contrato de Gobierno a Gobierno, endeudamiento, Obras por Impuestos y asociación público-privada.</li>
+      <li>Cada paso es una ficha que dice con quién se coordina y qué producto se obtiene. Al abrirla se ve por qué existe el paso, qué hay que traer y quién más interviene.</li>
+      <li>Tres niveles con tres formas: 54 pasos (fichas), 111 procedimientos (flechas) y 337 actividades (notas), cada una con su responsable, su resultado, su aplicativo y su norma enlazada. Las notas de color marcan dónde alguien aprueba; las negras, dónde alguien opina o controla.</li>
+      <li>El color dice el sistema. Una lista deja a color solo los pasos donde interviene un actor, para ver la ruta desde cada oficina.</li>
+      <li>Cada entidad puede escribir el nombre de sus propias unidades, y las actividades se copian a Excel para completar plazos y delegaciones internas.</li>
     </ul>
   </div>
 </section>
@@ -68,7 +68,7 @@
 <section class="seccion dos-columnas">
   <h2>Cómo se hizo</h2>
   <div class="prosa">
-    <p>Las actividades salen de la lectura de las normas: el reglamento de Invierte.pe de 2026, los decretos legislativos de Presupuesto y de Endeudamiento, la Ley 32069 de contrataciones y su reglamento, y las directivas de ejecución presupuestal, de programación de compras y de concertación y desembolsos de deuda. Una revisión automática comprobó que cada actor, norma y macroproceso citado existe en los datos.</p>
+    <p>Las actividades salen de la lectura de las normas de cada sistema y de cada mecanismo: entre otras, la Ley 32069 de contrataciones, el reglamento de Invierte.pe de 2026, la Ley 30356 de convenios con organismos internacionales, la Ley 32441 de asociaciones público-privadas, el reglamento de Obras por Impuestos y las directivas de programas presupuestales y de convenios de apoyo presupuestario. Una revisión automática comprobó que cada actor, norma y paso citado existe en los datos.</p>
   </div>
 </section>
 
@@ -76,10 +76,11 @@
   <h2>Limitaciones</h2>
   <div class="prosa">
     <ul>
-      <li>No sustituye el texto de las normas. La fecha de corte es el 14 de noviembre de 2026.</li>
+      <li>No sustituye el texto de las normas. La fecha de corte es el 20 de noviembre de 2026.</li>
+      <li>El orden de cada ruta es una pauta general: varios pasos avanzan en paralelo y cada entidad lo ajusta a sus plazos y delegaciones.</li>
       <li>La Directiva General de Invierte.pe se citó en su texto de 2019: los artículos y plazos que vienen de ella deben confirmarse en la versión vigente.</li>
       <li>Las reglas que valen solo para 2026 cambian con cada ley anual de presupuesto.</li>
-      <li>No incluye las asociaciones público-privadas, las Obras por Impuestos ni la cooperación no reembolsable, que tienen circuitos propios.</li>
+      <li>Los seis mecanismos especiales se resumen en sus pasos generales. No detalla las iniciativas privadas, los Proyectos en Activos ni la cooperación no reembolsable.</li>
       <li>Los nombres que escribe cada entidad se guardan solo en su navegador.</li>
     </ul>
   </div>
@@ -88,7 +89,7 @@
 <section class="seccion dos-columnas">
   <h2>Fuentes</h2>
   <div class="prosa">
-    <p>Normas oficiales publicadas por el MEF, el OECE, el CEPLAN, la Contraloría y el diario oficial El Peruano. La lista completa, con 67 normas y sus enlaces, está en el <a href="../demos/mapeo-procesos-estado/index.html#normas" target="_blank" rel="noopener">anexo de la herramienta</a>.</p>
+    <p>Normas oficiales publicadas por el MEF, el OECE, ProInversión, el CEPLAN, la Contraloría, el Congreso y el diario oficial El Peruano. La lista completa, con 84 normas y sus enlaces, está en la <a href="../demos/mapeo-procesos-estado/index.html#normas" target="_blank" rel="noopener">pestaña de normas de la herramienta</a>.</p>
   </div>
 </section>
 

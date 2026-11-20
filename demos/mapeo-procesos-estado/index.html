@@ -3,237 +3,394 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Mapa de procesos en tres niveles de los sistemas de presupuesto, inversiones, contrataciones y endeudamiento del Estado peruano: quién hace qué, en qué orden y según qué norma.">
-<title>Mapeo de procesos del Estado</title>
+<meta name="description" content="Nueve rutas de gestión pública del Estado peruano: con quién coordinas, por qué y qué te llevas en cada paso, según las normas de presupuesto, inversiones, contrataciones, endeudamiento e inversión privada.">
+<title>Rutas de gestión del Estado</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-/* Layout: matriz de sistemas (filas) x fases del ciclo (columnas); cada caja se abre en procedimientos y estos en actividades. */
+/* Layout: una ruta cableada sobre un lienzo de puntos. Macro = ficha con puertos; meso = flecha; micro = nota.
+   El color dice el sistema y el talón blanco de cada ficha dice qué te llevas. */
 :root{
-  --bg:#f4f5f7; --surface:#ffffff; --ink:#191c20; --muted:#5a626d; --line:#d9dde2; --soft:#eaedf0;
-  --pl:#5a6575; --p:#1c5ca6; --i:#2a7649; --c:#965806; --e:#843676;
-  --focus:#1c5ca6;
-  --font:"Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --mono:"IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
-  --s:13px; --m:15px; --l:18px; --xl:22px;
+  --bg:#ebecf0; --surface:#ffffff; --ink:#111111; --muted:#4a4f58; --line:#c3c6cf; --soft:#dcdee4; --wire-off:#a2a6b1; --dot:#c0c3cc;
+  --band:#111111; --on-band:#ffffff; --band-muted:#b4b8c2;
+  --pl:#89f0e1; --p:#a6a0f5; --i:#abf089; --c:#f5ad6e; --e:#f5abe1; --x:#f6e35c; --on-fill:#111111;
+  --focus:#1d4ed8;
+  --font:"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --s:13px; --m:15px; --l:19px; --xl:28px;
 }
-@media (prefers-color-scheme: dark){
+@media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#111316; --surface:#191c20; --ink:#e7e9ec; --muted:#a2aab4; --line:#2d3239; --soft:#21252a;
-    --pl:#9ca7b6; --p:#80b1ee; --i:#76c596; --c:#e4aa5d; --e:#d78ec9; --focus:#80b1ee;
-    color-scheme:dark;
+    --bg:#08090c; --surface:#16181d; --ink:#f3f4f6; --muted:#a6abb6; --line:#3b3f4a; --soft:#22252c; --wire-off:#555a66; --dot:#2a2d37;
+    --band:#16181d; --on-band:#ffffff; --band-muted:#a6abb6; --focus:#9db4ff; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#111316; --surface:#191c20; --ink:#e7e9ec; --muted:#a2aab4; --line:#2d3239; --soft:#21252a;
-  --pl:#9ca7b6; --p:#80b1ee; --i:#76c596; --c:#e4aa5d; --e:#d78ec9; --focus:#80b1ee;
-  color-scheme:dark;
+  --bg:#08090c; --surface:#16181d; --ink:#f3f4f6; --muted:#a6abb6; --line:#3b3f4a; --soft:#22252c; --wire-off:#555a66; --dot:#2a2d37;
+  --band:#16181d; --on-band:#ffffff; --band-muted:#a6abb6; --focus:#9db4ff; color-scheme:dark;
 }
+
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:var(--m);line-height:1.5;margin:0}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 var(--m)/1.5 var(--font);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,p,ol,ul,dl,dd,figure{margin:0}
+ol,ul{padding:0;list-style:none}
 a{color:inherit}
-:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
-.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
-header.top{background:var(--surface);border-bottom:1px solid var(--line)}
-header.top .wrap{padding-block:20px 0}
-.eyebrow{margin:0;font-size:var(--s);color:var(--muted);letter-spacing:.02em}
-h1{font-size:var(--xl);margin:4px 0 6px;font-weight:700;text-wrap:balance}
-h2{font-size:var(--l);margin:0 0 8px;font-weight:700;text-wrap:balance}
-h3{font-size:var(--m);margin:0 0 8px;font-weight:700}
-p{margin:0 0 10px}
-.lede{color:var(--muted);max-width:72ch;margin-bottom:14px}
-nav.tabs{display:flex;gap:4px;flex-wrap:wrap}
-nav.tabs a{padding:10px 12px;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;font-weight:500}
-nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--ink)}
-nav.tabs a:hover{color:var(--ink)}
-main.wrap{padding-block:22px 48px}
-.muted{color:var(--muted)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1240px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.lbl{font:500 10.5px/1.3 var(--mono);letter-spacing:.07em;text-transform:uppercase}
+.sec{font:500 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 .small{font-size:var(--s)}
-.mono{font-family:var(--mono);font-size:var(--s)}
-button{font:inherit;color:inherit}
-.btn{border:1px solid var(--line);background:var(--surface);padding:8px 12px;border-radius:6px;cursor:pointer;font-weight:500}
-.btn:hover{border-color:var(--muted)}
-.btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.row-btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-
-/* Selector de ruta */
-.route{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:18px}
-.route .q{margin-bottom:12px}
-.route .q > p{font-weight:600;margin-bottom:8px}
-.route-note{max-width:80ch}
-ol.steps{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
-ol.steps li a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;border:1px solid color-mix(in srgb, var(--sc) 45%, var(--line));background:color-mix(in srgb, var(--sc) 7%, var(--surface));border-radius:999px;padding:3px 10px 3px 4px;font-size:var(--s)}
-ol.steps .n{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:12px;font-variant-numeric:tabular-nums;font-weight:600}
-ol.steps .c{font-family:var(--mono);color:var(--sc);font-weight:500}
-
-/* Matriz macro */
-.gridwrap{overflow-x:auto;padding-bottom:4px}
-.mgrid{display:grid;grid-template-columns:132px repeat(5, minmax(150px,1fr));gap:6px;min-width:960px}
-.mrow{display:contents}
-.phead{font-size:var(--s);color:var(--muted);font-weight:600;padding:4px 6px;border-bottom:1px solid var(--line)}
-.phead .k{font-family:var(--mono);margin-right:4px}
-.rlab{padding:8px 6px;border-top:2px solid var(--sc)}
-.rlab b{display:block;color:var(--sc)}
-.rlab span{font-size:var(--s);color:var(--muted)}
-.boxes{display:contents}
-.mcell{display:flex;flex-direction:column;gap:6px;padding-top:2px}
+.muted{color:var(--muted)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.box{position:relative;display:flex;flex-direction:column;gap:2px;text-decoration:none;background:color-mix(in srgb, var(--sc) 7%, var(--surface));border:1px solid color-mix(in srgb, var(--sc) 38%, var(--line));border-radius:6px;padding:8px 10px 9px;transition:opacity .2s, border-color .2s}
-.box:hover{border-color:var(--sc)}
-.box .bcode{font-family:var(--mono);font-size:12px;color:var(--sc);font-weight:500}
-.box .bname{font-weight:600;line-height:1.3}
-.box .bwho{font-size:var(--s);color:var(--muted)}
-.box .bph{display:none;font-size:12px;color:var(--muted)}
-.box .ord{display:none;position:absolute;top:6px;right:6px;min-width:22px;height:22px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:12px;font-weight:600;place-items:center;font-variant-numeric:tabular-nums}
-.has-route .box{opacity:.3}
-.has-route .box.on{opacity:1}
-.has-route .box.on .ord{display:inline-grid}
-.has-route .box.on .bname{padding-right:24px}
-.legend{margin-top:12px;font-size:var(--s);color:var(--muted);max-width:90ch}
-@media (max-width:760px){
-  .gridwrap{overflow:visible}
-  .mgrid{display:block;min-width:0}
-  .phead{display:none}
-  .mrow{display:block;margin-bottom:16px}
-  .rlab{margin-bottom:6px}
-  .mcell{display:contents}
-  .mrow .boxes{display:grid;gap:6px}
-  .box .bph{display:block}
-}
+.s-PL{--sc:var(--pl)} .s-P{--sc:var(--p)} .s-I{--sc:var(--i)} .s-C{--sc:var(--c)} .s-E{--sc:var(--e)} .s-X{--sc:var(--x)}
 
-/* Buscador */
-.search{display:flex;gap:8px;align-items:center;margin:0 0 14px;flex-wrap:wrap}
-.search input{flex:1 1 260px;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:9px 11px;font:inherit;color:inherit}
-.results{list-style:none;margin:0 0 18px;padding:0;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
-.results li{border-top:1px solid var(--line)}
-.results li:first-child{border-top:0}
-.results a{display:block;padding:9px 12px;text-decoration:none}
-.results a:hover{background:var(--soft)}
-.results .c{font-family:var(--mono);font-size:12px;color:var(--sc)}
+/* ---------- Cabecera ---------- */
+.top{background:var(--band);color:var(--on-band)}
+.top .wrap{padding-block:22px 0}
+.top :focus-visible{outline-color:var(--on-band)}
+.top-row{display:flex;flex-wrap:wrap;gap:16px 40px;align-items:flex-end;justify-content:space-between}
+.top h1{font-size:var(--xl);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.lede{color:var(--band-muted);max-width:58ch;margin-top:6px}
+.legend{display:flex;flex-direction:column;gap:6px}
+.legend .lbl{color:var(--band-muted)}
+.legend ul{display:flex;flex-wrap:wrap;gap:4px}
+.legend li{background:var(--sc);color:var(--on-fill);font-size:var(--s);font-weight:700;padding:4px 9px;border-radius:4px}
+.tabs{display:flex;gap:2px;margin-top:18px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{flex:none;padding:10px 14px;border-radius:8px 8px 0 0;color:var(--band-muted);font-weight:600;text-decoration:none}
+.tabs a:hover{color:var(--on-band)}
+.tabs a[aria-current="page"]{background:var(--bg);color:var(--ink)}
 
-/* Migas */
-.crumbs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:var(--s);color:var(--muted);margin-bottom:14px}
-.crumbs a{text-decoration:none;color:var(--muted)}
-.crumbs a:hover{color:var(--ink);text-decoration:underline}
-.crumbs .sep{opacity:.6}
+main{padding-block:24px 64px}
+#app{display:grid;gap:30px}
+#app>*{min-width:0}
+footer .wrap{padding-block:18px 28px;border-top:2px solid var(--ink);font-size:var(--s);color:var(--muted)}
 
-/* Cabecera de caja y de procedimiento */
-.head{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--sc);border-radius:8px;padding:16px;margin-bottom:18px}
-.tag{display:inline-flex;gap:6px;align-items:center;font-size:var(--s);color:var(--muted);margin-bottom:6px;flex-wrap:wrap}
-.tag .c{font-family:var(--mono);color:var(--sc);font-weight:500}
-.facts{display:grid;grid-template-columns:repeat(auto-fit, minmax(220px,1fr));gap:12px 20px;margin:12px 0 0}
-.facts div{min-width:0}
-.facts dt{font-size:var(--s);color:var(--muted);margin-bottom:2px}
-.facts dd{margin:0}
-.srcs{display:flex;flex-wrap:wrap;gap:6px}
-a.src{display:inline-flex;align-items:baseline;gap:4px;font-size:var(--s);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:1px 7px;background:var(--surface);max-width:100%}
-a.src:hover{border-color:var(--muted)}
-a.src .r{color:var(--muted)}
-.lv{font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;font-weight:600;margin:22px 0 8px}
+/* ---------- Controles ---------- */
+.btn{border:2px solid var(--ink);background:transparent;border-radius:999px;padding:6px 14px;font-weight:600;font-size:var(--s);cursor:pointer}
+.btn:hover,.btn[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.row-btns{display:flex;flex-wrap:wrap;gap:6px}
+select,input[type="search"],input[type="text"],textarea{width:100%;background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:8px 11px}
+select:hover,input:hover{border-color:var(--ink)}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-weight:600;font-size:var(--s);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:20;max-width:calc(100% - 32px)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.copybox{margin-top:10px}
+.copybox textarea{height:140px;font:12px var(--mono)}
 
-/* Procedimientos (meso) */
-.meso{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill, minmax(250px,1fr));gap:10px}
-.meso a{display:flex;flex-direction:column;gap:4px;height:100%;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px}
-.meso a:hover{border-color:var(--sc)}
-.meso .n{font-family:var(--mono);font-size:12px;color:var(--sc)}
-.meso .t{font-weight:600}
-.meso .m{font-size:var(--s);color:var(--muted)}
-.meso .more{margin-top:auto;font-size:var(--s);font-weight:600;padding-top:6px}
+/* ---------- Decisión: elegir la ruta ---------- */
+.deci{position:relative;display:grid;grid-template-columns:auto auto auto auto minmax(300px,1fr);gap:6px 38px;align-items:center}
+.deci>svg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.dn{display:flex;flex-direction:column;gap:3px;padding:10px 14px 11px;border-radius:10px;background:var(--surface);font-weight:700;line-height:1.25}
+.dn .br{color:var(--muted)}
+.dn .qt{display:flex;align-items:center;gap:9px}
+.dn.on{box-shadow:inset 0 0 0 2px var(--ink)}
+.dn.start{grid-column:1;grid-row:1/10;display:grid;place-items:center;width:40px;height:40px;padding:0;border-radius:50%;background:var(--ink);color:var(--bg)}
+.q-q1{grid-column:2;grid-row:1/10}
+.q-qa{grid-column:3;grid-row:1/4}
+.q-qb{grid-column:3;grid-row:4/10}
+.q-q3{grid-column:4;grid-row:4/7}
+.q-q4{grid-column:4;grid-row:7/10}
+.dia{flex:none;width:12px;height:12px;border-radius:2px;background:currentColor;transform:rotate(45deg);margin-inline:3px}
+.rc{grid-column:5;display:grid;grid-template-columns:42px minmax(0,1fr) auto;grid-template-areas:"k name n" "k ans ans" "k sig sig";gap:1px 10px;align-items:center;min-width:0;text-align:left;padding:7px 12px 8px;border:0;border-radius:9px;background:var(--surface);cursor:pointer}
+.rc:hover{box-shadow:inset 0 0 0 2px var(--ink)}
+.rc[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+#rc-proc{grid-row:1} #rc-ppr{grid-row:2} #rc-cap{grid-row:3} #rc-proy{grid-row:4;margin-top:8px} #rc-car{grid-row:5} #rc-g2g{grid-row:6} #rc-deuda{grid-row:7;margin-top:8px} #rc-oxi{grid-row:8} #rc-app{grid-row:9}
+.rc-k{grid-area:k;font-weight:800;font-size:15px;letter-spacing:-.01em}
+.rc-name{grid-area:name;min-width:0;font-weight:700;line-height:1.2}
+.rc-ans{grid-area:ans;min-width:0;font-size:12px;line-height:1.3;opacity:.78}
+.rc-n{grid-area:n;justify-self:end;white-space:nowrap;opacity:.78}
+.sig{grid-area:sig;display:flex;flex-wrap:wrap;gap:2px;margin-top:3px}
+.sig i{width:8px;height:8px;border-radius:2px;background:var(--sc)}
 
-/* Conexiones */
-.links{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.links li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px}
-.pair{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:var(--s)}
-a.chip{display:inline-flex;gap:5px;align-items:baseline;text-decoration:none;border-radius:4px;padding:1px 7px;background:color-mix(in srgb, var(--sc) 9%, var(--surface));border:1px solid color-mix(in srgb, var(--sc) 40%, var(--line))}
-a.chip .c{font-family:var(--mono);color:var(--sc);font-weight:500}
+/* ---------- Lienzo de la ruta ---------- */
+.ruta-head{display:flex;flex-wrap:wrap;gap:14px 32px;justify-content:space-between;align-items:flex-end;margin-bottom:8px}
+.ruta-head>div:first-child{flex:1 1 420px;min-width:0}
+.ruta-head h2{font-size:var(--l);font-weight:800;line-height:1.2;margin-top:4px;text-wrap:balance}
+.ruta-d{max-width:72ch;color:var(--muted);margin-top:4px}
+.lens{flex:0 1 300px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.lens .lbl{color:var(--muted)}
+.lens-note{margin-top:10px;font-size:var(--s)}
+.canvas{position:relative;padding:24px 22px;margin-inline:-6px;border-radius:12px;background-image:radial-gradient(var(--dot) 1.3px,transparent 1.5px);background-size:22px 22px}
+.canvas>svg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.nodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(188px,1fr));gap:46px 40px}
+.nodes>li{min-width:0}
+.node{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto 1fr auto;grid-template-areas:"num sys" "name name" "who who" "stub stub";height:100%;border-radius:10px;overflow:hidden;background:var(--sc);color:var(--on-fill);text-decoration:none;transition:transform .15s ease}
+.node:hover{transform:translateY(-3px)}
+.n-num{grid-area:num;font:800 34px/1 var(--font);letter-spacing:-.03em;font-variant-numeric:tabular-nums;padding:13px 0 0 14px}
+.n-sys{grid-area:sys;justify-self:end;align-self:start;padding:15px 14px 0 8px;text-align:right}
+.n-role{display:inline-block;background:var(--on-fill);color:var(--sc);padding:2px 6px;border-radius:3px;font-weight:600}
+.n-name{grid-area:name;font-weight:700;line-height:1.25;padding:9px 14px 0;text-wrap:balance}
+.n-who{grid-area:who;align-self:end;font-size:var(--s);line-height:1.3;padding:10px 14px 12px}
+.n-who .lbl,.n-stub .lbl{display:block;opacity:.72;margin-bottom:1px}
+.n-stub{grid-area:stub;position:relative;background:var(--surface);color:var(--ink);border-top:2px dashed var(--bg);padding:9px 14px 12px;font-size:var(--s);font-weight:700;line-height:1.3}
+.n-stub::before,.n-stub::after{content:"";position:absolute;top:-8px;width:14px;height:14px;border-radius:50%;background:var(--bg)}
+.n-stub::before{left:-7px} .n-stub::after{right:-7px}
+.node.dim{background:var(--soft);color:var(--muted)}
+.node.dim .n-stub{color:var(--muted)}
+.endcap{display:flex;align-items:flex-start;gap:10px}
+.end{flex:none;width:26px;height:26px;margin:17px 0 0 18px;border-radius:50%;border:7px solid var(--ink)}
+.endcap .lbl{margin-top:24px;color:var(--muted)}
+.w{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.w.off{stroke:var(--wire-off);stroke-width:2}
+.port,.ah{fill:var(--ink)}
+.port.off,.ah.off{fill:var(--wire-off)}
+.hint{font-size:var(--s);color:var(--muted)}
 
-/* Actividades (micro) */
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 10px}
-.acts{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:8px}
-.acts li{display:grid;grid-template-columns:4rem minmax(0,2.3fr) minmax(0,1.5fr) minmax(0,1.3fr) minmax(0,1.6fr);gap:14px;padding:12px 14px;border-top:1px solid var(--line)}
-.acts li:first-child{border-top:0}
-.acts li.h{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600;padding-block:8px}
-.acts .n{font-family:var(--mono);font-size:var(--s);color:var(--sc);font-variant-numeric:tabular-nums}
-.acts .cell{min-width:0}
-.who{font-weight:600}
-.alias{display:block;font-size:var(--s);color:var(--muted)}
-.part{display:block;font-size:var(--s);color:var(--muted);margin-top:2px}
-.app{display:block;font-size:var(--s);color:var(--muted);margin-top:4px}
-.kb{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.03em;border-radius:3px;padding:0 5px;margin-left:6px;vertical-align:1px;white-space:nowrap}
-.kb.A{background:var(--ink);color:var(--bg)}
-.kb.O{border:1px solid var(--ink)}
-@media (max-width:760px){
-  .acts li{grid-template-columns:3.6rem minmax(0,1fr);gap:4px 10px}
-  .acts li.h{display:none}
-  .acts .cell{grid-column:2}
-  .acts .cell[data-l]::before{content:attr(data-l);display:block;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:6px}
-  .acts .cell.first{grid-column:2;grid-row:1}
-}
-.pager{display:flex;justify-content:space-between;gap:10px;margin-top:14px;flex-wrap:wrap}
-.pager a{text-decoration:none;font-size:var(--s);border:1px solid var(--line);border-radius:6px;padding:8px 12px;background:var(--surface);max-width:48%}
-.pager a:hover{border-color:var(--muted)}
+/* ---------- Paso: ficha abierta ---------- */
+.mini{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.mm-back{font-weight:700;text-decoration:none;white-space:nowrap}
+.mm-back:hover{text-decoration:underline}
+.mm-sc{overflow-x:auto;max-width:100%;padding:6px;margin:-6px;scrollbar-width:thin}
+.mm-sc ol{position:relative;display:inline-flex;gap:6px;min-width:max-content;vertical-align:top}
+.mm-sc ol::before{content:"";position:absolute;left:6px;right:6px;top:50%;height:2.5px;margin-top:-1.25px;background:var(--ink)}
+.mm{position:relative;display:grid;place-items:center;width:30px;height:30px;border-radius:6px;background:var(--sc);color:var(--on-fill);font:600 12px var(--mono);text-decoration:none}
+.mm:hover{transform:translateY(-2px)}
+.mm.cur{box-shadow:0 0 0 3px var(--bg),0 0 0 6px var(--ink)}
+.ctx-note{font-size:var(--s);color:var(--muted);margin-top:8px}
+.paso{display:grid;gap:30px;min-width:0}
+.paso>*{min-width:0}
+.hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 20px;align-items:end;background:var(--sc);color:var(--on-fill);border-radius:12px 12px 0 0;padding:20px 22px 22px}
+.hero .num{grid-row:1/3;font:900 76px/.82 var(--font);letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.hero h2{font-size:clamp(22px,3.2vw,31px);font-weight:800;line-height:1.1;letter-spacing:-.015em;text-wrap:balance}
+.quad{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;margin-top:3px}
+.q{display:flex;flex-direction:column;gap:7px;padding:16px 18px 18px;background:var(--surface);min-width:0}
+.q .lbl{color:var(--muted)}
+.q .big{font-size:17px;font-weight:700;line-height:1.25}
+.q.who{background:var(--ink);color:var(--bg);border-radius:0 0 0 12px}
+.q.who .lbl{color:inherit;opacity:.72}
+.q.who .small{opacity:.8}
+.q.out{background:var(--sc);color:var(--on-fill);border-radius:0 0 12px 0}
+.q.out .lbl{color:inherit;opacity:.72}
+.alias{font-size:var(--s);font-weight:600}
+.mesa{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.mesa a{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1px 11px;align-items:baseline;padding:10px 13px;border-radius:8px;background:var(--surface);text-decoration:none;min-width:0}
+.mesa a:hover{box-shadow:inset 0 0 0 2px var(--ink)}
+.mesa .g{grid-row:1/4;align-self:center}
+.mesa b{font-weight:700;line-height:1.25}
+.mesa .lbl{color:var(--muted)}
+.mesa .res{font-size:var(--s);line-height:1.35}
+.g{display:inline-block;flex:none;width:11px;height:11px}
+.g.A{background:currentColor;transform:rotate(45deg);border-radius:1.5px}
+.g.O{border:2.5px solid currentColor;transform:rotate(45deg);border-radius:1.5px}
+.g.E{background:currentColor;border-radius:50%}
+.g.P{border:2.5px solid currentColor;border-radius:50%}
 
-/* Tablas */
-.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+/* Flechas (procedimientos) y notas (actividades) */
+.chevs{display:flex;flex-wrap:wrap;gap:6px 2px}
+.chevs li{flex:1 1 230px;display:flex;min-width:0;max-width:420px}
+.chevs li:focus-within{outline:3px solid var(--focus);outline-offset:2px}
+.chev{flex:1;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0;min-height:66px;border:0;cursor:pointer;text-align:left;text-decoration:none;font-weight:700;line-height:1.25;background:var(--sc);color:var(--on-fill);padding:10px 30px 11px 30px;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,0 100%,16px 50%)}
+.chevs li:first-child .chev,.chain li:first-child .chev{padding-left:16px;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,0 100%)}
+.chev:focus-visible{outline:0}
+.chev[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.chev .lbl{opacity:.75}
+.pm{display:flex;flex-wrap:wrap;gap:8px 30px;margin-top:14px;font-size:var(--s)}
+.pm dt{font:500 10.5px/1.3 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.pm dd{font-weight:600}
+.acts{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:14px}
+.act{display:flex;flex-direction:column;gap:7px;padding:13px 14px 14px;background:var(--surface);border-radius:4px;min-width:0}
+.act.k-A{background:var(--sc);color:var(--on-fill)}
+.act.k-O{background:var(--ink);color:var(--bg)}
+.a-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px;align-items:center}
+.a-top .lbl{opacity:.72}
+.a-k{display:inline-flex;gap:7px;align-items:center;font:600 10.5px/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase}
+.a-who{font-weight:800;line-height:1.2}
+.a-who a{text-decoration:none}
+.a-who a:hover{text-decoration:underline}
+.a-txt{line-height:1.45}
+.a-out{display:flex;gap:6px;font-weight:700;line-height:1.3}
+.a-meta{font-size:12px;opacity:.78}
+.srcs{display:flex;flex-wrap:wrap;gap:5px}
+.act .srcs{margin-top:auto;padding-top:3px}
+.src{display:inline-flex;flex-wrap:wrap;gap:0 4px;align-items:baseline;max-width:100%;border:1.5px solid currentColor;border-radius:12px;padding:1px 9px;font-size:12px;font-weight:500;line-height:1.5;text-decoration:none;opacity:.85}
+a.src:hover{opacity:1;text-decoration:underline}
+.src .r{opacity:.8}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:16px}
+
+/* Conexiones y navegación entre pasos */
+.links{display:grid;gap:8px}
+.links>li{display:grid;grid-template-columns:minmax(0,330px) minmax(0,1fr);gap:8px 22px;align-items:start;background:var(--surface);border-radius:8px;padding:12px 14px}
+.pair{display:flex;flex-wrap:wrap;gap:5px 7px;align-items:center}
+.pair .arr{font-weight:800}
+.ltxt{display:grid;gap:7px;min-width:0}
+.bchip{display:inline-flex;gap:6px;align-items:baseline;max-width:100%;background:var(--sc);color:var(--on-fill);padding:4px 9px;border-radius:5px;font-size:var(--s);font-weight:600;line-height:1.3;text-decoration:none}
+.bchip b{font:600 11px var(--mono)}
+.bchip:hover{text-decoration:underline}
+.pager{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pg{display:flex;flex-direction:column;gap:4px;padding:14px 16px;border-radius:10px;background:var(--sc);color:var(--on-fill);text-decoration:none;font-weight:700;line-height:1.25;min-width:0}
+.pg:hover{transform:translateY(-2px)}
+.pg.next{text-align:right;align-items:flex-end}
+.pg .lbl{opacity:.75}
+
+/* ---------- Sistemas ---------- */
+.sec-head h2{font-size:var(--l);font-weight:800;line-height:1.2}
+.sec-head p{max-width:72ch;color:var(--muted);margin-top:4px}
+.search{display:grid;gap:5px;max-width:560px}
+.search label{color:var(--muted)}
+.results{display:grid;gap:4px;max-width:760px}
+.results a{display:flex;flex-wrap:wrap;gap:4px 9px;align-items:baseline;background:var(--surface);border-radius:6px;padding:7px 11px;text-decoration:none;font-size:var(--s)}
+.results a:hover{box-shadow:inset 0 0 0 2px var(--ink)}
+.results .code{background:var(--sc);color:var(--on-fill);font:600 11px var(--mono);padding:1px 6px;border-radius:3px}
+.sysrows{display:grid;gap:8px}
+.sysrow{display:grid;grid-template-columns:168px minmax(0,1fr);gap:8px}
+.sys-lab{display:flex;flex-direction:column;justify-content:center;gap:5px;background:var(--ink);color:var(--bg);border-radius:8px;padding:12px 14px}
+.sys-lab i{width:20px;height:20px;border-radius:4px;background:var(--sc)}
+.sys-lab b{font-size:17px;font-weight:800;line-height:1.15}
+.sys-lab .lbl{opacity:.75}
+.chain{display:flex;flex-wrap:wrap;gap:6px 2px}
+.chain li{flex:1 1 150px;display:flex;min-width:0;max-width:250px}
+.chain li:focus-within{outline:3px solid var(--focus);outline-offset:2px}
+.chain .chev{position:relative;font-size:var(--s);justify-content:flex-start;padding-top:12px;padding-bottom:13px}
+.chain .chev>.lbl{padding-right:26px}
+.chain .chev b{font-size:14px;font-weight:700}
+.chain .chev:hover b{text-decoration:underline}
+.chain .cw{font-weight:500}
+.ord{position:absolute;top:9px;right:24px;display:grid;place-items:center;min-width:21px;height:21px;padding:0 4px;border-radius:11px;background:var(--on-fill);color:var(--sc);font:600 11px var(--mono)}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+
+/* ---------- Actores ---------- */
+.glegend{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:8px;font-size:var(--s)}
+.glegend span{display:inline-flex;gap:8px;align-items:center}
+.adapt{background:var(--surface);border-radius:10px;padding:12px 16px}
+.adapt summary{font-weight:700;cursor:pointer}
+.fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px 14px;margin-top:12px}
+.fields label{display:flex;flex-direction:column;justify-content:space-between;gap:4px;font-size:var(--s);font-weight:600}
+.acards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.acard{display:flex;flex-direction:column;gap:6px;background:var(--surface);border-radius:10px;padding:14px 16px;min-width:0}
+.acard h4{font-size:var(--m);font-weight:800;line-height:1.25}
+.acard h4 a{text-decoration:none}
+.acard h4 a:hover{text-decoration:underline}
+.minis{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto;padding-top:6px}
+.mn{display:inline-flex;gap:5px;align-items:center;background:var(--sc);color:var(--on-fill);border-radius:4px;padding:3px 7px;font:600 11px var(--mono);text-decoration:none}
+.mn:hover{transform:translateY(-2px)}
+.mn .g{width:8px;height:8px}
+.mn .g.O,.mn .g.P{border-width:2px}
+.ahead{display:grid;gap:8px;background:var(--ink);color:var(--bg);border-radius:12px;padding:20px 22px}
+.ahead h2{font-size:clamp(20px,3vw,28px);font-weight:800;line-height:1.15;text-wrap:balance}
+.ahead .lbl{opacity:.72}
+.ahead p{max-width:72ch}
+.ahead-row{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:flex-end;margin-top:4px}
+.ahead-row label{display:grid;gap:4px;font-size:var(--s);font-weight:600;flex:1 1 260px;max-width:380px}
+.ahead-row input{color:var(--ink)}
+.ahead .btn{border-color:var(--bg)}
+.ahead .btn:hover{background:var(--bg);color:var(--ink)}
+.agroup{display:grid;gap:8px}
+.agroup+.agroup{margin-top:18px}
+.plist{display:grid;gap:5px;font-size:var(--s)}
+.plist a{font-family:var(--mono);font-size:12px}
+
+/* ---------- Normas y guía ---------- */
+.norms{display:grid;gap:6px}
+.norm{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;align-items:start;background:var(--surface);border-radius:8px;padding:10px 14px}
+.norm .t{font-weight:800}
+.norm .open{font-weight:700;white-space:nowrap;font-size:var(--s)}
+.norm .used{grid-column:1/-1;font-size:12px;color:var(--muted)}
+.norm .used a{font-family:var(--mono);margin-right:6px}
+.ngroup{font-size:var(--m);font-weight:800;margin:20px 0 8px}
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.apps a{display:block;background:var(--surface);border-radius:8px;padding:10px 14px;font-weight:700;text-decoration:none}
+.apps a:hover{box-shadow:inset 0 0 0 2px var(--ink)}
+.prose{max-width:78ch;display:grid;gap:12px}
+.prose h3{font-size:17px;font-weight:800;margin-top:14px}
+.prose ol{list-style:decimal;padding-left:22px;display:grid;gap:8px}
+.prose ul{list-style:disc;padding-left:20px;display:grid;gap:8px}
+.prose .src{vertical-align:baseline}
+.tablewrap{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:var(--s)}
-th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-thead th{position:sticky;top:0;background:var(--surface);z-index:1}
-.matrix th.a,.matrix td.a{position:sticky;left:0;background:var(--surface);z-index:2;min-width:220px;max-width:260px}
-.matrix thead th.a{z-index:3}
-.matrix td.x{text-align:center;font-family:var(--mono);font-size:12px;min-width:34px;white-space:nowrap}
-.matrix td.x.on{background:color-mix(in srgb, var(--sc) 11%, var(--surface))}
-.matrix th.b{text-align:center;font-family:var(--mono);font-weight:500;color:var(--sc);font-size:12px}
-.matrix th.g{color:var(--sc);font-weight:700;text-align:center;border-bottom:2px solid var(--sc)}
-.matrix a{text-decoration:none}
-.matrix a:hover{text-decoration:underline}
-.grp td{background:var(--soft);font-weight:700}
-.grp td.a{background:var(--soft)}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 10.5px/1.3 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.shapes{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.shape{display:grid;gap:9px;align-content:start;background:var(--surface);border-radius:10px;padding:14px;font-size:var(--s);line-height:1.4}
+.shape .demo{height:74px;display:flex;align-items:center}
+.d-node{display:grid;width:118px;border-radius:8px;overflow:hidden;font-weight:800;color:var(--on-fill)}
+.d-node span:first-child{background:var(--i);padding:7px 10px 12px;font-size:20px;line-height:1}
+.d-node span:last-child{background:var(--bg);border-top:2px dashed var(--surface);padding:5px 10px;font:500 10px var(--mono);color:var(--ink)}
+.d-chev{width:150px;height:44px;background:var(--i);clip-path:polygon(0 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,0 100%,16px 50%)}
+.d-note{width:62px;height:62px;border-radius:3px;background:var(--bg);display:grid;place-items:center}
+.d-note.A{background:var(--i);color:var(--on-fill)}
+.d-note.O{background:var(--ink);color:var(--bg)}
+.d-dia{width:34px;height:34px;margin-left:8px;background:var(--ink);transform:rotate(45deg);border-radius:4px}
 
-/* Actores y normas */
-.cards{display:grid;grid-template-columns:repeat(auto-fill, minmax(260px,1fr));gap:10px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;min-width:0}
-.adapt{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:18px}
-.adapt summary{cursor:pointer;font-weight:600}
-.fields{display:grid;grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:10px 16px;margin-top:12px}
-.fields label{display:grid;gap:4px;font-size:var(--s);color:var(--muted)}
-.fields input,.alias-in{border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:7px 9px;font:inherit;font-size:var(--m);color:var(--ink);min-width:0;width:100%}
-.norms{display:grid;gap:8px}
-.norm{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px}
-.norm .t{font-weight:700}
-.norm .open{align-self:start;font-size:var(--s);white-space:nowrap}
-.norm .used{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:var(--s);color:var(--muted)}
-.norm .used a{font-family:var(--mono);font-size:12px;text-decoration:none;border:1px solid var(--line);border-radius:3px;padding:0 4px;color:var(--ink)}
-section.block{margin-bottom:26px}
-.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.guide{max-width:80ch}
-.guide li{margin-bottom:8px}
-.guide table{margin:8px 0 14px}
-.copybox{margin:10px 0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px}
-.copybox textarea{width:100%;height:140px;font-family:var(--mono);font-size:12px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px}
-#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:6px;font-size:var(--s);opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw}
-#toast.show{opacity:1}
-footer .wrap{padding-block:18px 28px;font-size:var(--s);color:var(--muted);border-top:1px solid var(--line)}
-@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+/* ---------- Pantallas angostas ---------- */
+@media (max-width:1199px){
+  .deci{display:flex;flex-direction:column;align-items:stretch;gap:6px}
+  .deci>svg,.dn.start{display:none}
+  .q-qa,.q-qb{margin-top:8px}
+  .q-q3,.q-q4{margin:6px 0 0 14px}
+  #rc-proc,#rc-ppr,#rc-cap{margin-left:14px}
+  #rc-proy,#rc-car,#rc-g2g,#rc-deuda,#rc-oxi,#rc-app{margin:0 0 0 28px}
+}
+@media (max-width:1020px){
+  .quad{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .q.who{border-radius:0}
+  .q.out{border-radius:0 0 12px 0}
+  .q.inp{border-radius:0 0 0 12px}
+}
+@media (max-width:640px){
+  .links>li{grid-template-columns:minmax(0,1fr)}
+  .sysrow{grid-template-columns:minmax(0,1fr)}
+  .sys-lab{flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap}
+  .chain li{max-width:none;flex-basis:210px}
+  .norm{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){
+  .canvas{padding:8px 0;margin-inline:0}
+  .nodes{grid-template-columns:minmax(0,1fr);gap:34px}
+  .node{grid-template-rows:auto;grid-template-areas:"num sys" "num name" "num who" "stub stub"}
+  .n-num{padding:13px 4px 0 14px;min-width:62px}
+  .n-sys{padding-top:12px}
+  .n-name{padding:2px 14px 0 8px}
+  .n-who{padding:6px 14px 12px 8px}
+  .hero{grid-template-columns:minmax(0,1fr);padding:16px 16px 18px}
+  .hero .num{grid-row:auto;font-size:56px}
+  .quad{grid-template-columns:minmax(0,1fr)}
+  .q.inp{border-radius:0}
+  .q.out{border-radius:0 0 12px 12px}
+  .pager{grid-template-columns:minmax(0,1fr)}
+  .pg.next{text-align:left;align-items:flex-start}
+}
+
+/* ---------- Movimiento: el cable se traza al cambiar de ruta ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .canvas.anim .node,.canvas.anim .endcap{animation:pop .36s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--k)*30ms)}
+  .canvas.anim .w{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw .32s ease-out forwards;animation-delay:calc(var(--k)*30ms + 140ms)}
+  .canvas.anim .port,.canvas.anim .ah{animation:fade .2s ease-out backwards;animation-delay:calc(var(--k)*30ms + 380ms)}
+}
+@media (prefers-reduced-motion:reduce){ .node,.mm,.pg,.mn{transition:none} .node:hover,.mm:hover,.pg:hover,.mn:hover{transform:none} }
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.97)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{from{opacity:0}}
 </style>
 </head>
 <body>
 
 <header class="top">
   <div class="wrap">
-    <p class="eyebrow">Presupuesto · Inversiones · Contrataciones · Endeudamiento</p>
-    <h1>Mapeo de procesos del Estado</h1>
-    <p class="lede">Quién hace qué, en qué orden y según qué norma, en los cuatro sistemas que un gestor público necesita para pasar de una necesidad a un servicio funcionando. Cada caja se abre en procedimientos y cada procedimiento en actividades.</p>
+    <div class="top-row">
+      <div>
+        <h1>Rutas de gestión del Estado</h1>
+        <p class="lede">Con quién coordinas, por qué y qué te llevas en cada paso de una gestión. Nueve rutas según las normas de presupuesto, inversiones, contrataciones, endeudamiento e inversión privada.</p>
+      </div>
+      <div class="legend">
+        <span class="lbl" id="leg">El color dice el sistema</span>
+        <ul aria-labelledby="leg">
+          <li class="s-PL">Planeamiento</li><li class="s-P">Presupuesto</li><li class="s-I">Inversiones</li><li class="s-C">Contrataciones</li><li class="s-E">Endeudamiento</li><li class="s-X">Inversión privada</li>
+        </ul>
+      </div>
+    </div>
     <nav class="tabs" aria-label="Secciones">
-      <a href="#mapa" data-tab="mapa">Mapa de procesos</a>
-      <a href="#conexiones" data-tab="conexiones">Interconexiones</a>
-      <a href="#actores" data-tab="actores">Mapa de actores</a>
-      <a href="#normas" data-tab="normas">Anexo: normas</a>
-      <a href="#guia" data-tab="guia">Cómo usarlo</a>
+      <a href="#ruta" data-tab="ruta">Ruta</a>
+      <a href="#sistemas" data-tab="sistemas">Sistemas</a>
+      <a href="#actores" data-tab="actores">Actores</a>
+      <a href="#normas" data-tab="normas">Normas</a>
+      <a href="#guia" data-tab="guia">Cómo leerlo</a>
     </nav>
   </div>
 </header>
-<main class="wrap" id="app"></main>
+<main class="wrap"><div id="app"></div></main>
 <footer><div class="wrap" id="foot"></div></footer>
 <div id="toast" role="status" aria-live="polite"></div>
 
@@ -888,175 +1045,795 @@ routes:{
    b:['PL1','I1','E1','P1','I2','E2','E3','P2','P3','E4','I3','P4','C3','C4','C5','I4','C6','I5','E5','I6']}
 }
 };
+
 </script>
 
 <script>
-/* ================= APLICACIÓN ================= */
+/* ================= DATOS · ampliación del 20 de noviembre de 2026 =================
+   Seis mecanismos más: CAR, G2G, Obras por Impuestos, APP, programa presupuestal (PpR) y CAP.
+   Mismo formato que el bloque anterior. Actividad = [actividad, responsable, resultado, 'NORMA@ref|NORMA@ref', 'A'|'O'|'', 'PARTICIPA,PARTICIPA', aplicativo] */
+(function(){
+const D = window.MPE;
+D.corte2 = '20 de noviembre de 2026';
+D.sys.X = {n:'Inversión privada', r:'MEF · DGPPIP', v:'--x'};
+D.ngroups.X = 'Inversión privada (APP y Obras por Impuestos)';
+
+/* Mecanismos: cada uno toma el color del sistema que lo gobierna */
+D.mec = {
+  PPR:{n:'Programa presupuestal (PpR)', s:'P', r:'Rector: MEF · DGPP'},
+  CAP:{n:'Convenio de apoyo presupuestario (CAP)', s:'P', r:'Rector: MEF · DGPP'},
+  CAR:{n:'Convenio con organismo internacional (CAR)', s:'C', r:'Opinión vinculante del MEF'},
+  G2G:{n:'Gobierno a Gobierno (G2G)', s:'C', r:'Autoriza el sector; supervisa el OECE'},
+  APP:{n:'Asociación público-privada (APP)', s:'X', r:'Rector: MEF · DGPPIP; promueve ProInversión'},
+  OXI:{n:'Obras por Impuestos (OxI)', s:'X', r:'Rector: MEF · DGPPIP'}
+};
+
+Object.assign(D.actors, {
+  MEF:{n:'Ministerio de Economía y Finanzas', g:'nac', d:'Emite las opiniones previas que condicionan los convenios con organismos internacionales y los contratos de APP; aprueba por decreto supremo transferencias y proyectos priorizados.', s:'L30356@art. 4.2.1|L32441@art. 6'},
+  DGPPIP:{n:'Dirección General de Política de Promoción de la Inversión Privada (MEF)', g:'nac', d:'Rector de las APP y de Obras por Impuestos: da lineamientos, opina y hace seguimiento.', s:'L32441@arts. 6 y 12|DS038@art. 6'},
+  PROINV:{n:'ProInversión (o el organismo promotor del gobierno regional o local)', g:'nac', d:'Diseña, conduce y concluye el proceso de promoción de las APP; en Obras por Impuestos publica las listas y da asistencia técnica.', s:'L32441@arts. 9 y 15|DS038@arts. 10 y 11'},
+  REG:{n:'Organismo regulador (OSITRAN, SUNASS, OSINERGMIN u OSIPTEL)', g:'nac', d:'Opina sobre el contrato de APP en las materias de su competencia y supervisa su cumplimiento.', s:'L32441@arts. 10 y 61'},
+  MRE:{n:'Ministerio de Relaciones Exteriores', g:'nac', d:'Acredita a las organizaciones internacionales en el Perú.', s:'DS181@art. 5'},
+  MINSEC:{n:'Ministro del sector (decreto supremo)', g:'nac', d:'Refrenda el decreto supremo que autoriza un contrato de Gobierno a Gobierno.', s:'LEY32069@20.ª DCF, párr. 3'},
+  SUNAT:{n:'SUNAT', g:'nac', d:'Recibe los certificados de Obras por Impuestos como pago del impuesto a la renta.', s:'DS038@arts. 17 y 18'},
+  EIMP:{n:'Entidad implementadora del CAP (rectora de la política)', g:'nac', d:'Diseña el CAP con la DGPP, da asistencia técnica, hace seguimiento y verifica el cumplimiento de metas.', s:'DCAP@arts. 7, 11 y 13'},
+  EPTP:{n:'Entidad pública titular del proyecto (EPTP)', g:'dir', d:'En una APP administra el contrato, sustenta la capacidad de financiamiento, acuerda las modificaciones y declara la caducidad.', s:'L32441@art. 7'},
+  OGA:{n:'Oficina de administración (o la que haga sus veces)', g:'ent', d:'Sustenta por qué conviene encargar la contratación a una organización internacional y qué ventajas trae.', s:'L30356@art. 4.2.2|DS181@art. 4'},
+  OAJ:{n:'Oficina de asesoría jurídica', g:'ent', d:'Opina sobre la viabilidad legal de convenios y contratos y revisa sus cláusulas obligatorias.', s:'DS181@art. 5'},
+  EGP:{n:'Equipo de gestión del proyecto (estructura de gestión de proyectos)', g:'ent', d:'Organización interna que dirige el proyecto frente al Estado contratado en un G2G.', s:'LEY32069@20.ª DCF, párr. 5|DL1553@art. 6'},
+  CE:{n:'Comité especial (Obras por Impuestos)', g:'ent', d:'Elabora las bases y conduce la selección de la empresa privada y de la supervisora.', s:'DS038@arts. 70 y 72'},
+  EBEN:{n:'Entidad beneficiaria del CAP (pliego)', g:'ent', d:'Trabaja para alcanzar las metas y recibe los recursos según su cumplimiento.', s:'DCAP@art. 16'},
+  OI:{n:'Organización internacional (UNOPS, PNUD, OIM, OPS u otra)', g:'ext', d:'Administra recursos del Estado y contrata con sus propias reglas, por encargo de la entidad.', s:'L30356@arts. 3 y 4.3|DS181@art. 4'},
+  GOBEXT:{n:'Gobierno contratado (de Estado a Estado)', g:'ext', d:'Ejecuta el contrato mediante sus organismos, dependencias o empresas y aporta la asistencia técnica.', s:'LEY32069@20.ª DCF, párr. 1'},
+  INVPRIV:{n:'Inversionista privado (concesionario)', g:'ext', d:'Financia, construye, opera y mantiene según el contrato de APP.', s:'L32441@art. 23'},
+  EMP:{n:'Empresa privada (Obras por Impuestos)', g:'ext', d:'Financia y ejecuta la intervención y recibe certificados para pagar su impuesto a la renta.', s:'DS038@arts. 19 y 30'},
+  EPS:{n:'Entidad privada supervisora', g:'ext', d:'Supervisa la ejecución en Obras por Impuestos y da la conformidad de calidad.', s:'DS038@arts. 36 y 115'},
+  COOP:{n:'Cooperante (Unión Europea, KfW u otro donante)', g:'ext', d:'Dona recursos al Tesoro sujetos a indicadores; el MEF los canaliza a los pliegos mediante un CAP.', s:'DL1440@art. 67.2.1'}
+});
+
+Object.assign(D.norms, {
+  L30356:{t:'Ley 30356', n:'Ley que fortalece la transparencia y el control en los convenios de administración de recursos con organizaciones internacionales (art. 4 según la Ley 32103)', u:'https://www.leyes.congreso.gob.pe/Documentos/Leyes/30356.pdf', g:'C', d:'Norma base del CAR: es excepcional, exige una ley que lo autorice, cláusulas obligatorias, opinión del MEF y rendición de cuentas.'},
+  L32103:{t:'Ley 32103', n:'Ley que aprueba créditos suplementarios de 2024. Su primera DCM fija el texto vigente del art. 4 de la Ley 30356', u:'https://www.gob.pe/institucion/mef/normas-legales/5820636-32103', g:'C', d:'Requisitos vigentes para autorizar y suscribir un CAR. Su art. 15.1 autorizó el convenio del MINSA para comprar ambulancias.'},
+  DS181:{t:'DS 181-2024-EF', n:'Reglamento que establece los requisitos para solicitar la opinión del MEF en virtud de la Ley 30356', u:'https://www.gob.pe/institucion/mef/normas-legales/6052761-181-2024-ef', g:'C', d:'Umbral de 20 000 UIT, estándares de la organización internacional e informes de la entidad.'},
+  DL1645:{t:'DL 1645', n:'Decreto Legislativo que modifica los DL 1437 y 1441 (art. 20, num. 8, del DL 1441)', u:'https://busquedas.elperuano.pe/dispositivo/NL/2324653-2', g:'C', d:'Los saldos de un CAR, con intereses, vuelven a la Cuenta Única del Tesoro en 30 días calendario desde la liquidación.'},
+  RM892:{t:'RM 892-2024-MINSA', n:'Ejemplo: aprueba el convenio de administración de recursos MINSA-UNOPS para adquirir ambulancias', u:'https://cdn.www.gob.pe/uploads/document/file/7405058/6312403-resolucion-ministerial-n-892-2024-minsa.pdf', g:'C', d:'Muestra un caso completo: la ley que lo autorizó, la opinión del MEF y la aprobación del titular.'},
+  COM003:{t:'Comunicado 003-2026-OECE', n:'Registro de la información de las contrataciones de Gobierno a Gobierno en el SEACE', u:'https://www.gob.pe/institucion/oece/noticias/1364750-comunicado-n-003-2026-oece-registro-de-la-informacion-de-las-contrataciones-de-gobierno-a-gobierno-en-el-seace', g:'C', d:'El G2G se registra como «Convenio» en 10 días hábiles, con los informes técnico y legal de la exclusión.'},
+  DL1553:{t:'DL 1553', n:'Decreto Legislativo de medidas en inversión y contratación pública (art. 6: estructuras de gestión de proyectos)', u:'https://cdn.www.gob.pe/uploads/document/file/4549112/DLEG_1553.pdf', g:'C', d:'Estructura de gestión de proyectos que debe tener la entidad en un G2G.'},
+  L32441:{t:'Ley 32441', n:'Ley que regula la promoción de la inversión privada mediante Asociaciones Público Privadas y Proyectos en Activos', u:'https://cdn.www.gob.pe/uploads/document/file/8895416/7332535-ley32441.pdf', g:'X', d:'Marco vigente de las APP desde el 25 de diciembre de 2025: fases, opiniones previas, límites y ejecución contractual. Su 15.ª DCF exige informe previo de la Contraloría a los G2G que comprometen el crédito del Estado.'},
+  DS316:{t:'DS 316-2025-EF', n:'Reglamento de la Ley 32441', u:'https://cdn.www.gob.pe/uploads/document/file/9219103/7567039-ds316_2025ef.pdf', g:'X', d:'Requisitos, procedimientos y plazos de cada fase de una APP.'},
+  DL1712:{t:'DL 1712', n:'Decreto Legislativo que modifica la Ley 32441', u:'https://www.gob.pe/institucion/mef/normas-legales/7693952-1712', g:'X', d:'Cambia, entre otros, la incorporación al proceso de promoción (art. 42) y el informe previo de la Contraloría (art. 45).'},
+  OF133:{t:'Oficio 133-2026-EF/68.02', n:'El MEF precisa el rol de EsSalud en sus contratos de APP', u:'https://www.mef.gob.pe/contenidos/inv_privada/normas/app/Oficio_133_2026EF6802.pdf', g:'X', d:'EsSalud conserva sus contratos de APP como entidad titular solo en la fase de ejecución contractual.'},
+  L29230:{t:'TUO de la Ley 29230', n:'Texto Único Ordenado de la Ley que impulsa la inversión pública regional y local con participación del sector privado, Obras por Impuestos (DS 081-2022-EF)', u:'https://busquedas.elperuano.pe/dispositivo/NL/2062622-5', g:'X', d:'Ley base de Obras por Impuestos y de sus certificados (CIPRL y CIPGN).'},
+  L32460:{t:'Ley 32460', n:'Ley que modifica la Ley 29230 para ampliar el mecanismo de Obras por Impuestos', u:'https://busquedas.elperuano.pe/dispositivo/NL/2444431-1', g:'X', d:'Crea los Servicios por Impuestos: salud, educación y saneamiento en zonas rurales, de frontera o de emergencia.'},
+  DS038:{t:'DS 038-2026-EF', n:'Reglamento de la Ley 29230', u:'https://www.gob.pe/institucion/mef/normas-legales/7895406-038-2026-ef', g:'X', d:'Fases de Obras por Impuestos: priorización, actos previos, proceso de selección y ejecución.'},
+  DSEG:{t:'Directiva 0003-2022-EF/50.01', n:'Directiva de seguimiento en el marco del Presupuesto por Resultados (RD 0011-2022-EF/50.01)', u:'https://www.gob.pe/institucion/mef/normas-legales/2942568-0011-2022-ef-50-01', g:'P', d:'Indicadores de desempeño, metas y aplicativo de seguimiento de los programas presupuestales.'},
+  DCAP:{t:'Directiva 0001-2025-EF/50.01', n:'Directiva de los Convenios de Apoyo Presupuestario (RD 0014-2025-EF/50.01)', u:'https://www.gob.pe/institucion/mef/normas-legales/7007429-014-2025-ef-50-01', g:'P', d:'Ciclo del CAP: pertinencia, diseño, aprobación por resolución directoral, verificación y asignación de recursos.'},
+  CAPAUS:{t:'RD 0009-2026-EF/50.01', n:'Ejemplo: aprueba el CAP de Aseguramiento Universal en Salud', u:'https://www.gob.pe/institucion/mef/normas-legales/7886458-0009-2026-ef-50-01', g:'P', d:'Caso vigente en salud, con MINSA, SIS y SUSALUD.'}
+});
+
+D.boxes.push(
+/* ---------- CAR: convenio de administración de recursos ---------- */
+{id:'CAR1', s:'C', m:'CAR', ph:1, n:'Sustento y autorización por ley del convenio', w:'TIT',
+ f:'Un convenio de administración de recursos es excepcional: solo procede si antes una norma con rango de ley lo autoriza y señala qué contrataciones se encargan. La necesidad se sustenta en la alta complejidad del objeto y en que la entidad no tiene especialidad o experiencia para contratarlo.',
+ i:'Objeto de alta complejidad; si es un proyecto de inversión, su declaración de viabilidad', o:'Norma con rango de ley que autoriza el convenio e identifica los objetos encargados',
+ src:'L30356@arts. 2 y 4.1|L32103@1.ª DCM|DS181@art. 4|RM892@Ejemplo',
+ pr:[
+  {n:'Sustentar la necesidad del encargo', w:'OGA', o:'Sustento de alta complejidad y de falta de especialidad o experiencia', act:[
+   ['Acreditar la alta complejidad del objeto, con un monto de contratación igual o mayor a 20 000 UIT','OGA','Sustento de alta complejidad','L30356@art. 4.1.2|DS181@art. 4, num. 1','','AU'],
+   ['Sustentar que la entidad no tiene especialidad o no tiene experiencia en el objeto que se encargará','OGA','Sustento de falta de especialidad o de experiencia','L30356@art. 4.1.2','','AU'],
+   ['Si es un proyecto de inversión, verificar que sea de alta complejidad y que esté declarado viable','OPMI','Inversión viable y de alta complejidad','L30356@art. 4.1.3|DS181@art. 7','O','UF','Banco de Inversiones']]},
+  {n:'Obtener la norma con rango de ley', w:'TIT', o:'Autorización expresa por ley', act:[
+   ['Gestionar la propuesta de autorización con el sustento de la necesidad','TIT','Propuesta de autorización','L30356@art. 4.1.1','','OGA,OAJ'],
+   ['Aprobar la norma con rango de ley que autoriza a suscribir el convenio e identifica los objetos que se encargan','CONG','Norma con rango de ley','L30356@arts. 4.1.1 y 4.1.4|L32103@art. 15.1','A','']]}
+ ]},
+{id:'CAR2', s:'C', m:'CAR', ph:2, n:'Opinión favorable y vinculante del MEF', w:'MEF',
+ f:'Antes de firmar, el MEF debe dar opinión favorable y vinculante sobre la viabilidad y la necesidad del convenio. La forma con los pronunciamientos de cuatro de sus órganos sobre los informes de la entidad.',
+ i:'Ley que autoriza el convenio; informes favorables de presupuesto, administración, asesoría jurídica y OPMI', o:'Opinión favorable y vinculante del MEF',
+ src:'L30356@arts. 4.2 y 4.5|DS181@arts. 3 a 7',
+ pr:[
+  {n:'Preparar los informes de la entidad', w:'OGA', o:'Cuatro informes favorables', act:[
+   ['Informar las ventajas del convenio, la experiencia y los estándares de la organización, y las cláusulas de transferencia de conocimiento, registro en el SEACE y devolución de saldos','OGA','Informe favorable de administración','L30356@art. 4.2.2, lit. b|DS181@art. 4','','AU'],
+   ['Informar la capacidad presupuestal: monto total, cronograma de transferencias y comisión de la organización','OPP','Informe favorable de presupuesto','L30356@art. 4.2.2, lit. a|DS181@art. 6','',''],
+   ['Informar la viabilidad legal del proyecto de convenio y adjuntar la acreditación de la organización en el Perú','OAJ','Informe legal favorable','L30356@arts. 4.2.2, lit. c, y 4.3|DS181@art. 5','','MRE,OI'],
+   ['En inversiones, informar que el proyecto está viable, activo, alineado al PMI y que es de alta complejidad','OPMI','Informe favorable de la OPMI','L30356@art. 4.2.2, lit. d|DS181@art. 7','','UF,UEI','Banco de Inversiones']]},
+  {n:'Solicitar y obtener la opinión del MEF', w:'TIT', o:'Opinión favorable y vinculante', act:[
+   ['Solicitar al MEF la opinión favorable para celebrar el convenio','TIT','Solicitud de opinión','L30356@art. 4.5','',''],
+   ['Pronunciarse sobre el informe de administración','DGA','Pronunciamiento de la DGA','DS181@art. 3.2, lit. a','O',''],
+   ['Pronunciarse sobre los informes legal, presupuestal y de inversiones','DGPP','Pronunciamientos de asesoría jurídica, la DGPP y la DGPMI','DS181@art. 3.2, lits. b, c y d','O','OGAJMEF,DGPMI'],
+   ['Emitir el informe con la opinión favorable y vinculante','MEF','Opinión favorable y vinculante del MEF','L30356@art. 4.2.1|DS181@art. 3.1','A','']]}
+ ]},
+{id:'CAR3', s:'C', m:'CAR', ph:2, n:'Aprobación y suscripción del convenio', w:'TIT',
+ f:'Con la opinión del MEF, el titular aprueba la suscripción con un acto propio que no puede delegar. El convenio debe traer las cláusulas que exige la ley.',
+ i:'Opinión favorable del MEF; organización acreditada en el Perú y con experiencia', o:'Convenio de administración de recursos suscrito y publicado',
+ src:'L30356@arts. 3, 4.3, 4.6 y 6|DS181@DCF única',
+ pr:[
+  {n:'Aprobar la suscripción', w:'TIT', o:'Acto que aprueba la suscripción', act:[
+   ['Verificar que el convenio incluya las cláusulas obligatorias, las causales de resolución, el registro en el SEACE, la transferencia de conocimiento y la devolución de saldos con intereses','OAJ','Convenio conforme a la ley','L30356@art. 3|DS181@arts. 4 y 5','O','OGA'],
+   ['Aprobar la suscripción por resolución del titular; en gobiernos regionales y locales, por acuerdo de Consejo o Concejo; en empresas del Estado, por acuerdo de Directorio. La facultad es indelegable','TIT','Suscripción aprobada','L30356@art. 4.6|DS181@DCF única','A','CONSEJO']]},
+  {n:'Suscribir y publicar', w:'TIT', o:'Convenio suscrito y publicado', act:[
+   ['Suscribir el convenio con la organización internacional','TIT','Convenio suscrito','L30356@art. 4.6','','OI'],
+   ['Publicar el convenio en el portal institucional (10 días hábiles)','OGA','Convenio publicado','L30356@art. 6','','']]}
+ ]},
+{id:'CAR4', s:'C', m:'CAR', ph:3, n:'Transferencia de recursos y contratación por la organización', w:'OI',
+ f:'La entidad transfiere los recursos y la organización internacional contrata con sus propias reglas. La entidad no deja de ser responsable: registra los actos, hace seguimiento y recibe el conocimiento.',
+ i:'Convenio suscrito; transferencia autorizada en la ley anual de presupuesto', o:'Bienes, servicios u obras contratados y entregados',
+ src:'L30356@arts. 3, 4.7, 4.8 y 6|DS181@arts. 4 y 8|LEY32513@art. 13|DIR5001@Directiva',
+ pr:[
+  {n:'Transferir los recursos', w:'OPP', o:'Recursos transferidos según el cronograma', act:[
+   ['Aprobar la transferencia financiera por resolución del titular o por acuerdo de Consejo o Concejo, con informe previo favorable de presupuesto, y publicarla (regla de 2026)','TIT','Transferencia aprobada y publicada','LEY32513@art. 13.2','A','OPP'],
+   ['Registrar y girar la transferencia según el cronograma del convenio','UE','Recursos transferidos','DS181@art. 6|DIR5001@Directiva','','TES','SIAF']]},
+  {n:'Contratar con las reglas de la organización', w:'OI', o:'Contratos adjudicados y registrados', act:[
+   ['Conducir los procedimientos de selección con sus manuales y resolver las impugnaciones en una instancia imparcial','OI','Contratos adjudicados','DS181@art. 4, num. 2','',''],
+   ['Registrar en el SEACE las bases, la convocatoria, la absolución de consultas, los resultados y los contratos','OI','Actos registrados en el SEACE','L30356@art. 6|DS181@art. 4, num. 4','','DEC','SEACE'],
+   ['Transferir a los operadores de la entidad la experiencia en contratación y administración de contratos','OI','Conocimiento transferido','DS181@art. 4, num. 3','','DEC,AU']]},
+  {n:'Controlar y modificar el convenio', w:'OGA', o:'Convenio controlado', act:[
+   ['Ejercer control y acceder a la documentación del convenio y de sus contratos','CGR','Servicios de control','L30356@arts. 3, lit. e, y 6|L27785@art. 22','O','OCI,OI'],
+   ['Para cambiar la finalidad, los alcances, las obligaciones sustanciales o los plazos, obtener una norma con rango de ley y la opinión del MEF antes de la adenda','TIT','Adenda autorizada','L30356@arts. 4.7 y 4.8|DS181@art. 8','A','MEF,CONG']]}
+ ]},
+{id:'CAR5', s:'C', m:'CAR', ph:4, n:'Rendición de cuentas, devolución de saldos y cierre', w:'OGA',
+ f:'Al terminar, la organización rinde cuentas y la entidad liquida el convenio. Los saldos, con sus intereses, vuelven al Tesoro.',
+ i:'Contratos culminados', o:'Rendición de cuentas aprobada y saldos devueltos al Tesoro',
+ src:'L30356@art. 6|DL1441@art. 20, num. 8|DL1645@Modificación|DS181@art. 4, num. 5',
+ pr:[
+  {n:'Rendir cuentas y liquidar', w:'OGA', o:'Convenio liquidado', act:[
+   ['Presentar la rendición de cuentas de los recursos administrados (45 días hábiles)','OI','Rendición de cuentas','L30356@art. 6','','OGA'],
+   ['Revisar la rendición y liquidar el convenio','OGA','Convenio liquidado','L30356@art. 6','','CONT,OPP']]},
+  {n:'Devolver los saldos y registrar los activos', w:'TES', o:'Saldos en la Cuenta Única del Tesoro', act:[
+   ['Depositar en la Cuenta Única del Tesoro los saldos y sus intereses dentro de los 30 días calendario siguientes a la liquidación','OI','Saldos e intereses devueltos','DL1441@art. 20, num. 8|DL1645@Modificación|DS181@art. 4, num. 5','','TES'],
+   ['Registrar en el patrimonio los bienes y activos recibidos','ALM','Activos registrados','DBIEN@Directiva','','CONT']]}
+ ]},
+
+/* ---------- G2G: contrato de Gobierno a Gobierno ---------- */
+{id:'G1', s:'C', m:'G2G', ph:1, n:'Sustento del contrato de Gobierno a Gobierno', w:'TIT',
+ f:'El contrato de Estado a Estado queda fuera de la Ley de Contrataciones y solo procede en dos casos: inversiones de alta complejidad que necesitan asistencia técnica especializada de otro Estado, o bienes y servicios estratégicos para la defensa o el orden interno. Hay que demostrar que conviene más que las otras modalidades.',
+ i:'Proyecto de 40 000 UIT o más, o programa de 600 000 UIT o más, formulado con el G2G como sistema de entrega', o:'Informes de sustento y opiniones favorables',
+ src:'LEY32069@art. 7.1, lit. o, y 20.ª DCF',
+ pr:[
+  {n:'Definir el G2G desde la formulación', w:'UF', o:'Proyecto formulado con el G2G como sistema de entrega', act:[
+   ['Determinar en la formulación que el sistema de entrega será de Gobierno a Gobierno; si el proyecto ya era viable, actualizarlo','UF','Proyecto con G2G como sistema de entrega','LEY32069@20.ª DCF, párr. 4','','UEI','Banco de Inversiones'],
+   ['Verificar que el proyecto alcanza 40 000 UIT o el programa 600 000 UIT','UF','Alta complejidad acreditada','LEY32069@20.ª DCF, párr. 4','','']]},
+  {n:'Elaborar los informes y recabar las opiniones', w:'TIT', o:'Informes y opiniones previas', act:[
+   ['Informar el alcance, las ventajas y el costo-beneficio frente a otras modalidades de ejecución','TIT','Informe de ventajas y costo-beneficio','LEY32069@20.ª DCF, párr. 3, lit. a','','UEI,OGA'],
+   ['Informar qué gobiernos pueden ser contratados, según su transparencia, solvencia técnica y experiencia','TIT','Informe sobre los gobiernos potenciales','LEY32069@20.ª DCF, párr. 3, lit. b','','UEI'],
+   ['Opinar sobre la inversión en el marco de Invierte.pe','OPMIS','Opinión de la OPMI del sector','LEY32069@20.ª DCF, párr. 3, lit. c','O','UF'],
+   ['Opinar sobre la capacidad presupuestal o, si hay endeudamiento, verificar que la operación está en el Programa Anual de Endeudamiento','DGPP','Opinión favorable de la DGPP','LEY32069@20.ª DCF, párr. 3, lit. d','O','OPP,DGTP']]}
+ ]},
+{id:'G2', s:'C', m:'G2G', ph:2, n:'Decreto supremo que autoriza la contratación', w:'MINSEC',
+ f:'La autorización se da por decreto supremo refrendado por el ministro del sector. Solo pueden ser autorizados un ministerio, sus organismos públicos adscritos, sus programas o sus proyectos especiales.',
+ i:'Informes de sustento y opiniones favorables', o:'Decreto supremo de autorización',
+ src:'LEY32069@20.ª DCF, párr. 3',
+ pr:[
+  {n:'Autorizar por decreto supremo', w:'MINSEC', o:'Decreto supremo publicado', act:[
+   ['Proponer el decreto supremo con los informes y las opiniones previas','TIT','Proyecto de decreto supremo','LEY32069@20.ª DCF, párr. 3','','OAJ'],
+   ['Aprobar el decreto supremo de autorización, con el refrendo del ministro del sector','MINSEC','Decreto supremo de autorización','LEY32069@20.ª DCF, párr. 3','A','']]}
+ ]},
+{id:'G3', s:'C', m:'G2G', ph:2, n:'Negociación y firma del contrato de Estado a Estado', w:'TIT',
+ f:'El contrato se firma con otro gobierno, que lo ejecuta mediante sus organismos, dependencias o empresas, y se rige por el derecho del comercio internacional. La ley fija las cláusulas que no pueden faltar.',
+ i:'Decreto supremo de autorización; estructura de gestión de proyectos', o:'Contrato de Gobierno a Gobierno suscrito y registrado',
+ src:'LEY32069@art. 7.3 y 20.ª DCF, párrs. 1, 5 y 6|L32441@15.ª DCF|COM003@Comunicado',
+ pr:[
+  {n:'Negociar el contrato con sus cláusulas obligatorias', w:'TIT', o:'Contrato negociado', act:[
+   ['Negociar el contrato con el gobierno elegido','TIT','Contrato negociado','LEY32069@20.ª DCF, párr. 1','','GOBEXT,OAJ'],
+   ['Incluir el plan de transferencia de conocimiento, el plan de legado, la entrega de la documentación y de los contratos derivados, y la resolución de pleno derecho por corrupción','OAJ','Cláusulas obligatorias incorporadas','LEY32069@20.ª DCF, párr. 5','O','GOBEXT'],
+   ['Contar con una estructura de gestión de proyectos','EGP','Equipo de gestión constituido','LEY32069@20.ª DCF, párr. 5|DL1553@art. 6','','UEI']]},
+  {n:'Obtener el informe previo, firmar y registrar', w:'TIT', o:'Contrato suscrito y registrado', act:[
+   ['Si el contrato compromete el crédito o la capacidad financiera del Estado, emitir el informe previo (15 días hábiles)','CGR','Informe previo','L32441@15.ª DCF|L27785@art. 22, lit. l','O','TIT'],
+   ['Suscribir el contrato','TIT','Contrato suscrito','LEY32069@20.ª DCF, párr. 3','A','GOBEXT'],
+   ['Registrar la contratación en el SEACE como «Convenio», con los informes técnico y legal de la exclusión (10 días hábiles)','DEC','Contratación registrada','LEY32069@art. 7.3|COM003@Comunicado|DSEACE@Directiva','','','SEACE']]}
+ ]},
+{id:'G4', s:'C', m:'G2G', ph:3, n:'Ejecución con asistencia técnica del otro Estado', w:'EGP',
+ f:'El otro Estado aporta la asistencia técnica y gestiona los contratos derivados; la entidad dirige, paga y controla los costos. La Contraloría acompaña con control simultáneo.',
+ i:'Contrato suscrito; presupuesto disponible', o:'Obras y equipamiento ejecutados, con costos proyectados y controlados',
+ src:'LEY32069@20.ª DCF, párrs. 1, 3, 5 y 6|LEY32513@art. 12.5|CSIM@Directiva',
+ pr:[
+  {n:'Ejecutar y controlar los costos', w:'EGP', o:'Avance de la inversión y costos bajo control', act:[
+   ['Brindar la asistencia técnica y ejecutar el contrato mediante sus organismos, dependencias o empresas','GOBEXT','Asistencia técnica y contratos derivados','LEY32069@20.ª DCF, párr. 1','','EGP'],
+   ['Remitir a la DGPP las proyecciones trimestrales de costos','OPP','Proyecciones trimestrales','LEY32069@20.ª DCF, párr. 3, lit. f|LEY32513@art. 12.5','','EGP'],
+   ['Si el componente de obras aumenta más de 40 % sobre el costo de inversión actualizado, dar nueva opinión antes de la certificación','DGPP','Nueva opinión de la DGPP','LEY32069@20.ª DCF, párr. 3, lit. e','O','OPP,UEI']]},
+  {n:'Atender el control y la transparencia', w:'EGP', o:'Control atendido', act:[
+   ['Ejercer control simultáneo sobre el contrato','CGR','Informes de control simultáneo','LEY32069@20.ª DCF, párr. 6|CSIM@Directiva','O','OCI'],
+   ['Remitir los documentos del contrato y de los contratos derivados a la Contraloría, cuando los pida, y al OECE','EGP','Documentación remitida','LEY32069@20.ª DCF, párr. 5','','GOBEXT,OECE']]}
+ ]},
+{id:'G5', s:'C', m:'G2G', ph:4, n:'Transferencia de conocimiento, legado y cierre', w:'EGP',
+ f:'El G2G se justifica por lo que deja en el Estado: capacidades y un legado. Su cumplimiento se comprueba antes de cerrar.',
+ i:'Obras culminadas; plan de transferencia de conocimiento y plan de legado', o:'Conocimiento transferido y legado entregado',
+ src:'LEY32069@20.ª DCF, párr. 5',
+ pr:[
+  {n:'Recibir el conocimiento, el legado y la documentación', w:'EGP', o:'Planes cumplidos', act:[
+   ['Ejecutar el plan de transferencia de conocimiento, que parte de un diagnóstico y de un nivel de madurez','GOBEXT','Conocimiento transferido','LEY32069@20.ª DCF, párr. 5','','EGP,UEI'],
+   ['Cumplir el plan de legado','GOBEXT','Legado entregado','LEY32069@20.ª DCF, párr. 5','','EGP'],
+   ['Recibir la documentación completa, incluidos los contratos derivados','EGP','Documentación recibida','LEY32069@20.ª DCF, párr. 5','','']]}
+ ]},
+
+/* ---------- OxI: Obras por Impuestos y Servicios por Impuestos ---------- */
+{id:'OXI1', s:'X', m:'OXI', ph:0, n:'Priorización de la intervención', w:'TIT',
+ f:'La entidad elige qué inversiones, mantenimientos o servicios encargará a una empresa privada, que los financia y ejecuta y cobra con certificados para pagar su impuesto a la renta. Solo puede priorizar lo que cabe en su tope de certificados o en su presupuesto.',
+ i:'Inversión registrada en el PMI y con viabilidad o aprobación; tope de certificados o capacidad presupuestal', o:'Lista de priorización aprobada y publicada por ProInversión',
+ src:'DS038@arts. 19, 21, 26, 54 y 56 a 61|L29230@TUO|L32460@Servicios por Impuestos',
+ pr:[
+  {n:'Verificar que la intervención puede priorizarse', w:'OPMI', o:'Intervención apta para priorizar', act:[
+   ['Verificar que la inversión está registrada en el PMI y cuenta con viabilidad o aprobación','OPMI','Inversión apta para priorizar','DS038@arts. 21 y 57.2','','UF','Banco de Inversiones'],
+   ['Si son servicios de salud, educación o saneamiento, verificar que figuran en la lista aprobada por el sector','OPMI','Servicio alineado a la lista sectorial','DS038@arts. 26, 27 y 57.4|L32460@25.ª DCF','','AU'],
+   ['Comprobar que el monto cabe en el tope de certificados disponible o en el presupuesto institucional','OPP','Financiamiento verificado','DS038@arts. 38, 39 y 57.1','','']]},
+  {n:'Aprobar y publicar la lista de priorización', w:'TIT', o:'Lista de priorización publicada', act:[
+   ['En el Gobierno Nacional, opinar sobre la capacidad presupuestal antes de que se apruebe la lista','DGPP','Opinión favorable de capacidad presupuestal','DS038@art. 59','O','OPP'],
+   ['Aprobar la lista: por resolución del titular en el Gobierno Nacional; por acuerdo de Consejo Regional, Concejo Municipal o Consejo Universitario en los demás casos','TIT','Lista de priorización aprobada','DS038@arts. 57.6 y 59.1','A','CONSEJO'],
+   ['Publicar y promover la lista en su portal','PROINV','Lista publicada','DS038@arts. 56.2 y 61','','']]}
+ ]},
+{id:'OXI2', s:'X', m:'OXI', ph:1, n:'Actos previos al proceso de selección', w:'CE',
+ f:'Prepara todo lo necesario para convocar: el comité especial, las bases, el respaldo presupuestal y el informe previo de la Contraloría.',
+ i:'Lista de priorización aprobada', o:'Bases aprobadas',
+ src:'DS038@arts. 69 a 81',
+ pr:[
+  {n:'Designar el comité especial y elaborar las bases', w:'CE', o:'Proyecto de bases', act:[
+   ['Designar el comité especial, de tres miembros, dentro de los 5 días siguientes a la aprobación de la lista','TIT','Comité especial designado','DS038@art. 70','A',''],
+   ['Elaborar las bases de la selección de la empresa privada y de la supervisora','CE','Proyecto de bases','DS038@arts. 75 a 77','','AU,UEI'],
+   ['Si no se financia con el tope de certificados, emitir la certificación presupuestaria o el compromiso de priorizar recursos','OPP','Certificación o compromiso de priorización','DS038@art. 79','','']]},
+  {n:'Obtener el informe previo y aprobar las bases', w:'TIT', o:'Bases aprobadas', act:[
+   ['Solicitar el informe previo de la Contraloría con el informe técnico y el informe legal favorable','TIT','Solicitud de informe previo','DS038@art. 80.1','','OAJ'],
+   ['Emitir el informe previo','CGR','Informe previo','DS038@art. 80|L27785@art. 22, lit. l','O',''],
+   ['Implementar las recomendaciones del informe previo (20 días) y aprobar las bases','TIT','Bases aprobadas','DS038@art. 81','A','CE']]}
+ ]},
+{id:'OXI3', s:'X', m:'OXI', ph:2, n:'Selección de la empresa privada y convenio de inversión', w:'CE',
+ f:'Elige a la empresa privada que financiará y ejecutará la intervención, y a la entidad privada que la supervisará. Termina con el convenio de inversión firmado.',
+ i:'Bases aprobadas', o:'Convenio de inversión y contrato de supervisión suscritos',
+ src:'DS038@arts. 83 a 123',
+ pr:[
+  {n:'Seleccionar a la empresa privada', w:'CE', o:'Buena pro', act:[
+   ['Convocar, publicar las bases y recibir las expresiones de interés','CE','Convocatoria publicada','DS038@arts. 84, 90 y 97','','PROINV'],
+   ['Absolver consultas y observaciones e integrar las bases','CE','Bases integradas','DS038@arts. 99 y 100','',''],
+   ['Evaluar las propuestas y otorgar la buena pro','CE','Buena pro','DS038@arts. 103 a 105','A','EMP']]},
+  {n:'Firmar el convenio y contratar la supervisión', w:'TIT', o:'Convenio de inversión suscrito', act:[
+   ['Presentar los requisitos y la garantía de fiel cumplimiento (10 días hábiles desde el consentimiento de la buena pro)','EMP','Requisitos presentados','DS038@arts. 111 a 113','',''],
+   ['Suscribir el convenio de inversión y registrarlo en el SEACE','TIT','Convenio de inversión suscrito','DS038@arts. 91 y 111','A','EMP','SEACE'],
+   ['Seleccionar y contratar a la entidad privada supervisora, obligatoria en proyectos de inversión e IOARR','CE','Contrato de supervisión','DS038@arts. 115 a 118','','EPS']]}
+ ]},
+{id:'OXI4', s:'X', m:'OXI', ph:3, n:'Ejecución y supervisión del convenio', w:'EMP',
+ f:'La empresa privada financia y ejecuta lo pactado bajo la supervisión de una entidad privada. La entidad pública aprueba los estudios, las valorizaciones y los cambios.',
+ i:'Convenio de inversión suscrito; terrenos y licencias disponibles', o:'Intervención culminada con conformidad de calidad',
+ src:'DS038@arts. 124 a 145 y 168 a 174',
+ pr:[
+  {n:'Elaborar el expediente técnico y ejecutar', w:'EMP', o:'Avance de la intervención', act:[
+   ['Elaborar el expediente técnico, el documento equivalente o el plan de operación y mantenimiento, cuando el convenio lo incluya','EMP','Expediente técnico o documento equivalente','DS038@art. 130','','EPS'],
+   ['Dar la conformidad al expediente técnico y registrarlo','UEI','Expediente aprobado y registrado','DS038@arts. 130 y 177|DS140@art. 13','A','EPS','Banco de Inversiones'],
+   ['Ejecutar la intervención con su propio financiamiento','EMP','Intervención en ejecución','DS038@arts. 124 a 127','','']]},
+  {n:'Supervisar, valorizar y gestionar cambios', w:'EPS', o:'Avance supervisado y valorizado', act:[
+   ['Supervisar la ejecución y dar la conformidad de calidad','EPS','Conformidad de calidad','DS038@arts. 115 y 146','O','UEI'],
+   ['Aprobar las valorizaciones del avance','UEI','Valorizaciones aprobadas','DS038@art. 139','A','EPS,EMP'],
+   ['Aprobar ampliaciones de plazo, mayores trabajos y modificaciones al convenio','TIT','Modificaciones aprobadas','DS038@arts. 140, 142 y 143','A','EPS,EMP']]}
+ ]},
+{id:'OXI5', s:'X', m:'OXI', ph:4, n:'Recepción, liquidación y certificados', w:'DGTP',
+ f:'La entidad recibe la intervención y pide al Tesoro los certificados (CIPRL o CIPGN) con los que la empresa paga su impuesto a la renta. En gobiernos regionales y locales, el monto se descuenta después de sus transferencias.',
+ i:'Conformidad de calidad y conformidad de recepción', o:'Certificados emitidos y convenio liquidado',
+ src:'DS038@arts. 52, 124, 133, 146 a 149 y 175 a 186|L29230@TUO',
+ pr:[
+  {n:'Recibir y liquidar', w:'UEI', o:'Intervención recibida y convenio liquidado', act:[
+   ['Emitir la conformidad de recepción tras verificar el cumplimiento del expediente técnico','UEI','Conformidad de recepción','DS038@art. 146','A','EPS,EMP'],
+   ['Aprobar la liquidación del convenio de inversión','TIT','Convenio liquidado','DS038@arts. 133 y 148','A','EMP']]},
+  {n:'Emitir y aplicar los certificados', w:'DGTP', o:'Certificado emitido y aplicado', act:[
+   ['Registrar la afectación presupuestal y financiera y solicitar el certificado dentro de los 3 días siguientes a las conformidades','UE','Solicitud de CIPRL o CIPGN','DS038@arts. 177 y 178','','OPP','SIAF'],
+   ['Emitir el CIPRL o el CIPGN a favor de la empresa privada','DGTP','Certificado emitido','DS038@arts. 7, 175 y 178','A',''],
+   ['Aplicar el certificado al pago de su impuesto a la renta, con el límite de 80 % que fija la norma','EMP','Certificado aplicado','DS038@art. 183|L29230@art. 7','','SUNAT']]}
+ ]},
+
+/* ---------- APP: asociación público-privada ---------- */
+{id:'APP1', s:'X', m:'APP', ph:0, n:'Planeamiento y programación de la APP', w:'EPTP',
+ f:'Decide si conviene hacer el proyecto con un privado que financie, construya, opere y mantenga por un contrato de largo plazo, y planifica los pagos que el Estado asumirá. Se compara con hacerlo como obra pública.',
+ i:'Brechas y objetivos del planeamiento; Programación Multianual de Inversiones', o:'Informe Multianual de Inversiones en APP aprobado o proyecto priorizado por decreto supremo',
+ src:'L32441@arts. 23, 25, 28, 35 y 40|DS316@Reglamento',
+ pr:[
+  {n:'Elegir la modalidad', w:'EPTP', o:'Modalidad APP sustentada', act:[
+   ['Analizar de forma preliminar los beneficios de hacer el proyecto como APP frente a la obra pública','EPTP','Análisis preliminar de la modalidad','L32441@art. 40.2','','OPMI'],
+   ['Proyectar a diez años los gastos que el proyecto demandará al Estado (declaración de uso de recursos públicos)','EPTP','Declaración de uso de recursos públicos','L32441@art. 28','','OPP']]},
+  {n:'Aprobar la programación', w:'EPTP', o:'Proyecto programado como APP', act:[
+   ['En gobiernos regionales y locales, aprobar el Informe Multianual de Inversiones en APP','EPTP','Informe multianual aprobado','L32441@arts. 35 y 40','A',''],
+   ['En el Gobierno Nacional, aprobar por decreto supremo la relación de proyectos priorizados que desarrollará ProInversión','MEF','Proyectos priorizados por decreto supremo','L32441@arts. 6.1, num. 4, y 35.2','A','DGPPIP,PROINV']]}
+ ]},
+{id:'APP2', s:'X', m:'APP', ph:1, n:'Formulación e incorporación al proceso de promoción', w:'PROINV',
+ f:'Diseña y evalúa el proyecto con estudios técnicos y define si conviene desarrollarlo como APP. Termina cuando el proyecto entra al proceso de promoción.',
+ i:'Proyecto programado; predios e interferencias identificados', o:'Proyecto incorporado al proceso de promoción',
+ src:'L32441@arts. 34, 36, 41 y 42|DL1712@art. 42|DS316@Reglamento',
+ pr:[
+  {n:'Elaborar los estudios y el informe de evaluación', w:'PROINV', o:'Informe de evaluación', act:[
+   ['Elaborar los estudios técnicos del proyecto','PROINV','Estudios técnicos','L32441@art. 36','','EPTP'],
+   ['Elaborar el informe de evaluación, con la meta y la estrategia para adquirir predios y liberar interferencias','PROINV','Informe de evaluación','L32441@arts. 34.4 y 41','','EPTP'],
+   ['Iniciar temprano la identificación, adquisición, saneamiento y expropiación de predios y la liberación de interferencias','EPTP','Predios en proceso de liberación','L32441@art. 34.3','','']]},
+  {n:'Incorporar el proyecto al proceso de promoción', w:'PROINV', o:'Proyecto incorporado', act:[
+   ['En proyectos regionales y locales, opinar sobre el informe de evaluación','EPTP','Opinión favorable al informe de evaluación','L32441@art. 41.1','O',''],
+   ['Aprobar la incorporación: ProInversión en los proyectos nacionales; el Consejo Regional o el Concejo Municipal en los demás','PROINV','Proyecto incorporado al proceso de promoción','L32441@art. 42|DL1712@art. 42','A','CONSEJO']]}
+ ]},
+{id:'APP3', s:'X', m:'APP', ph:1, n:'Estructuración del contrato', w:'PROINV',
+ f:'Diseña el proyecto como APP: cómo se financia, cómo se paga al privado, quién asume cada riesgo y qué dice el contrato. Antes de salir al mercado se recogen las opiniones previas.',
+ i:'Proyecto incorporado al proceso de promoción; estudios técnicos y económicos', o:'Versión inicial del contrato publicada',
+ src:'L32441@arts. 37, 43 y 45|DL1712@art. 45',
+ pr:[
+  {n:'Diseñar la versión inicial del contrato', w:'PROINV', o:'Versión inicial del contrato', act:[
+   ['Elaborar la estructuración económica y financiera, la asignación de riesgos y el modelo económico financiero','PROINV','Estructuración del proyecto','L32441@arts. 37.1 y 43.2','','EPTP,REG'],
+   ['Elaborar la versión inicial del contrato y el informe sobre el estado de los terrenos','PROINV','Versión inicial del contrato','L32441@art. 43','','EPTP']]},
+  {n:'Recabar las opiniones previas', w:'PROINV', o:'Opiniones previas emitidas', act:[
+   ['Opinar sobre la versión inicial del contrato como titular del proyecto','EPTP','Opinión de la entidad titular','L32441@art. 45.1, num. 1','O',''],
+   ['Opinar, sin efecto vinculante, sobre las materias de su competencia','REG','Opinión del regulador','L32441@arts. 10 y 45.1, num. 2','O',''],
+   ['Emitir opinión previa favorable sobre la versión inicial del contrato','MEF','Opinión favorable del MEF','L32441@arts. 6 y 45.1, num. 3','O','DGPPIP'],
+   ['Emitir el informe previo, no vinculante, si el proyecto compromete el crédito o la capacidad financiera del Estado','CGR','Informe previo','L32441@arts. 11 y 45.1, num. 4|L27785@art. 22, lit. l','O',''],
+   ['Publicar la versión inicial del contrato o la declaratoria de interés','PROINV','Versión inicial publicada','L32441@art. 37.2','','']]}
+ ]},
+{id:'APP4', s:'X', m:'APP', ph:2, n:'Transacción: adjudicación y firma del contrato', w:'PROINV',
+ f:'Abre el proyecto al mercado, recoge los comentarios de los postores y adjudica por un mecanismo competitivo. Sin la opinión favorable del MEF a la versión final, el contrato y su adjudicación son nulos.',
+ i:'Versión inicial del contrato publicada', o:'Contrato de APP suscrito',
+ src:'L32441@arts. 24, 38, 44 y 45',
+ pr:[
+  {n:'Cerrar la versión final del contrato', w:'PROINV', o:'Versión final del contrato con opiniones', act:[
+   ['Recibir y evaluar los comentarios de los postores y definir el mecanismo de adjudicación','PROINV','Mecanismo de adjudicación definido','L32441@art. 38.1','',''],
+   ['Elaborar la versión final del contrato y recabar las opiniones sobre lo observado o lo que cambió','PROINV','Versión final del contrato','L32441@arts. 44 y 45','','EPTP,REG'],
+   ['Emitir opinión previa favorable sobre la versión final del contrato','MEF','Opinión favorable a la versión final','L32441@art. 45','O','DGPPIP']]},
+  {n:'Adjudicar y suscribir', w:'PROINV', o:'Contrato suscrito', act:[
+   ['Adjudicar por licitación pública, concurso de proyectos integrales u otro mecanismo competitivo','PROINV','Buena pro','L32441@art. 38.1','A','INVPRIV'],
+   ['Suscribir el contrato de APP','EPTP','Contrato suscrito','L32441@arts. 24 y 38.2','A','INVPRIV,PROINV']]}
+ ]},
+{id:'APP5', s:'X', m:'APP', ph:3, n:'Ejecución contractual', w:'EPTP',
+ f:'Dura toda la vigencia del contrato. La entidad titular administra el contrato, paga lo comprometido, hace seguimiento y acuerda las modificaciones; el privado construye, opera y mantiene con los niveles de servicio pactados.',
+ i:'Contrato suscrito; presupuesto con los compromisos del contrato', o:'Servicio prestado con los niveles pactados hasta la caducidad del contrato',
+ src:'L32441@arts. 7, 27, 39, 56 y 59 a 63|DS316@art. 137',
+ pr:[
+  {n:'Administrar el contrato y pagar', w:'EPTP', o:'Contrato administrado y compromisos pagados', act:[
+   ['Gestionar y administrar el contrato, cumplir las obligaciones del Estado y hacer seguimiento físico y financiero','EPTP','Contrato administrado','L32441@art. 7.1, nums. 1 y 4','',''],
+   ['Incluir en el presupuesto los créditos para los compromisos firmes y contingentes del contrato, sin pedir recursos adicionales al Tesoro','OPP','Compromisos presupuestados','L32441@art. 27','','EPTP'],
+   ['Financiar, construir, operar y mantener con los niveles de servicio del contrato','INVPRIV','Infraestructura y servicio en operación','L32441@art. 23','',''],
+   ['Supervisar el cumplimiento del contrato en los sectores regulados','REG','Supervisión del contrato','L32441@arts. 10 y 61','O','']]},
+  {n:'Modificar o terminar el contrato', w:'EPTP', o:'Contrato modificado o liquidado', act:[
+   ['Evaluar la adenda manteniendo el equilibrio económico financiero y convocar a las entidades que deben opinar (10 días hábiles)','EPTP','Propuesta de adenda evaluada','L32441@art. 59|DS316@art. 137','','INVPRIV,REG'],
+   ['Opinar sobre la modificación cuando requiere mayor cofinanciamiento','MEF','Opinión del MEF','L32441@arts. 28.4 y 59','O','DGPPIP'],
+   ['Resolver las controversias por arbitraje y publicar los laudos','EPTP','Controversia resuelta','L32441@art. 60','','REG'],
+   ['Declarar la caducidad cuando concurre una causal del contrato, y liquidar','EPTP','Contrato caducado y liquidado','L32441@arts. 7.1, num. 6, 39.2 y 62','A','']]}
+ ]},
+
+/* ---------- PpR: programa presupuestal ---------- */
+{id:'PPR1', s:'P', m:'PPR', ph:0, n:'Diseño del programa presupuestal', w:'RPP',
+ f:'Un programa presupuestal ordena el gasto alrededor de un resultado para la población. El diseño parte de una condición de interés, explica sus causas con evidencia y define los productos y los indicadores con los que se medirá.',
+ i:'Condición de interés priorizada; evidencia sobre lo que funciona', o:'Diseño del programa con su teoría de cambio, productos e indicadores',
+ src:'DL1440@arts. 13.6 y 16|DIRPP@arts. 4 a 15',
+ pr:[
+  {n:'Preparar el diseño', w:'DGPP', o:'Equipo y evidencia listos', act:[
+   ['En un programa orientado a resultados (PPoR), revisar las intervenciones en curso y la evidencia, y conformar el grupo de trabajo','DGPP','Grupo de trabajo conformado','DIRPP@art. 8.1','','RPP'],
+   ['En un programa institucional (PPI), convocar a las entidades con competencias que contribuyen al resultado','RPP','Entidades participantes convocadas','DIRPP@art. 7.1, lit. c','','']]},
+  {n:'Aplicar la metodología de diseño', w:'RPP', o:'Propuesta de diseño', act:[
+   ['Definir la condición de interés y el resultado específico','RPP','Condición de interés y resultado','DIRPP@arts. 4 y 10','',''],
+   ['Elaborar el modelo explicativo, el modelo prescriptivo y la teoría de cambio con evidencia','RPP','Teoría de cambio','DIRPP@arts. 11 a 13','',''],
+   ['Definir la línea de producción (productos y actividades) y los indicadores de desempeño','RPP','Productos e indicadores','DIRPP@arts. 14 y 15','','OPP']]}
+ ]},
+{id:'PPR2', s:'P', m:'PPR', ph:2, n:'Aprobación del programa y estructura programática', w:'DGPP',
+ f:'El diseño necesita la opinión favorable de la DGPP y un acto de aprobación. Después se traduce en la estructura funcional programática, que es la forma en que el programa aparece en el presupuesto.',
+ i:'Informe técnico del diseño', o:'Programa aprobado, con responsable designado y estructura funcional programática',
+ src:'DIRPP@arts. 16 a 22',
+ pr:[
+  {n:'Aprobar el diseño', w:'DGPP', o:'Programa presupuestal aprobado', act:[
+   ['Remitir el informe técnico del diseño a la DGPP','RPP','Informe técnico presentado','DIRPP@arts. 16.1 y 17.1','',''],
+   ['Opinar sobre el diseño; las observaciones se subsanan en 30 días calendario','DGPP','Opinión favorable de la DGPP','DIRPP@arts. 16.2 y 17.2','O',''],
+   ['Aprobar el programa: un PPoR por resolución suprema, que designa al responsable; un PPI por resolución del titular','TIT','Programa presupuestal aprobado','DIRPP@arts. 16.3, 16.4 y 17.3','A','MEF']]},
+  {n:'Vincular el diseño con el presupuesto', w:'OPP', o:'Estructura funcional programática', act:[
+   ['Registrar la estructura funcional programática del programa','OPP','Estructura funcional programática','DIRPP@art. 20','','RPP,DGPP'],
+   ['Identificar las tipologías de inversión vinculadas al programa','OPMI','Inversiones vinculadas al programa','DIRPP@art. 22','','RPP']]}
+ ]},
+{id:'PPR3', s:'P', m:'PPR', ph:3, n:'Implementación y seguimiento de indicadores', w:'RPP',
+ f:'El responsable del programa fija prioridades y metas con las entidades que participan, en los tres niveles de gobierno, y mide el desempeño con indicadores. Durante el año, los recursos del programa tienen reglas propias para moverse.',
+ i:'Programa aprobado; presupuesto asignado a sus productos', o:'Metas de indicadores definidas y reportes de seguimiento',
+ src:'DIRPP@arts. 18 a 24|DSEG@Directiva|LEY32513@art. 34',
+ pr:[
+  {n:'Fijar prioridades y metas', w:'RPP', o:'Prioridades y metas del programa', act:[
+   ['Definir las prioridades del programa en la programación multianual y comunicarlas a las entidades participantes','RPP','Prioridades del programa','DIRPP@art. 21.3','','OPP'],
+   ['Definir las metas multianuales de los indicadores de desempeño en cada ámbito','RPP','Metas de indicadores','DIRPP@art. 19.1, lit. b','','OPP'],
+   ['Dar asistencia técnica a los gobiernos regionales y locales que participan en el programa','RPP','Asistencia técnica','DIRPP@arts. 19.1, lit. c, 23 y 24','','']]},
+  {n:'Medir el desempeño y cuidar los recursos', w:'OPP', o:'Reportes de seguimiento', act:[
+   ['Registrar y reportar los indicadores de desempeño','RPP','Reportes de seguimiento','DSEG@Directiva','','OPP'],
+   ['Antes de mover recursos de un programa, aplicar las condiciones que fija la ley anual para las modificaciones en programas presupuestales (regla de 2026)','OPP','Modificación conforme a la regla del año','LEY32513@art. 34','','DGPP']]}
+ ]},
+{id:'PPR4', s:'P', m:'PPR', ph:4, n:'Evaluación independiente y mejora', w:'DGPP',
+ f:'Evaluadores independientes revisan el diseño, los procesos, el impacto o el gasto del programa. Sus recomendaciones se vuelven compromisos de mejora, y la evidencia pesa en la asignación del presupuesto siguiente.',
+ i:'Indicadores y ejecución del programa; calendario de evaluaciones', o:'Informe de evaluación y matriz de compromisos de mejora',
+ src:'DL1440@arts. 55 a 58|DIR5003@Directiva|DIRPP@arts. 21, 25 y 26',
+ pr:[
+  {n:'Evaluar y comprometer mejoras', w:'DGPP', o:'Evaluación y compromisos', act:[
+   ['Conducir las evaluaciones independientes del calendario aprobado','DGPP','Informe de evaluación','DL1440@arts. 55 a 57|DIR5003@Directiva','O','RPP'],
+   ['Suscribir y cumplir la matriz de compromisos de mejora','RPP','Matriz de compromisos','DIR5003@Directiva','','OPP,DGPP']]},
+  {n:'Usar la evidencia y revisar el programa', w:'DGPP', o:'Programa revisado', act:[
+   ['Usar la evidencia de desempeño al asignar los recursos del ciclo siguiente','DGPP','Asignación informada por evidencia','DIRPP@art. 21.2','','RPP'],
+   ['Revisar el programa con criterios técnicos; puede deshabilitarlo, fusionarlo o pedir su rediseño','DGPP','Programa revisado','DIRPP@arts. 25 y 26','A','RPP'],
+   ['Rediseñar el programa: a los 3 años un PPI y a los 5 años un PPoR','RPP','Programa rediseñado','DIRPP@art. 26','','DGPP']]}
+ ]},
+
+/* ---------- CAP: convenio de apoyo presupuestario ---------- */
+{id:'CAP1', s:'P', m:'CAP', ph:0, n:'Origen de los recursos y análisis de pertinencia', w:'DGPP',
+ f:'Un convenio de apoyo presupuestario es un incentivo: asigna recursos adicionales a un pliego si cumple metas. Los recursos pueden venir de un cooperante, que los dona al Tesoro, o de recursos ordinarios. Antes de diseñarlo, la DGPP evalúa si es pertinente.',
+ i:'Problema público y política o programa presupuestal al que se vincula; donación disponible o recursos previstos', o:'Pertinencia evaluada por la DGPP y recursos disponibles',
+ src:'DL1440@arts. 66 y 67|DCAP@arts. 6 y 8',
+ pr:[
+  {n:'Asegurar el origen de los recursos', w:'DGPP', o:'Recursos disponibles', act:[
+   ['Si hay un cooperante, aceptar la donación por resolución ministerial y depositarla en la cuenta del Tesoro','MEF','Donación aceptada y depositada','DL1440@art. 67.2.1|DCAP@art. 8','A','COOP,DGTP'],
+   ['Si se financia con recursos ordinarios, verificar que el monto consta en la ley anual de presupuesto y en la APM','DGPP','Recursos previstos','DCAP@art. 8','','']]},
+  {n:'Analizar la pertinencia', w:'DGPP', o:'Pertinencia evaluada', act:[
+   ['Solicitar por oficio el análisis de pertinencia, con el problema público, la teoría de cambio, la cadena de valor y la articulación territorial','TIT','Solicitud sustentada','DCAP@art. 6','','RPP,OPP'],
+   ['Evaluar la pertinencia del convenio','DGPP','Pertinencia evaluada','DCAP@art. 6','O','']]}
+ ]},
+{id:'CAP2', s:'P', m:'CAP', ph:1, n:'Diseño y aprobación del convenio', w:'DGPP',
+ f:'El diseño define quién hace qué, qué indicadores se medirán, qué metas hay que alcanzar y cuánto se asigna por cumplirlas. Desde 2025 ya no se firma un convenio con cada entidad: la DGPP lo aprueba por resolución directoral.',
+ i:'Pertinencia evaluada; indicadores con ficha técnica', o:'Resolución directoral que aprueba el CAP, con sus metas y montos',
+ src:'DCAP@arts. 4, 7 y 9|CAPAUS@Ejemplo',
+ pr:[
+  {n:'Diseñar', w:'DGPP', o:'Diseño del CAP', act:[
+   ['Definir las entidades y sus roles: implementadora, beneficiarias y responsable','DGPP','Roles definidos','DCAP@art. 7','','EIMP'],
+   ['Definir los indicadores con ficha técnica, las metas, la metodología de asignación, el monto máximo por beneficiario y los tramos','EIMP','Indicadores, metas y montos','DCAP@art. 7 y Anexo','','DGPP,EBEN']]},
+  {n:'Aprobar y publicar', w:'DGPP', o:'CAP aprobado', act:[
+   ['Aprobar el CAP por resolución directoral y publicarlo con sus procedimientos y anexos; cada tramo nuevo se aprueba con su propia resolución','DGPP','CAP aprobado y publicado','DCAP@art. 9|CAPAUS@Ejemplo','A','']]}
+ ]},
+{id:'CAP3', s:'P', m:'CAP', ph:3, n:'Implementación, asistencia técnica y seguimiento', w:'EIMP',
+ f:'Las entidades beneficiarias trabajan para alcanzar las metas, con asistencia técnica. Un tablero y reuniones periódicas permiten corregir a tiempo.',
+ i:'CAP aprobado con metas', o:'Avance hacia las metas y reportes de seguimiento',
+ src:'DCAP@arts. 11 y 16',
+ pr:[
+  {n:'Implementar con asistencia técnica', w:'EIMP', o:'Avance hacia las metas', act:[
+   ['Ejecutar las acciones para alcanzar las metas de los indicadores','EBEN','Avance en las metas','DCAP@art. 16','','RPP,UE'],
+   ['Brindar asistencia técnica a las entidades beneficiarias','EIMP','Asistencia técnica','DCAP@art. 11','','DGPP'],
+   ['Hacer seguimiento con tablero, reuniones y reportes intermedios','EIMP','Reportes de seguimiento','DCAP@art. 11','','DGPP,EBEN']]}
+ ]},
+{id:'CAP4', s:'P', m:'CAP', ph:3, n:'Verificación del cumplimiento de metas', w:'EIMP',
+ f:'Es el punto de control del mecanismo: sin verificación no hay recursos. La hace la entidad implementadora o rectora; la DGPP solo verifica cuando la implementadora también es beneficiaria.',
+ i:'Reportes y fuentes de verificación de los indicadores', o:'Informe de cumplimiento de metas',
+ src:'DCAP@art. 13',
+ pr:[
+  {n:'Verificar', w:'EIMP', o:'Informe de cumplimiento', act:[
+   ['Remitir la información y las fuentes de verificación de cada indicador','EBEN','Evidencia del cumplimiento','DCAP@art. 13 y Anexo','',''],
+   ['Verificar el cumplimiento de las metas y emitir el informe','EIMP','Informe de cumplimiento','DCAP@art. 13','O',''],
+   ['Verificar cuando la entidad implementadora también es beneficiaria','DGPP','Verificación de la DGPP','DCAP@art. 13','O','']]}
+ ]},
+{id:'CAP5', s:'P', m:'CAP', ph:3, n:'Asignación o transferencia de los recursos', w:'DGPP',
+ f:'Según el nivel de cumplimiento, los recursos llegan al pliego. Si vienen de una donación, el Tesoro hace una asignación financiera y el pliego la incorpora; si son recursos ordinarios, se transfieren por decreto supremo.',
+ i:'Informe de cumplimiento', o:'Recursos asignados e incorporados al presupuesto del pliego',
+ src:'DCAP@art. 14|DL1440@arts. 50 y 67.2|DIR5001@Directiva',
+ pr:[
+  {n:'Asignar con cargo a donaciones', w:'DGTP', o:'Recursos incorporados', act:[
+   ['Comunicar el monto que corresponde según el cumplimiento','DGPP','Monto comunicado','DCAP@art. 14','A',''],
+   ['Hacer la asignación financiera por la Cuenta Única del Tesoro','DGTP','Asignación financiera','DCAP@art. 14|DL1440@art. 67.2.1','',''],
+   ['Incorporar los recursos por resolución del titular','TIT','Recursos incorporados al presupuesto','DL1440@art. 50|DIR5001@Directiva','A','OPP','SIAF']]},
+  {n:'Transferir con cargo a recursos ordinarios', w:'MEF', o:'Recursos transferidos', act:[
+   ['Aprobar la transferencia por decreto supremo refrendado por el ministro de Economía y Finanzas','MEF','Decreto supremo de transferencia','DCAP@art. 14|DL1440@art. 67.2.2','A','DGPP']]}
+ ]},
+{id:'CAP6', s:'P', m:'CAP', ph:4, n:'Sistematización y lecciones', w:'EIMP',
+ f:'Al concluir el último tramo se documenta qué funcionó. El control posterior corresponde a la Contraloría y al órgano de control institucional.',
+ i:'Tramos concluidos; recursos ejecutados', o:'Informe de sistematización entregado a la DGPP',
+ src:'DCAP@arts. 15 y 16',
+ pr:[
+  {n:'Ejecutar, sistematizar y rendir', w:'EIMP', o:'Informe de sistematización', act:[
+   ['Ejecutar los recursos recibidos en los fines de la política o del programa','EBEN','Recursos ejecutados','DCAP@art. 16','','UE'],
+   ['Elaborar el informe de sistematización y lecciones y remitirlo a la DGPP','EIMP','Informe de sistematización','DCAP@art. 15','','EBEN'],
+   ['Ejercer el control posterior','CGR','Servicios de control','DCAP@art. 16|L27785@Ley','O','OCI']]}
+ ]}
+);
+
+D.links.push(
+ ['I2','CAR1','Para un proyecto de inversión, el convenio solo procede si es de alta complejidad y ya está declarado viable.','L30356@art. 4.1.3'],
+ ['P3','CAR4','La transferencia de recursos a la organización internacional debe estar autorizada en la ley anual de presupuesto.','LEY32513@art. 13'],
+ ['CAR5','P4','Al liquidar el convenio, los saldos y sus intereses vuelven a la Cuenta Única del Tesoro.','DL1441@art. 20, num. 8|DL1645@Modificación'],
+ ['I2','G1','El G2G debe quedar definido como sistema de entrega desde la formulación del proyecto.','LEY32069@20.ª DCF, párr. 4'],
+ ['P1','G1','La DGPP debe opinar a favor sobre la capacidad presupuestal antes de la autorización; si hay deuda, la operación debe estar en el Programa Anual de Endeudamiento.','LEY32069@20.ª DCF, párr. 3, lit. d'],
+ ['I1','OXI1','Solo se prioriza por Obras por Impuestos una inversión registrada en el PMI y con viabilidad o aprobación.','DS038@arts. 21 y 57.2'],
+ ['OXI5','P4','Para pedir el certificado, la entidad registra antes la afectación presupuestal y financiera en el SIAF.','DS038@art. 178'],
+ ['I1','APP1','La planificación de las APP se articula con la Programación Multianual de Inversiones.','L32441@art. 35.2'],
+ ['APP5','P2','La entidad titular incluye en su presupuesto los créditos para los compromisos del contrato, sin pedir recursos adicionales al Tesoro.','L32441@art. 27'],
+ ['PPR2','P1','Las prioridades de los productos del programa orientan la programación multianual, la formulación y la ejecución.','DIRPP@art. 21'],
+ ['PPR4','P1','La evidencia de las evaluaciones se usa al asignar los recursos del ciclo siguiente.','DIRPP@art. 21.2'],
+ ['PPR1','CAP1','El CAP se vincula a los productos e indicadores de un programa presupuestal o de una política.','DCAP@arts. 6 y 7'],
+ ['CAP5','P5','Los recursos de un CAP financiado con donaciones se incorporan al presupuesto por resolución del titular.','DL1440@art. 50|DCAP@art. 14']
+);
+
+Object.assign(D.routes, {
+  ppr:{n:'Una estrategia con resultados medibles: programa presupuestal', d:'Un programa presupuestal ordena el gasto de una estrategia alrededor de un resultado para la población. No garantiza un presupuesto fijo ni creciente: da prioridad a sus productos en la asignación y hace que la evidencia de desempeño pese en el presupuesto siguiente. Las compras del programa siguen la ruta A.', b:['PL1','PPR1','PPR2','P1','P2','P3','P4','PPR3','PPR4']},
+  cap:{n:'Recursos adicionales por cumplir metas: convenio de apoyo presupuestario', d:'El CAP asigna recursos adicionales a un pliego cuando cumple metas de indicadores. Los recursos pueden venir de un cooperante, que dona al Tesoro, o de recursos ordinarios. Lo conduce la DGPP del MEF; desde 2025 se aprueba por resolución directoral y ya no se firma un convenio con cada entidad.', b:['PL1','CAP1','CAP2','CAP3','CAP4','CAP5','P5','P4','CAP6']},
+  car:{n:'Una inversión que contrata un organismo internacional (CAR)', d:'El convenio de administración de recursos encarga a una organización internacional, como UNOPS, PNUD u OIM, contratar con sus reglas y con recursos del Estado. Es excepcional. La condición no es que falten proveedores: el objeto debe ser de alta complejidad (20 000 UIT o más), la entidad no debe tener especialidad o experiencia para contratarlo, una ley debe autorizarlo y el MEF debe opinar a favor.', b:['PL1','I1','P1','I2','CAR1','P2','P3','CAR2','CAR3','P4','CAR4','I3','I4','CAR5','I5','I6']},
+  g2g:{n:'Una inversión que gestiona otro Estado (Gobierno a Gobierno)', d:'Otro gobierno ejecuta la inversión mediante sus organismos o empresas y aporta asistencia técnica; el contrato se rige por el derecho del comercio internacional. Procede en proyectos de 40 000 UIT o más (programas de 600 000 UIT o más) y en bienes estratégicos de defensa y orden interno. Lo autoriza un decreto supremo del sector y solo pueden usarlo los ministerios, sus organismos adscritos, programas y proyectos especiales.', b:['PL1','I1','P1','I2','G1','G2','P2','P3','G3','P4','G4','I3','I4','G5','I5','I6']},
+  oxi:{n:'Una inversión o un servicio que ejecuta una empresa a cuenta de sus impuestos', d:'En Obras por Impuestos, una empresa privada financia y ejecuta la inversión, el mantenimiento o el servicio, y el Estado le entrega certificados con los que paga su impuesto a la renta. Desde 2025 también existen los Servicios por Impuestos en salud, educación y saneamiento, para zonas rurales, de frontera o de emergencia. La entidad paga después, con cargo a su presupuesto o a sus transferencias futuras.', b:['PL1','I1','P1','I2','OXI1','OXI2','OXI3','P2','P3','OXI4','I4','P4','OXI5','I5','I6']},
+  app:{n:'Un servicio que un privado construye, opera y mantiene (APP)', d:'En una asociación público-privada, un inversionista financia, construye, opera y mantiene la infraestructura o el servicio con un contrato de largo plazo, y reparte los riesgos con el Estado. Sirve cuando interesa asegurar la operación y el nivel de servicio, no solo la obra. En el Gobierno Nacional, ProInversión conduce el proceso; sin la opinión favorable del MEF, el contrato es nulo.', b:['PL1','I1','APP1','P1','APP2','APP3','APP4','P2','P3','P4','APP5']}
+});
+})();
+</script>
+
+<script>
+/* ================= APLICACIÓN · alternativa B: la gestión como una ruta cableada ================= */
 (function(){
 const D = window.MPE;
 const $app = document.getElementById('app');
-const KEY_ALIAS = 'mpe-alias-v1', KEY_Q = 'mpe-ruta-v1';
+const KEY_ALIAS = 'mpe-alias-v1', KEY_R = 'mpe2-ruta-v1';
 const TIPO = {A:'Aprueba o decide', O:'Opina o controla', '':'Ejecuta'};
+const ROLW = {E:'ejecuta', A:'aprueba o decide', O:'opina o controla', P:'participa'};
 
-function store(k, v){ try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)||'null'); localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
+/* Producto de cada paso en pocas palabras. Resume el campo "o" (resultado) de cada macroproceso; el texto completo está en la ficha. */
+const KEYP = {
+  PL1:'PEI y POI aprobados',
+  P1:'APM aprobada y desagregada', P2:'Presupuesto formulado', P3:'Ley de Presupuesto y PIA', P4:'Gasto certificado, devengado y pagado', P5:'PIM actualizado', P6:'Informes de evaluación',
+  I1:'PMI aprobado y registrado', I2:'Viabilidad o IOARR aprobada', I3:'Expediente técnico aprobado', I4:'Activos ejecutados', I5:'Cierre registrado (Formato 09)', I6:'Servicio en operación',
+  C1:'CMN aprobado', C2:'PAC publicado', C3:'Expediente de contratación y bases', C4:'Buena pro y contrato firmado', C5:'Conformidad y pago', C6:'Liquidación o constancia de prestación',
+  E1:'Ley de Endeudamiento del año', E2:'Minuta de negociación', E3:'Decreto supremo y contrato de préstamo', E4:'Desembolsos recibidos y conciliados', E5:'Deuda atendida y préstamo cerrado',
+  CAR1:'Ley que autoriza el convenio', CAR2:'Opinión favorable y vinculante del MEF', CAR3:'Convenio suscrito', CAR4:'Bienes, servicios u obras contratados', CAR5:'Rendición de cuentas y saldos devueltos',
+  G1:'Informes y opiniones favorables', G2:'Decreto supremo de autorización', G3:'Contrato de Gobierno a Gobierno', G4:'Obras ejecutadas y costos controlados', G5:'Conocimiento y legado transferidos',
+  OXI1:'Lista de priorización publicada', OXI2:'Bases aprobadas', OXI3:'Convenio de inversión firmado', OXI4:'Intervención culminada', OXI5:'Certificados emitidos (CIPRL o CIPGN)',
+  APP1:'Proyecto programado como APP', APP2:'Proyecto en proceso de promoción', APP3:'Versión inicial del contrato', APP4:'Contrato de APP firmado', APP5:'Servicio con los niveles pactados',
+  PPR1:'Diseño del programa', PPR2:'Programa aprobado, con estructura programática', PPR3:'Metas y reportes de seguimiento', PPR4:'Evaluación y compromisos de mejora',
+  CAP1:'Pertinencia evaluada y recursos disponibles', CAP2:'CAP aprobado por la DGPP', CAP3:'Avance hacia las metas', CAP4:'Informe de cumplimiento', CAP5:'Recursos incorporados al presupuesto', CAP6:'Informe de sistematización'
+};
+/* Nombre corto de cada actor para las fichas y las notas. El nombre completo está en su página. */
+const SHORT = {
+  DGPP:'Presupuesto Público (MEF)', DGPMI:'Programación de Inversiones (MEF)', DGA:'Abastecimiento (MEF)', DGTP:'Tesoro Público (MEF)', DGPMACDF:'Política Macroeconómica (MEF)',
+  OGAJMEF:'Asesoría Jurídica del MEF', MEFMIN:'Ministro de Economía y Finanzas', CM:'Consejo de Ministros', CONG:'Congreso de la República', CEPLAN:'CEPLAN', OPMIS:'OPMI del Sector',
+  OECE:'OECE', TCP:'Tribunal de Contrataciones', PCOMPRAS:'Perú Compras', CGR:'Contraloría', FUENTE:'Fuente crediticia', TIT:'Titular de la entidad', OR:'Órgano Resolutivo',
+  CONSEJO:'Consejo Regional o Concejo Municipal', AGA:'Autoridad de la gestión administrativa', CPMP:'Comisión de Programación Multianual', OPL:'Órgano de planeamiento',
+  OPP:'Oficina de Presupuesto', RPP:'Responsable de Programa Presupuestal', UE:'Unidad ejecutora', TES:'Tesorería', CONT:'Contabilidad', OPMI:'OPMI de la entidad',
+  UF:'Unidad Formuladora', UEI:'Unidad Ejecutora de Inversiones', UP:'Unidad Productora', DEC:'Abastecimiento', AU:'Área usuaria', EVAL:'Evaluadores',
+  ALM:'Almacén y control patrimonial', OCI:'Órgano de Control Institucional', PROV:'Proveedor o contratista', SUP:'Supervisor o inspector de obra',
+  MEF:'MEF', DGPPIP:'Inversión Privada (MEF)', PROINV:'ProInversión', REG:'Organismo regulador', MRE:'Relaciones Exteriores', MINSEC:'Ministro del sector', SUNAT:'SUNAT',
+  EIMP:'Entidad implementadora', EPTP:'Entidad titular del proyecto', OGA:'Oficina de administración', OAJ:'Asesoría jurídica', EGP:'Equipo de gestión del proyecto', CE:'Comité especial',
+  EBEN:'Entidad beneficiaria', OI:'Organización internacional', GOBEXT:'Gobierno contratado', INVPRIV:'Inversionista privado', EMP:'Empresa privada', EPS:'Entidad privada supervisora', COOP:'Cooperante'
+};
+const RUTA = {
+  proc:{k:'A', t:'Proceso', a:'Comprar un bien o servicio'},
+  ppr:{k:'PpR', t:'Programa presupuestal', a:'Sostener una estrategia con resultados medibles'},
+  cap:{k:'CAP', t:'Convenio de apoyo presupuestario', c:'Apoyo presupuestario', a:'Recibir recursos adicionales por cumplir metas'},
+  proy:{k:'B', t:'Proyecto de inversión', a:'Tu entidad, con sus propias contrataciones'},
+  car:{k:'CAR', t:'Convenio con organismo internacional', c:'Administración de recursos', a:'Un organismo internacional, por encargo'},
+  g2g:{k:'G2G', t:'Contrato de Gobierno a Gobierno', c:'Gobierno a Gobierno', a:'Otro Estado, con su asistencia técnica'},
+  deuda:{k:'C', t:'Proyecto con endeudamiento', c:'Endeudamiento', a:'Un préstamo'},
+  oxi:{k:'OxI', t:'Obras por Impuestos', a:'Una empresa, a cuenta de su impuesto a la renta'},
+  app:{k:'APP', t:'Asociación público-privada', a:'Un privado que también opera y mantiene'}
+};
+/* Árbol de decisión: cada pregunta lleva a otra pregunta o a una ruta */
+const TREE = {
+  q1:{t:'¿Qué vas a gestionar?', kids:['qa','qb']},
+  qa:{t:'¿Qué necesitas?', br:'Operar un servicio', kids:['proc','ppr','cap']},
+  qb:{t:'¿Tienes los recursos?', br:'Invertir', kids:['q3','q4']},
+  q3:{t:'¿Quién la ejecuta?', br:'Sí, los tengo', kids:['proy','car','g2g']},
+  q4:{t:'¿Quién la financia?', br:'No, faltan', kids:['deuda','oxi','app']}
+};
+const ORDER = ['proc','ppr','cap','proy','car','g2g','deuda','oxi','app'];
+function pathTo(r){ const out = []; let cur = r; for(;;){ const p = Object.keys(TREE).find(k => TREE[k].kids.includes(cur)); if(!p) break; out.unshift(p); cur = p; } return out; }
+const BOLT = '<svg viewBox="0 0 12 16" width="12" height="16" aria-hidden="true"><path d="M7 0 0 9h5l-1 7 7-9H6z" fill="currentColor"/></svg>';
+
+function store(k, v){ try{ if(v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
 let alias = store(KEY_ALIAS) || {};
-let q = store(KEY_Q) || {q1:'', q2:''};
+let R = store(KEY_R); if(!D.routes[R]) R = 'deuda';
+let lens = '', view = '';
+const openProc = {};
 
-const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
-const sysVar = s => 'var(' + D.sys[s].v + ')';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const pad = n => String(n).padStart(2, '0');
+function parseSrc(str){ return String(str || '').split('|').filter(Boolean).map(x => { const i = x.indexOf('@'); return i < 0 ? {id:x, ref:''} : {id:x.slice(0, i), ref:x.slice(i + 1)}; }); }
 
-function parseSrc(str){ return String(str||'').split('|').filter(Boolean).map(x => { const i = x.indexOf('@'); return i<0 ? {id:x, ref:''} : {id:x.slice(0,i), ref:x.slice(i+1)}; }); }
-
-/* Índices */
+/* ---------- Índices ---------- */
 const BOX = {}, PROC = {}, ALL = [];
 D.boxes.forEach(b => {
   BOX[b.id] = b; b.srcs = parseSrc(b.src);
   b.pr.forEach((p, i) => {
-    p.id = b.id + '-' + (i+1); p.code = b.id + '.' + (i+1); p.box = b; p.i = i;
-    p.acts = p.act.map((t, j) => ({n:j+1, a:t[0], w:t[1], o:t[2], s:parseSrc(t[3]), k:t[4]||'', p:(t[5]||'').split(',').filter(Boolean), ap:t[6]||'', proc:p}));
+    p.id = b.id + '-' + (i + 1); p.code = b.id + '.' + (i + 1); p.box = b; p.i = i;
+    p.acts = p.act.map((t, j) => ({n:j + 1, a:t[0], w:t[1], o:t[2], s:parseSrc(t[3]), k:t[4] || '', p:(t[5] || '').split(',').filter(Boolean), ap:t[6] || '', proc:p}));
     PROC[p.id] = p; p.acts.forEach(a => ALL.push(a));
   });
 });
 D.links.forEach(l => { l.s = parseSrc(l[3]); });
-
-/* Citas por norma (para el anexo) */
 const CITED = {};
 function cite(id, where){ (CITED[id] = CITED[id] || new Set()).add(where); }
 D.boxes.forEach(b => { b.srcs.forEach(s => cite(s.id, b.id)); b.pr.forEach(p => p.acts.forEach(a => a.s.forEach(s => cite(s.id, p.id)))); });
 
-/* Utilidades de render */
+/* Rol de cada actor en cada paso: E ejecuta, A aprueba, O opina o controla, P participa */
+const ROLES = {};
+D.boxes.forEach(b => b.pr.forEach(p => p.acts.forEach(a => {
+  const add = (id, x) => { const m = ROLES[id] = ROLES[id] || {}; (m[b.id] = m[b.id] || new Set()).add(x); };
+  add(a.w, a.k || 'E'); a.p.forEach(x => add(x, 'P'));
+})));
+function role(actor, bid){ const s = ROLES[actor] && ROLES[actor][bid]; if(!s) return ''; return ['E','A','O'].filter(x => s.has(x)).join('') || 'P'; }
+function topRole(r){ return r.includes('A') ? 'A' : r.includes('O') ? 'O' : r.includes('E') ? 'E' : 'P'; }
+function roleTxt(r){ const w = r.split('').map(x => ROLW[x]); const t = w.length > 1 ? w.slice(0, -1).join(', ') + ' y ' + w[w.length - 1] : w[0]; return t.charAt(0).toUpperCase() + t.slice(1); }
+
+/* ---------- Piezas comunes ---------- */
+function aName(id){ const a = D.actors[id]; return a ? a.n : id; }
+function aShort(id){ return alias[id] || SHORT[id] || aName(id); }
 function srcChip(s){
   const n = D.norms[s.id]; if(!n) return '<span class="src">' + esc(s.id) + '</span>';
   return '<a class="src" href="' + esc(n.u) + '" target="_blank" rel="noopener" title="' + esc(n.n) + '">' + esc(n.t) + (s.ref ? '<span class="r">· ' + esc(s.ref) + '</span>' : '') + ' ↗</a>';
 }
-function srcList(arr){ return '<div class="srcs">' + arr.map(srcChip).join('') + '</div>'; }
-function actorName(id){ const a = D.actors[id]; return a ? a.n : id; }
-function actorHTML(id, link){
-  const nm = esc(actorName(id));
-  const main = link ? '<a class="who" href="#actor-' + id + '">' + nm + '</a>' : '<span class="who">' + nm + '</span>';
-  return main + (alias[id] ? '<span class="alias">En tu entidad: ' + esc(alias[id]) + '</span>' : '');
+function srcList(arr){ return arr.length ? '<div class="srcs">' + arr.map(srcChip).join('') + '</div>' : ''; }
+function bchip(id){ const b = BOX[id]; return '<a class="bchip s-' + b.s + '" href="#paso-' + id + '"><b>' + id + '</b>' + esc(b.n) + '</a>'; }
+function linkHTML(l){ return '<li><div class="pair">' + bchip(l[0]) + '<span class="arr" aria-hidden="true">→</span><span class="sr">hacia</span>' + bchip(l[1]) + '</div><div class="ltxt"><p>' + esc(l[2]) + '</p>' + srcList(l.s) + '</div></li>'; }
+function actHTML(a){
+  return '<li class="act' + (a.k ? ' k-' + a.k : '') + '">' +
+    '<div class="a-top"><span class="lbl">' + a.proc.code + '.' + a.n + '</span>' + (a.k ? '<span class="a-k"><i class="g ' + a.k + '"></i>' + TIPO[a.k] + '</span>' : '') + '</div>' +
+    '<p class="a-who"><a href="#actor-' + a.w + '" title="' + esc(aName(a.w)) + '">' + esc(aShort(a.w)) + '</a></p>' +
+    '<p class="a-txt">' + esc(a.a) + '</p>' +
+    '<p class="a-out"><span aria-hidden="true">→</span><span>' + esc(a.o) + '</span></p>' +
+    (a.p.length || a.ap ? '<p class="a-meta">' + (a.p.length ? 'Participan: ' + a.p.map(x => esc(aShort(x))).join(', ') : '') + (a.p.length && a.ap ? ' · ' : '') + (a.ap ? 'Aplicativo: ' + esc(a.ap) : '') + '</p>' : '') +
+    srcList(a.s) + '</li>';
 }
-function shortActor(id){ return esc(alias[id] || actorName(id)); }
-function boxChip(id){ const b = BOX[id]; return '<a class="chip" href="#' + id + '" style="--sc:' + sysVar(b.s) + '"><span class="c">' + id + '</span>' + esc(b.n) + '</a>'; }
-function crumbs(parts){ return '<nav class="crumbs" aria-label="Ruta de navegación"><a href="#mapa">Mapa general</a>' + parts.map(p => '<span class="sep">/</span>' + (p.h ? '<a href="#' + p.h + '">' + esc(p.t) + '</a>' : '<span>' + esc(p.t) + '</span>')).join('') + '</nav>'; }
 function toast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2600); }
-function currentRoute(){ return q.q1 === 'proc' ? 'proc' : q.q1 === 'inv' ? (q.q2 === 'deuda' ? 'deuda' : 'proy') : ''; }
 
-/* ---------- Vista: mapa macro ---------- */
-function viewMapa(){
-  const r = currentRoute(), R = r ? D.routes[r] : null;
-  const order = {}; if(R) R.b.forEach((id, i) => order[id] = i+1);
-  let h = '<section class="route" aria-labelledby="rq"><h2 id="rq">¿Qué vas a gestionar?</h2>';
-  h += '<div class="q"><div class="row-btns">' +
-       btn('q1','proc','Un bien o servicio para operar (proceso)') +
-       btn('q1','inv','Una inversión (proyecto o IOARR)') +
-       btn('q1','','Ver todo el mapa') + '</div></div>';
-  if(q.q1 === 'inv'){
-    h += '<div class="q"><p>¿Tienes los recursos para financiarla?</p><div class="row-btns">' +
-         btn('q2','','Sí, con el presupuesto de la entidad') + btn('q2','deuda','No, se requiere endeudamiento') + '</div></div>';
+/* ---------- Cables: se calculan a partir de la posición real de cada ficha ---------- */
+const f1 = n => Math.round(n * 10) / 10;
+function relBox(el, base){ const a = el.getBoundingClientRect(), b = base.getBoundingClientRect(), l = a.left - b.left, t = a.top - b.top; return {l, t, r:l + a.width, b:t + a.height, cx:l + a.width / 2, cy:t + a.height / 2}; }
+function ortho(pts, rad){
+  let d = 'M' + f1(pts[0][0]) + ' ' + f1(pts[0][1]);
+  for(let i = 1; i < pts.length; i++){
+    const p = pts[i], a = pts[i - 1], c = pts[i + 1];
+    if(!c){ d += 'L' + f1(p[0]) + ' ' + f1(p[1]); break; }
+    const r = Math.min(rad, (Math.abs(p[0] - a[0]) + Math.abs(p[1] - a[1])) / 2, (Math.abs(c[0] - p[0]) + Math.abs(c[1] - p[1])) / 2);
+    d += 'L' + f1(p[0] + Math.sign(a[0] - p[0]) * r) + ' ' + f1(p[1] + Math.sign(a[1] - p[1]) * r) + 'Q' + f1(p[0]) + ' ' + f1(p[1]) + ' ' + f1(p[0] + Math.sign(c[0] - p[0]) * r) + ' ' + f1(p[1] + Math.sign(c[1] - p[1]) * r);
   }
-  if(R){
-    h += '<p class="route-note"><b>' + esc(R.n) + '.</b> ' + esc(R.d) + '</p><ol class="steps">' +
-      R.b.map((id, i) => { const b = BOX[id]; return '<li><a href="#' + id + '" style="--sc:' + sysVar(b.s) + '"><span class="n">' + (i+1) + '</span><span class="c">' + id + '</span>' + esc(b.n) + '</a></li>'; }).join('') + '</ol>';
+  return d;
+}
+function wireSVG(pts, dir, off, k){
+  const e = pts[pts.length - 1], s = pts[0], c = off ? ' off' : '';
+  const tip = dir === 'd' ? [[e[0] - 5.5, e[1]], [e[0] + 5.5, e[1]], [e[0], e[1] + 8]] : [[e[0], e[1] - 5.5], [e[0], e[1] + 5.5], [e[0] + 8, e[1]]];
+  return '<path class="w' + c + '" style="--k:' + k + '" d="' + ortho(pts, 10) + '"/>' +
+    '<circle class="port' + c + '" style="--k:' + k + '" cx="' + f1(s[0]) + '" cy="' + f1(s[1]) + '" r="4.5"/>' +
+    '<polygon class="ah' + c + '" style="--k:' + k + '" points="' + tip.map(p => f1(p[0]) + ',' + f1(p[1])).join(' ') + '"/>';
+}
+function drawRoute(animate){
+  const cv = document.getElementById('canvas'); if(!cv) return;
+  const svg = cv.querySelector('svg'), lis = Array.from(cv.querySelectorAll('.nodes > li')), PY = 30;
+  let out = '';
+  for(let i = 0; i < lis.length - 1; i++){
+    const LA = relBox(lis[i], cv), LB = relBox(lis[i + 1], cv), A = relBox(lis[i].firstElementChild, cv), B = relBox(lis[i + 1].firstElementChild, cv);
+    const ya = LA.t + PY, yb = LB.t + PY; let pts, dir = 'r';
+    if(Math.abs(LA.t - LB.t) < 3 && LB.l > LA.l){ pts = [[A.r, ya], [B.l - 8, yb]]; }            /* misma fila */
+    else if(Math.abs(LA.l - LB.l) < 3){ const x = LA.l + 31; pts = [[x, A.b], [x, B.t - 8]]; dir = 'd'; } /* una sola columna */
+    else { const my = LA.b + (LB.t - LA.b) / 2, x1 = A.r + 16, x2 = B.l - 18; pts = [[A.r, ya], [x1, ya], [x1, my], [x2, my], [x2, yb], [B.l - 8, yb]]; } /* salto de fila */
+    out += wireSVG(pts, dir, false, i);
+  }
+  svg.innerHTML = out;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  /* si el lienzo se vuelve a dibujar mientras se anima, los cables nuevos conservan su longitud para seguir trazándose */
+  if(animate || cv.classList.contains('anim')) svg.querySelectorAll('.w').forEach(p => p.style.setProperty('--len', Math.ceil(p.getTotalLength()) + 1));
+  if(animate){
+    lis.forEach((li, i) => li.style.setProperty('--k', i));
+    cv.classList.add('anim'); clearTimeout(drawRoute._t);
+    drawRoute._t = setTimeout(() => cv.classList.remove('anim'), lis.length * 30 + 900);
+  }
+}
+function drawDeci(){
+  const g = document.getElementById('deci'); if(!g) return;
+  const svg = g.querySelector('svg');
+  if(getComputedStyle(svg).display === 'none'){ svg.innerHTML = ''; return; }
+  const bx = id => relBox(document.getElementById((TREE[id] ? 'dn-' : 'rc-') + id), g);
+  const on = pathTo(R).concat(R), off = [], act = [];
+  const st = relBox(document.getElementById('dn-st'), g), q1 = bx('q1');
+  act.push([[st.r, st.cy], [q1.l - 8, q1.cy]]);
+  Object.keys(TREE).forEach(q => {
+    const a = bx(q), tx = a.r + 15;
+    TREE[q].kids.forEach(k => {
+      const b = bx(k), pts = Math.abs(b.cy - a.cy) < 2 ? [[a.r, a.cy], [b.l - 8, b.cy]] : [[a.r, a.cy], [tx, a.cy], [tx, b.cy], [b.l - 8, b.cy]];
+      (on.includes(q) && on.includes(k) ? act : off).push(pts);
+    });
+  });
+  svg.innerHTML = off.map((p, i) => wireSVG(p, 'r', true, i)).join('') + act.map((p, i) => wireSVG(p, 'r', false, i)).join('');
+}
+function redraw(){ drawDeci(); drawRoute(false); }
+
+/* ---------- Vista: ruta ---------- */
+function rcard(r){
+  const ids = D.routes[r].b;
+  return '<button type="button" class="rc" id="rc-' + r + '" data-r="' + r + '" aria-pressed="' + (R === r) + '">' +
+    '<span class="rc-k">' + RUTA[r].k + '</span><span class="rc-name">' + (RUTA[r].c || RUTA[r].t) + '</span><span class="rc-n lbl">' + ids.length + ' pasos</span>' +
+    '<span class="rc-ans">' + RUTA[r].a + '</span><span class="sig" aria-hidden="true">' + ids.map(id => '<i class="s-' + BOX[id].s + '"></i>').join('') + '</span></button>';
+}
+function deciHTML(){
+  const on = pathTo(R);
+  const qn = id => '<div class="dn q-' + id + (on.includes(id) ? ' on' : '') + '" id="dn-' + id + '">' + (TREE[id].br ? '<span class="lbl br">' + TREE[id].br + '</span>' : '') + '<span class="qt"><i class="dia"></i>' + TREE[id].t + '</span></div>';
+  return '<div class="deci" id="deci"><svg aria-hidden="true"></svg><div class="dn start" id="dn-st" title="Tienes una necesidad">' + BOLT + '<span class="sr">Tienes una necesidad</span></div>' +
+    qn('q1') + qn('qa') + ORDER.slice(0, 3).map(rcard).join('') + qn('qb') + qn('q3') + ORDER.slice(3, 6).map(rcard).join('') + qn('q4') + ORDER.slice(6).map(rcard).join('') + '</div>';
+}
+function nodeHTML(b, n){
+  let r = '', cls = 'node s-' + b.s;
+  if(lens){ r = role(lens, b.id); cls += r ? ' hit' : ' dim'; }
+  return '<li><a class="' + cls + '" href="#paso-' + b.id + '">' +
+    '<span class="n-num">' + pad(n) + '</span>' +
+    '<span class="n-sys lbl">' + (r ? '<b class="n-role">' + esc(roleTxt(r)) + '</b>' : b.id) + '</span>' +
+    '<span class="n-name">' + esc(b.n) + '</span>' +
+    '<span class="n-who"><span class="lbl">Con</span>' + esc(aShort(b.w)) + '</span>' +
+    '<span class="n-stub"><span class="lbl">Te llevas</span>' + esc(KEYP[b.id] || b.o) + '</span></a></li>';
+}
+function lensOptions(ids){
+  let o = '<option value="">Todos los actores</option>';
+  Object.keys(D.groups).forEach(g => {
+    const xs = Object.keys(D.actors).filter(id => D.actors[id].g === g && ids.some(x => role(id, x)));
+    if(xs.length) o += '<optgroup label="' + esc(D.groups[g]) + '">' + xs.map(id => '<option value="' + id + '"' + (lens === id ? ' selected' : '') + '>' + esc(alias[id] || aName(id)) + '</option>').join('') + '</optgroup>';
+  });
+  return o;
+}
+function viewRuta(animate){
+  const rt = D.routes[R], ids = rt.b;
+  if(lens && !ids.some(x => role(lens, x))) lens = '';
+  let h = '<section aria-labelledby="h-deci"><h2 class="sec" id="h-deci">Elige tu ruta · ' + ORDER.length + ' rutas</h2>' + deciHTML() + '</section>';
+  h += '<section aria-labelledby="h-ruta"><div class="ruta-head"><div><p class="lbl muted">Ruta ' + RUTA[R].k + ' · ' + ids.length + ' pasos</p><h2 id="h-ruta">' + esc(rt.n) + '</h2><p class="ruta-d">' + esc(rt.d) + '</p></div>' +
+    '<div class="lens"><label class="lbl" for="lens">Resaltar dónde interviene</label><select id="lens">' + lensOptions(ids) + '</select></div></div>';
+  h += '<div class="canvas" id="canvas"><svg aria-hidden="true"></svg><ol class="nodes">' + ids.map((id, i) => nodeHTML(BOX[id], i + 1)).join('') +
+    '<li class="endcap"><i class="end"></i><span class="lbl">Fin de la ruta</span></li></ol></div>';
+  if(lens){
+    const n = ids.filter(x => role(lens, x)).length;
+    h += '<p class="lens-note"><b>' + esc(alias[lens] || aName(lens)) + '</b> interviene en ' + n + ' de ' + ids.length + ' pasos de esta ruta. <a href="#actor-' + lens + '">Ver todo lo que hace</a></p>';
   } else {
-    h += '<p class="route-note muted">Un <b>proceso</b> es una actividad permanente para que la entidad funcione. Un <b>proyecto de inversión</b> es una intervención temporal para crear, ampliar, mejorar o recuperar la capacidad de producir bienes o servicios (DS 140-2026-EF, art. 3). Elige una opción y el mapa marca la ruta en orden.</p>';
+    h += '<p class="hint">Cada ficha es un paso: arriba dice con quién coordinas y abajo, en el talón, qué te llevas. Abre una ficha para ver por qué, qué debes traer y quién más interviene.</p>';
   }
   h += '</section>';
-  h += '<div class="search"><label class="small muted" for="buscar">Buscar en el mapa</label><input id="buscar" type="search" placeholder="Ej.: certificación, viabilidad, conformidad, desembolso, PAC" autocomplete="off"></div><ul class="results" id="res" hidden></ul>';
-  h += '<div class="gridwrap"><div class="mgrid' + (R ? ' has-route' : '') + '">';
-  h += '<div class="phead"></div>' + D.ph.map((p, i) => '<div class="phead"><span class="k">' + (i+1) + '</span>' + esc(p) + '</div>').join('');
-  Object.keys(D.sys).forEach(s => {
-    const S = D.sys[s];
-    h += '<div class="mrow" style="--sc:' + sysVar(s) + '"><div class="rlab"><b>' + esc(S.n) + '</b><span>' + esc(S.r) + '</span></div><div class="boxes">';
-    D.ph.forEach((p, i) => {
-      const bs = D.boxes.filter(b => b.s === s && b.ph === i);
-      h += '<div class="mcell">' + bs.map(b => boxHTML(b, order[b.id])).join('') + '</div>';
-    });
-    h += '</div></div>';
-  });
-  h += '</div></div>';
-  h += '<p class="legend">Cada caja es un macroproceso. Ábrela para ver sus procedimientos (nivel meso) y, dentro de cada procedimiento, las actividades con su responsable, resultado y fuente (nivel micro). Las columnas son las fases genéricas del ciclo de gestión; cada sistema las nombra a su manera. La pestaña <a href="#conexiones">Interconexiones</a> muestra dónde un sistema necesita del otro.</p>';
   $app.innerHTML = h;
-  $app.querySelectorAll('[data-q]').forEach(el => el.addEventListener('click', () => {
-    const k = el.dataset.q, v = el.dataset.v; q[k] = v; if(k === 'q1' && v !== 'inv') q.q2 = ''; store(KEY_Q, q); viewMapa();
+  $app.querySelectorAll('.rc').forEach(el => el.addEventListener('click', () => {
+    if(R === el.dataset.r) return;
+    R = el.dataset.r; store(KEY_R, R); viewRuta(true);
+    const b = document.getElementById('rc-' + R); if(b) b.focus({preventScroll:true});
+    const hr = document.getElementById('h-ruta'); if(hr && hr.getBoundingClientRect().top > window.innerHeight * 0.6) hr.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'});
   }));
-  const inp = document.getElementById('buscar'), res = document.getElementById('res');
-  inp.addEventListener('input', () => {
-    const t = norm(inp.value.trim()); if(t.length < 3){ res.hidden = true; res.innerHTML = ''; return; }
-    const hits = [];
-    D.boxes.forEach(b => { if(norm(b.n + ' ' + b.f).includes(t)) hits.push('<li><a href="#' + b.id + '" style="--sc:' + sysVar(b.s) + '"><span class="c">' + b.id + '</span> <b>' + esc(b.n) + '</b></a></li>'); });
-    Object.values(PROC).forEach(p => { if(norm(p.n).includes(t)) hits.push('<li><a href="#' + p.id + '" style="--sc:' + sysVar(p.box.s) + '"><span class="c">' + p.code + '</span> <b>' + esc(p.n) + '</b></a></li>'); });
-    ALL.forEach(a => { if(norm(a.a + ' ' + a.o + ' ' + actorName(a.w)).includes(t)) hits.push('<li><a href="#' + a.proc.id + '" style="--sc:' + sysVar(a.proc.box.s) + '"><span class="c">' + a.proc.code + '.' + a.n + '</span> ' + esc(a.a) + ' <span class="muted small">· ' + esc(actorName(a.w)) + '</span></a></li>'); });
-    res.innerHTML = hits.length ? hits.slice(0, 40).join('') : '<li><a href="#guia">Sin resultados. Prueba con otra palabra.</a></li>';
-    res.hidden = false;
-  });
-  function btn(k, v, label){ return '<button type="button" class="btn" data-q="' + k + '" data-v="' + v + '" aria-pressed="' + (q[k] === v) + '">' + esc(label) + '</button>'; }
-}
-function boxHTML(b, ord){
-  return '<a class="box' + (ord ? ' on' : '') + '" href="#' + b.id + '" style="--sc:' + sysVar(b.s) + '">' +
-    '<span class="bcode">' + b.id + '</span><span class="bname">' + esc(b.n) + '</span>' +
-    '<span class="bwho">' + shortActor(b.w) + '</span><span class="bph">' + esc(D.ph[b.ph]) + '</span>' +
-    (ord ? '<span class="ord" aria-label="Paso ' + ord + '">' + ord + '</span>' : '') + '</a>';
+  document.getElementById('lens').addEventListener('change', e => { lens = e.target.value; viewRuta(false); document.getElementById('lens').focus({preventScroll:true}); });
+  drawDeci(); drawRoute(!!animate);
 }
 
-/* ---------- Vista: caja (meso) ---------- */
-function viewBox(id){
-  const b = BOX[id], S = D.sys[b.s];
-  const rel = D.links.filter(l => l[0] === id || l[1] === id);
-  let h = crumbs([{t: b.id + ' ' + b.n}]);
-  h += '<section class="head" style="--sc:' + sysVar(b.s) + '"><div class="tag"><span class="c">' + b.id + '</span><span>' + esc(S.n) + ' · Fase ' + (b.ph+1) + ': ' + esc(D.ph[b.ph]) + '</span><span>· Nivel macro</span></div>' +
-       '<h2>' + esc(b.n) + '</h2><p>' + esc(b.f) + '</p><dl class="facts">' +
-       '<div><dt>Responsable principal</dt><dd>' + actorHTML(b.w, true) + '</dd></div>' +
-       '<div><dt>Insumo</dt><dd>' + esc(b.i) + '</dd></div>' +
-       '<div><dt>Resultado</dt><dd>' + esc(b.o) + '</dd></div>' +
-       '<div><dt>Fuentes</dt><dd>' + srcList(b.srcs) + '</dd></div></dl></section>';
-  h += '<p class="lv">Procedimientos · nivel meso</p><ol class="meso" style="--sc:' + sysVar(b.s) + '">' + b.pr.map(p =>
-       '<li><a href="#' + p.id + '"><span class="n">' + p.code + '</span><span class="t">' + esc(p.n) + '</span>' +
-       '<span class="m">Responsable: ' + shortActor(p.w) + '</span><span class="m">Resultado: ' + esc(p.o) + '</span>' +
-       (p.t ? '<span class="m">Plazo: ' + esc(p.t) + '</span>' : '') +
-       '<span class="more">' + p.acts.length + ' actividades →</span></a></li>').join('') + '</ol>';
-  if(rel.length){
-    h += '<p class="lv">Se conecta con otros sistemas</p><ul class="links">' + rel.map(linkHTML).join('') + '</ul>';
+/* ---------- Vista: paso (ficha abierta, con sus procedimientos y actividades) ---------- */
+function ctxFor(id){
+  const ids = D.routes[R].b;
+  if(ids.includes(id)) return {t:'ruta', ids, label:'Ruta ' + RUTA[R].k + ' · ' + RUTA[R].t};
+  const b = BOX[id];
+  if(b.m) return {t:'sis', ids:D.boxes.filter(x => x.m === b.m).map(x => x.id), label:D.mec[b.m].n};
+  return {t:'sis', ids:D.boxes.filter(x => x.s === b.s && !x.m).map(x => x.id), label:'Sistema de ' + D.sys[b.s].n};
+}
+function renderProcs(b){
+  const box = document.getElementById('procs'); if(!box) return;
+  const pi = Math.min(openProc[b.id] || 0, b.pr.length - 1), p = b.pr[pi];
+  box.innerHTML = '<h3 class="sec" id="h-pr">Cómo se hace · ' + b.pr.length + (b.pr.length > 1 ? ' procedimientos' : ' procedimiento') + '</h3>' +
+    '<ol class="chevs s-' + b.s + '">' + b.pr.map((x, i) => '<li><button type="button" class="chev" data-pi="' + i + '" aria-pressed="' + (i === pi) + '"><span class="lbl">' + x.code + '</span><span>' + esc(x.n) + '</span></button></li>').join('') + '</ol>' +
+    '<dl class="pm"><div><dt>Lo conduce</dt><dd><a href="#actor-' + p.w + '">' + esc(aShort(p.w)) + '</a></dd></div><div><dt>Resultado</dt><dd>' + esc(p.o) + '</dd></div>' + (p.t ? '<div><dt>Plazo</dt><dd>' + esc(p.t) + '</dd></div>' : '') + '</dl>' +
+    '<ol class="acts s-' + b.s + '">' + p.acts.map(actHTML).join('') + '</ol>' +
+    '<div class="toolbar"><button type="button" class="btn" id="cp">Copiar este paso para Excel</button><span class="small muted">Copia todas las actividades del paso como tabla, con los nombres de tu entidad si los registraste en <a href="#actores">Actores</a>.</span></div><div id="cpbox"></div>';
+  box.querySelectorAll('.chev').forEach(el => el.addEventListener('click', () => {
+    openProc[b.id] = +el.dataset.pi; renderProcs(b);
+    const again = box.querySelector('.chev[data-pi="' + el.dataset.pi + '"]'); if(again) again.focus({preventScroll:true});
+  }));
+  document.getElementById('cp').addEventListener('click', () => copyTSV(b.pr, document.getElementById('cpbox')));
+}
+function viewPaso(id, pi){
+  const b = BOX[id], S = D.sys[b.s], cx = ctxFor(id), pos = cx.ids.indexOf(id), prev = cx.ids[pos - 1], next = cx.ids[pos + 1], A = D.actors[b.w];
+  if(pi !== undefined) openProc[id] = pi;
+  let h = '<nav class="mini" aria-label="' + esc(cx.label) + '"><a class="mm-back" href="#' + (cx.t === 'ruta' ? 'ruta' : 'sistemas') + '">← ' + esc(cx.label) + '</a><div class="mm-sc" id="mmsc"><ol>' +
+    cx.ids.map((x, i) => '<li><a class="mm s-' + BOX[x].s + (x === id ? ' cur' : '') + '" href="#paso-' + x + '" title="' + esc((i + 1) + '. ' + BOX[x].n) + '"' + (x === id ? ' aria-current="step"' : '') + '>' + (i + 1) + '</a></li>').join('') + '</ol></div></nav>';
+  h += '<article class="paso s-' + b.s + '"><div>';
+  h += '<header class="hero"><span class="num" aria-hidden="true">' + pad(pos + 1) + '</span><p class="lbl">Paso ' + (pos + 1) + ' de ' + cx.ids.length + ' · ' + esc(b.m ? D.mec[b.m].n : S.n) + ' · ' + b.id + ' · Fase ' + (b.ph + 1) + ': ' + esc(D.ph[b.ph]) + '</p><h2>' + esc(b.n) + '</h2></header>';
+  h += '<div class="quad">' +
+    '<section class="q who"><h3 class="lbl">¿Con quién coordinas?</h3><p class="big"><a href="#actor-' + b.w + '">' + esc(aName(b.w)) + '</a></p>' + (alias[b.w] ? '<p class="alias">En tu entidad: ' + esc(alias[b.w]) + '</p>' : '') + '<p class="small">' + esc(A ? A.d : '') + '</p></section>' +
+    '<section class="q why"><h3 class="lbl">¿Por qué?</h3><p>' + esc(b.f) + '</p></section>' +
+    '<section class="q inp"><h3 class="lbl">¿Qué debes traer?</h3><p>' + esc(b.i) + '</p></section>' +
+    '<section class="q out"><h3 class="lbl">¿Qué te llevas?</h3><p class="big">' + esc(b.o) + '</p></section></div>';
+  if(cx.t === 'sis') h += '<p class="ctx-note">Este paso no forma parte de la ruta ' + RUTA[R].k + ' (' + RUTA[R].t.toLowerCase() + '). Lo ves junto a los demás pasos de su sistema o mecanismo.</p>';
+  h += '</div>';
+  const rank = {A:0, O:1, E:2, P:3};
+  const others = Object.keys(D.actors).filter(x => x !== b.w && role(x, id)).map(x => ({id:x, r:role(x, id)})).sort((u, v) => rank[topRole(u.r)] - rank[topRole(v.r)]);
+  if(others.length){
+    h += '<section aria-labelledby="h-mesa"><h3 class="sec" id="h-mesa">Con quién más coordinas · ' + others.length + (others.length > 1 ? ' actores' : ' actor') + '</h3><div class="mesa">' + others.map(o => {
+      const res = Array.from(new Set(ALL.filter(a => a.proc.box === b && a.w === o.id).map(a => a.o)));
+      return '<a href="#actor-' + o.id + '" title="' + esc(aName(o.id)) + '"><i class="g ' + topRole(o.r) + '"></i><b>' + esc(aShort(o.id)) + '</b><span class="lbl">' + esc(roleTxt(o.r)) + '</span>' +
+        (res.length ? '<span class="res">→ ' + esc(res.slice(0, 2).join('; ')) + (res.length > 2 ? ' y ' + (res.length - 2) + ' más' : '') + '</span>' : '') + '</a>';
+    }).join('') + '</div></section>';
   }
+  h += '<section id="procs" aria-labelledby="h-pr"></section>';
+  const rel = D.links.filter(l => l[0] === id || l[1] === id);
+  if(rel.length) h += '<section aria-labelledby="h-cx"><h3 class="sec" id="h-cx">Se conecta con otros sistemas · ' + rel.length + '</h3><ul class="links">' + rel.map(linkHTML).join('') + '</ul></section>';
+  h += '<section aria-labelledby="h-fu"><h3 class="sec" id="h-fu">Normas de este paso</h3>' + srcList(b.srcs) + '</section>';
+  const pg = (x, n, c) => '<a class="pg ' + c + ' s-' + BOX[x].s + '" href="#paso-' + x + '"><span class="lbl">' + (c === 'prev' ? '← Paso anterior' : 'Paso siguiente →') + '</span><span>' + pad(n) + ' · ' + esc(BOX[x].n) + '</span></a>';
+  h += '<nav class="pager" aria-label="Paso anterior y siguiente">' + (prev ? pg(prev, pos, 'prev') : '<span></span>') + (next ? pg(next, pos + 2, 'next') : '<span></span>') + '</nav></article>';
   $app.innerHTML = h;
-}
-function linkHTML(l){
-  return '<li><div class="pair">' + boxChip(l[0]) + '<span aria-hidden="true">→</span><span class="sr">hacia</span>' + boxChip(l[1]) + '</div><div>' + esc(l[2]) + '</div>' + srcList(l.s) + '</li>';
-}
-
-/* ---------- Vista: procedimiento (micro) ---------- */
-function viewProc(id){
-  const p = PROC[id], b = p.box, S = D.sys[b.s];
-  const srcs = []; const seen = {};
-  p.acts.forEach(a => a.s.forEach(s => { const k = s.id + s.ref; if(!seen[k]){ seen[k] = 1; srcs.push(s); } }));
-  let h = crumbs([{t: b.id + ' ' + b.n, h: b.id}, {t: p.code + ' ' + p.n}]);
-  h += '<section class="head" style="--sc:' + sysVar(b.s) + '"><div class="tag"><span class="c">' + p.code + '</span><span>' + esc(S.n) + ' · ' + esc(b.n) + '</span><span>· Nivel meso</span></div>' +
-       '<h2>' + esc(p.n) + '</h2><dl class="facts">' +
-       '<div><dt>Responsable del procedimiento</dt><dd>' + actorHTML(p.w, true) + '</dd></div>' +
-       '<div><dt>Resultado</dt><dd>' + esc(p.o) + '</dd></div>' +
-       (p.t ? '<div><dt>Plazo</dt><dd>' + esc(p.t) + '</dd></div>' : '') + '</dl></section>';
-  h += '<p class="lv">Actividades · nivel micro</p><div class="toolbar"><button type="button" class="btn" id="cp">Copiar para Excel</button><span class="small muted">Copia este procedimiento como tabla, con los nombres de tu entidad si los registraste en <a href="#actores">Mapa de actores</a>.</span></div><div id="cpbox"></div>';
-  h += '<ol class="acts" style="--sc:' + sysVar(b.s) + '"><li class="h" aria-hidden="true"><span>N.°</span><span>Actividad</span><span>Responsable</span><span>Resultado</span><span>Fuente</span></li>' +
-    p.acts.map(a => '<li><span class="n">' + p.code + '.' + a.n + '</span>' +
-      '<div class="cell first">' + esc(a.a) + (a.k ? '<span class="kb ' + a.k + '">' + TIPO[a.k] + '</span>' : '') + (a.ap ? '<span class="app">Aplicativo: ' + esc(a.ap) + '</span>' : '') + '</div>' +
-      '<div class="cell" data-l="Responsable">' + actorHTML(a.w, true) + (a.p.length ? '<span class="part">Participan: ' + a.p.map(shortActor).join(', ') + '</span>' : '') + '</div>' +
-      '<div class="cell" data-l="Resultado">' + esc(a.o) + '</div>' +
-      '<div class="cell" data-l="Fuente">' + srcList(a.s) + '</div></li>').join('') + '</ol>';
-  const prev = b.pr[p.i-1], next = b.pr[p.i+1];
-  h += '<div class="pager">' + (prev ? '<a href="#' + prev.id + '">← ' + prev.code + ' ' + esc(prev.n) + '</a>' : '<a href="#' + b.id + '">← Volver a ' + b.id + '</a>') +
-       (next ? '<a href="#' + next.id + '">' + next.code + ' ' + esc(next.n) + ' →</a>' : '<a href="#' + b.id + '">Volver a ' + b.id + ' →</a>') + '</div>';
-  $app.innerHTML = h;
-  document.getElementById('cp').addEventListener('click', () => copyTSV([p], document.getElementById('cpbox')));
+  renderProcs(b);
+  const sc = document.getElementById('mmsc'), cur = sc.querySelector('.cur');
+  if(cur) sc.scrollLeft = cur.offsetLeft - sc.clientWidth / 2 + 15;
 }
 
 /* ---------- Copiar a Excel ---------- */
-function clean(s){ return String(s||'').replace(/[\t\r\n]+/g, ' '); }
+function clean(s){ return String(s || '').replace(/[\t\r\n]+/g, ' '); }
 function buildTSV(procs){
   const rows = [['Sistema','Fase','Macroproceso','Procedimiento','N.°','Actividad','Tipo','Responsable','Responsable en mi entidad','Participan','Resultado','Aplicativo','Fuentes','Enlaces']];
   procs.forEach(p => p.acts.forEach(a => {
-    rows.push([D.sys[p.box.s].n, D.ph[p.box.ph], p.box.id + ' ' + p.box.n, p.code + ' ' + p.n, p.code + '.' + a.n, a.a, TIPO[a.k], actorName(a.w), alias[a.w] || '',
-      a.p.map(x => alias[x] || actorName(x)).join('; '), a.o, a.ap,
+    rows.push([D.sys[p.box.s].n, D.ph[p.box.ph], p.box.id + ' ' + p.box.n, p.code + ' ' + p.n, p.code + '.' + a.n, a.a, TIPO[a.k], aName(a.w), alias[a.w] || '',
+      a.p.map(x => alias[x] || aName(x)).join('; '), a.o, a.ap,
       a.s.map(s => (D.norms[s.id] ? D.norms[s.id].t : s.id) + (s.ref ? ' (' + s.ref + ')' : '')).join('; '),
       a.s.map(s => D.norms[s.id] ? D.norms[s.id].u : '').join(' ')].map(clean));
   }));
@@ -1065,153 +1842,218 @@ function buildTSV(procs){
 function copyTSV(procs, box){
   const txt = buildTSV(procs);
   const fallback = () => { box.innerHTML = '<div class="copybox"><p class="small">El navegador no permitió copiar. Selecciona todo el texto (Ctrl+A) y cópialo (Ctrl+C):</p><textarea id="cpta" readonly></textarea></div>'; const ta = document.getElementById('cpta'); ta.value = txt; ta.focus(); ta.select(); };
-  try{
-    navigator.clipboard.writeText(txt).then(() => toast('Copiado. Pégalo en Excel con Ctrl+V.'), fallback);
-  }catch(e){ fallback(); }
+  try{ navigator.clipboard.writeText(txt).then(() => toast('Copiado. Pégalo en Excel con Ctrl+V.'), fallback); }catch(e){ fallback(); }
 }
 
-/* ---------- Vista: interconexiones ---------- */
+/* ---------- Vista: sistemas ---------- */
 let linkFilter = '';
-function viewConexiones(){
-  let h = '<section class="block"><h2>Interconexiones entre sistemas</h2><p class="guide">Ningún sistema funciona solo. Estos son los puntos en que un sistema entrega a otro el insumo que necesita, o le pone una condición. Son los lugares donde más se traba la gestión, porque los resuelven oficinas distintas.</p>';
-  h += '<div class="filters" role="group" aria-label="Filtrar por sistema">' + [['', 'Todos']].concat(Object.keys(D.sys).map(s => [s, D.sys[s].n])).map(([k, n]) =>
-    '<button type="button" class="btn" data-f="' + k + '" aria-pressed="' + (linkFilter === k) + '">' + esc(n) + '</button>').join('') + '</div>';
-  const ls = D.links.filter(l => !linkFilter || BOX[l[0]].s === linkFilter || BOX[l[1]].s === linkFilter);
-  h += '<p class="small muted">' + ls.length + ' interconexiones</p><ul class="links">' + ls.map(linkHTML).join('') + '</ul></section>';
+function viewSistemas(){
+  const order = {}; D.routes[R].b.forEach((id, i) => order[id] = i + 1);
+  let h = '<section><div class="sec-head"><h2>Todos los sistemas y mecanismos, de principio a fin</h2><p>Cada fila es un sistema o un mecanismo y cada flecha, un macroproceso. El número marca su lugar en la ruta ' + RUTA[R].k + ' (' + RUTA[R].t.toLowerCase() + '); las flechas sin número no forman parte de esa ruta.</p></div></section>';
+  h += '<section><div class="search"><label class="lbl" for="buscar">Buscar un paso, un procedimiento o una actividad</label><input id="buscar" type="search" placeholder="Ej.: certificación, viabilidad, conformidad, desembolso, PAC" autocomplete="off"></div><ul class="results" id="res" hidden style="margin-top:8px"></ul></section>';
+  const srow = (cls, name, rector, bs) => '<div class="sysrow s-' + cls + '"><div class="sys-lab"><i></i><b>' + esc(name) + '</b><span class="lbl">' + esc(rector) + '</span></div><ol class="chain">' +
+    bs.map(b => '<li><a class="chev" href="#paso-' + b.id + '">' + (order[b.id] ? '<span class="ord" title="Paso ' + order[b.id] + ' de la ruta ' + RUTA[R].k + '">' + order[b.id] + '</span>' : '') +
+      '<span class="lbl">' + b.id + ' · ' + esc(D.ph[b.ph]) + '</span><b>' + esc(b.n) + '</b><span class="cw">' + esc(aShort(b.w)) + '</span></a></li>').join('') + '</ol></div>';
+  h += '<section class="sysrows">';
+  Object.keys(D.sys).forEach(s => {
+    const base = D.boxes.filter(b => b.s === s && !b.m);
+    if(base.length) h += srow(s, D.sys[s].n, 'Rector: ' + D.sys[s].r, base);
+    Object.keys(D.mec).filter(m => D.mec[m].s === s).forEach(m => { h += srow(s, D.mec[m].n, D.mec[m].r, D.boxes.filter(b => b.m === m)); });
+  });
+  h += '</section>';
+  h += '<section aria-labelledby="h-ix"><div class="sec-head" style="margin-bottom:12px"><h2 id="h-ix">Dónde un sistema necesita a otro</h2><p>Ningún sistema funciona solo. Estos son los puntos en que un sistema entrega a otro el insumo que necesita, o le pone una condición. Son los lugares donde más se traba la gestión, porque los resuelven oficinas distintas.</p></div>' +
+    '<div class="filters" role="group" aria-label="Filtrar por sistema">' + [['', 'Todos']].concat(Object.keys(D.sys).map(s => [s, D.sys[s].n])).map(([k, n]) => '<button type="button" class="btn" data-f="' + k + '" aria-pressed="' + (linkFilter === k) + '">' + esc(n) + '</button>').join('') + '</div><div id="ixl"></div></section>';
   $app.innerHTML = h;
-  $app.querySelectorAll('[data-f]').forEach(el => el.addEventListener('click', () => { linkFilter = el.dataset.f; viewConexiones(); }));
+  const drawLinks = () => {
+    const ls = D.links.filter(l => !linkFilter || BOX[l[0]].s === linkFilter || BOX[l[1]].s === linkFilter);
+    document.getElementById('ixl').innerHTML = '<p class="small muted" style="margin-bottom:8px">' + ls.length + ' interconexiones</p><ul class="links">' + ls.map(linkHTML).join('') + '</ul>';
+    $app.querySelectorAll('[data-f]').forEach(el => el.setAttribute('aria-pressed', String(linkFilter === el.dataset.f)));
+  };
+  $app.querySelectorAll('[data-f]').forEach(el => el.addEventListener('click', () => { linkFilter = el.dataset.f; drawLinks(); }));
+  drawLinks();
+  const inp = document.getElementById('buscar'), res = document.getElementById('res');
+  inp.addEventListener('input', () => {
+    const t = norm(inp.value.trim()); if(t.length < 3){ res.hidden = true; res.innerHTML = ''; return; }
+    const hits = [], row = (href, s, code, body) => '<li><a href="#' + href + '" class="s-' + s + '"><span class="code">' + code + '</span>' + body + '</a></li>';
+    D.boxes.forEach(b => { if(norm(b.n + ' ' + b.f).includes(t)) hits.push(row('paso-' + b.id, b.s, b.id, '<b>' + esc(b.n) + '</b>')); });
+    Object.values(PROC).forEach(p => { if(norm(p.n).includes(t)) hits.push(row('paso-' + p.id, p.box.s, p.code, '<b>' + esc(p.n) + '</b>')); });
+    ALL.forEach(a => { if(norm(a.a + ' ' + a.o + ' ' + aName(a.w)).includes(t)) hits.push(row('paso-' + a.proc.id, a.proc.box.s, a.proc.code + '.' + a.n, '<span>' + esc(a.a) + '</span><span class="muted">· ' + esc(aShort(a.w)) + '</span>')); });
+    res.innerHTML = hits.length ? hits.slice(0, 40).join('') : '<li><a href="#guia">Sin resultados. Prueba con otra palabra.</a></li>';
+    res.hidden = false;
+  });
 }
 
 /* ---------- Vista: actores ---------- */
-const RANK = ['E','A','O'];
-function roleCell(actor, b){
-  const set = new Set(); let part = false;
-  b.pr.forEach(p => p.acts.forEach(a => { if(a.w === actor) set.add(a.k || 'E'); else if(a.p.includes(actor)) part = true; }));
-  const letters = RANK.filter(x => set.has(x)).join('');
-  return letters || (part ? 'P' : '');
-}
-function viewActores(){
-  const ids = Object.keys(D.actors);
-  let h = '<section class="block"><h2>Mapa de actores</h2><p class="guide">Quién interviene en cada macroproceso. <b>E</b> ejecuta una actividad, <b>A</b> aprueba o decide, <b>O</b> opina o controla antes de que se siga, <b>P</b> participa. Haz clic en un actor para ver todas sus actividades.</p>';
-  h += '<details class="adapt"' + (Object.keys(alias).length ? '' : ' open') + '><summary>Adaptar a tu entidad</summary><p class="small muted" style="margin-top:8px">Escribe cómo se llama cada unidad en tu organigrama (por ejemplo, “Gerencia de Presupuesto” para la Oficina de Presupuesto). El mapa y la copia para Excel usarán esos nombres. Se guardan solo en este navegador.</p><div class="fields">' +
-    ids.filter(id => ['dir','ent'].includes(D.actors[id].g)).map(id => '<label for="al-' + id + '">' + esc(D.actors[id].n) + '<input id="al-' + id + '" data-al="' + id + '" value="' + esc(alias[id] || '') + '" placeholder="Nombre en tu entidad"></label>').join('') +
-    '</div><div class="row-btns" style="margin-top:12px"><button type="button" class="btn" id="cpall">Copiar todas las actividades para Excel</button><button type="button" class="btn" id="clr">Borrar nombres</button></div><div id="cpbox"></div></details>';
-  h += '<div class="tablewrap"><table class="matrix"><thead><tr><th class="a" rowspan="2">Actor</th>' +
-    Object.keys(D.sys).map(s => { const n = D.boxes.filter(b => b.s === s).length; return '<th class="g" colspan="' + n + '" style="--sc:' + sysVar(s) + '">' + esc(D.sys[s].n) + '</th>'; }).join('') + '</tr><tr>' +
-    D.boxes.map(b => '<th class="b" style="--sc:' + sysVar(b.s) + '" title="' + esc(b.n) + '"><a href="#' + b.id + '">' + b.id + '</a></th>').join('') + '</tr></thead><tbody>';
-  Object.keys(D.groups).forEach(g => {
-    h += '<tr class="grp"><td class="a">' + esc(D.groups[g]) + '</td><td colspan="' + D.boxes.length + '"></td></tr>';
-    ids.filter(id => D.actors[id].g === g).forEach(id => {
-      h += '<tr><td class="a"><a href="#actor-' + id + '">' + esc(actorName(id)) + '</a>' + (alias[id] ? '<span class="alias">' + esc(alias[id]) + '</span>' : '') + '</td>' +
-        D.boxes.map(b => { const r = roleCell(id, b); return '<td class="x' + (r ? ' on' : '') + '" style="--sc:' + sysVar(b.s) + '"' + (r ? ' title="' + esc(actorName(id) + ' en ' + b.id + ' ' + b.n) + '"' : '') + '>' + r + '</td>'; }).join('') + '</tr>';
-    });
-  });
-  h += '</tbody></table></div></section>';
-  $app.innerHTML = h;
-  bindAlias();
-  document.getElementById('cpall').addEventListener('click', () => copyTSV(Object.values(PROC), document.getElementById('cpbox')));
-  document.getElementById('clr').addEventListener('click', () => { alias = {}; store(KEY_ALIAS, alias); viewActores(); toast('Nombres borrados.'); });
-}
 function bindAlias(){
   $app.querySelectorAll('[data-al]').forEach(el => el.addEventListener('change', () => {
     const v = el.value.trim(); if(v) alias[el.dataset.al] = v; else delete alias[el.dataset.al]; store(KEY_ALIAS, alias); toast('Guardado en este navegador.');
   }));
 }
-function viewActor(id){
-  const A = D.actors[id]; if(!A){ go('actores'); return; }
-  const mine = ALL.filter(a => a.w === id), part = ALL.filter(a => a.p.includes(id));
-  let h = '<nav class="crumbs"><a href="#actores">Mapa de actores</a><span class="sep">/</span><span>' + esc(A.n) + '</span></nav>';
-  h += '<section class="head" style="--sc:var(--ink)"><div class="tag">' + esc(D.groups[A.g]) + '</div><h2>' + esc(A.n) + '</h2><p>' + esc(A.d) + '</p><dl class="facts"><div><dt>Base de su rol</dt><dd>' + srcList(parseSrc(A.s)) + '</dd></div>' +
-       (['dir','ent'].includes(A.g) ? '<div><dt><label for="al-' + id + '">Nombre en tu entidad</label></dt><dd><input class="alias-in" id="al-' + id + '" data-al="' + id + '" value="' + esc(alias[id] || '') + '" placeholder="Escribe el nombre de tu unidad"></dd></div>' : '') +
-       '<div><dt>Actividades</dt><dd>' + mine.length + ' como responsable · ' + part.length + ' como participante</dd></div></dl></section>';
-  h += group(mine, 'Responsable de') + group(part, 'Participa en');
+function actorCard(id){
+  const A = D.actors[id], cells = D.boxes.map(b => [b, role(id, b.id)]).filter(x => x[1]);
+  return '<article class="acard"><h4><a href="#actor-' + id + '">' + esc(A.n) + '</a></h4>' + (alias[id] ? '<p class="alias">En tu entidad: ' + esc(alias[id]) + '</p>' : '') + '<p class="small">' + esc(A.d) + '</p>' +
+    '<div class="minis">' + cells.map(([b, r]) => '<a class="mn s-' + b.s + '" href="#paso-' + b.id + '" title="' + esc(b.n + ': ' + roleTxt(r).toLowerCase()) + '"><i class="g ' + topRole(r) + '"></i>' + b.id + '</a>').join('') + '</div></article>';
+}
+function viewActores(){
+  const ids = Object.keys(D.actors);
+  let h = '<section><div class="sec-head"><h2>¿Con quién coordino?</h2><p>Cada tarjeta es un actor y cada etiqueta de color, un paso donde interviene. Abre un actor para ver todo lo que hace y entrega.</p>' +
+    '<p class="glegend"><span><i class="g E"></i>Ejecuta</span><span><i class="g A"></i>Aprueba o decide</span><span><i class="g O"></i>Opina o controla</span><span><i class="g P"></i>Participa</span></p></div></section>';
+  h += '<details class="adapt"><summary>Adaptar a tu entidad: escribe los nombres de tu organigrama' + (Object.keys(alias).length ? ' (' + Object.keys(alias).length + ' registrados)' : '') + '</summary><p class="small muted" style="margin-top:8px">Escribe cómo se llama cada unidad en tu organigrama (por ejemplo, «Gerencia de Presupuesto» para la Oficina de Presupuesto). Las fichas y la copia para Excel usarán esos nombres. Se guardan solo en este navegador.</p><div class="fields">' +
+    ids.filter(id => ['dir','ent'].includes(D.actors[id].g)).map(id => '<label for="al-' + id + '">' + esc(D.actors[id].n) + '<input type="text" id="al-' + id + '" data-al="' + id + '" value="' + esc(alias[id] || '') + '" placeholder="Nombre en tu entidad"></label>').join('') +
+    '</div><div class="row-btns" style="margin-top:14px"><button type="button" class="btn" id="cpall">Copiar todas las actividades para Excel</button><button type="button" class="btn" id="clr">Borrar nombres</button></div><div id="cpbox"></div></details>';
+  Object.keys(D.groups).forEach(g => {
+    h += '<section><h3 class="sec">' + esc(D.groups[g]) + '</h3><div class="acards">' + ids.filter(id => D.actors[id].g === g).map(actorCard).join('') + '</div></section>';
+  });
   $app.innerHTML = h;
   bindAlias();
-  function group(list, title){
-    if(!list.length) return '';
-    let out = '<p class="lv">' + title + '</p><ul class="links">';
-    D.boxes.forEach(b => {
-      const xs = list.filter(a => a.proc.box === b); if(!xs.length) return;
-      out += '<li><div class="pair">' + boxChip(b.id) + '</div><ul style="margin:0;padding-left:18px">' + xs.map(a => '<li><a href="#' + a.proc.id + '">' + a.proc.code + '.' + a.n + '</a> ' + esc(a.a) + (a.k ? '<span class="kb ' + a.k + '">' + TIPO[a.k] + '</span>' : '') + '</li>').join('') + '</ul></li>';
-    });
-    return out + '</ul>';
+  document.getElementById('cpall').addEventListener('click', () => copyTSV(Object.values(PROC), document.getElementById('cpbox')));
+  document.getElementById('clr').addEventListener('click', () => { alias = {}; store(KEY_ALIAS, alias); viewActores(); toast('Nombres borrados.'); });
+}
+function viewActor(id){
+  const A = D.actors[id]; if(!A){ location.hash = 'actores'; return; }
+  const mine = ALL.filter(a => a.w === id), part = ALL.filter(a => a.p.includes(id)), inRoute = D.routes[R].b.filter(x => role(id, x)).length;
+  let h = '<nav class="mini"><a class="mm-back" href="#actores">← Actores</a></nav>';
+  h += '<header class="ahead"><p class="lbl">' + esc(D.groups[A.g]) + '</p><h2>' + esc(A.n) + '</h2><p>' + esc(A.d) + '</p>' + srcList(parseSrc(A.s)) +
+    '<p class="small">' + mine.length + ' actividades como responsable · ' + part.length + ' como participante</p><div class="ahead-row">' +
+    (['dir','ent'].includes(A.g) ? '<label for="al-' + id + '">Nombre en tu entidad<input type="text" id="al-' + id + '" data-al="' + id + '" value="' + esc(alias[id] || '') + '" placeholder="Escribe el nombre de tu unidad"></label>' : '') +
+    (inRoute ? '<button type="button" class="btn" id="tolens">Resaltar sus ' + inRoute + ' pasos en la ruta ' + RUTA[R].k + '</button>' : '<span class="small">No interviene en la ruta ' + RUTA[R].k + ' (' + RUTA[R].t.toLowerCase() + ').</span>') + '</div></header>';
+  if(mine.length){
+    h += '<section><h3 class="sec">Lo que hace y entrega</h3>' + D.boxes.map(b => {
+      const xs = mine.filter(a => a.proc.box === b); if(!xs.length) return '';
+      return '<div class="agroup"><div>' + bchip(b.id) + '</div><ol class="acts s-' + b.s + '" style="margin-top:0">' + xs.map(actHTML).join('') + '</ol></div>';
+    }).join('') + '</section>';
   }
+  if(part.length){
+    h += '<section><h3 class="sec">Donde participa</h3>' + D.boxes.map(b => {
+      const xs = part.filter(a => a.proc.box === b); if(!xs.length) return '';
+      return '<div class="agroup"><div>' + bchip(b.id) + '</div><ul class="plist">' + xs.map(a => '<li><a href="#paso-' + a.proc.id + '">' + a.proc.code + '.' + a.n + '</a> ' + esc(a.a) + '</li>').join('') + '</ul></div>';
+    }).join('') + '</section>';
+  }
+  $app.innerHTML = h;
+  bindAlias();
+  const tl = document.getElementById('tolens'); if(tl) tl.addEventListener('click', () => { lens = id; location.hash = 'ruta'; });
 }
 
 /* ---------- Vista: normas ---------- */
 let normFilter = '';
 function viewNormas(){
-  let h = '<section class="block"><h2>Anexo: normas y fuentes</h2><p class="guide">Las reglas que respaldan cada caja. Úsalas cuando haya dudas de interpretación; para el trabajo diario, empieza por el mapa. Cada enlace abre la fuente oficial. Corte: ' + esc(D.corte) + '. Antes de aplicar un artículo, confirma su texto vigente en El Peruano o en el SPIJ.</p>';
-  h += '<div class="search"><label class="small muted" for="fn">Filtrar</label><input id="fn" type="search" value="' + esc(normFilter) + '" placeholder="Ej.: 1440, viabilidad, OECE" autocomplete="off"></div><div id="nl"></div></section>';
-  h += '<section class="block"><h2>Aplicativos y buscadores oficiales</h2><div class="cards">' + D.apps.map(a => '<div class="card"><a href="' + esc(a[1]) + '" target="_blank" rel="noopener"><b>' + esc(a[0]) + '</b> ↗</a></div>').join('') + '</div></section>';
+  let h = '<section><div class="sec-head"><h2>Normas y fuentes</h2><p>Las reglas que respaldan cada paso. Úsalas cuando haya dudas de interpretación; para el trabajo diario, empieza por la ruta. Cada enlace abre la fuente oficial. Corte: ' + esc(D.corte) + '. Antes de aplicar un artículo, confirma su texto vigente en El Peruano o en el SPIJ.</p></div>' +
+    '<div class="search" style="margin-top:14px"><label class="lbl" for="fn">Filtrar</label><input id="fn" type="search" value="' + esc(normFilter) + '" placeholder="Ej.: 1440, viabilidad, OECE" autocomplete="off"></div><div id="nl"></div></section>';
+  h += '<section><h3 class="sec">Aplicativos y buscadores oficiales</h3><div class="apps">' + D.apps.map(a => '<a href="' + esc(a[1]) + '" target="_blank" rel="noopener">' + esc(a[0]) + ' ↗</a>').join('') + '</div></section>';
   $app.innerHTML = h;
   const inp = document.getElementById('fn');
   const draw = () => {
-    const t = norm(normFilter);
-    let out = '';
+    const t = norm(normFilter); let out = '';
     Object.keys(D.ngroups).forEach(g => {
       const ids = Object.keys(D.norms).filter(id => D.norms[id].g === g && (!t || norm(D.norms[id].t + ' ' + D.norms[id].n + ' ' + D.norms[id].d).includes(t)));
       if(!ids.length) return;
-      out += '<h3 style="margin-top:18px">' + esc(D.ngroups[g]) + '</h3><div class="norms">' + ids.map(id => {
+      out += '<h3 class="ngroup">' + esc(D.ngroups[g]) + '</h3><div class="norms">' + ids.map(id => {
         const n = D.norms[id], used = CITED[id] ? Array.from(CITED[id]) : [];
         return '<div class="norm"><div><span class="t">' + esc(n.t) + '</span> · ' + esc(n.n) + '<div class="small muted">' + esc(n.d) + '</div></div><a class="open" href="' + esc(n.u) + '" target="_blank" rel="noopener">Abrir fuente ↗</a>' +
-          (used.length ? '<div class="used">Se cita en: ' + used.map(w => '<a href="#' + w + '">' + (PROC[w] ? PROC[w].code : w) + '</a>').join(' ') + '</div>' : '') + '</div>';
+          (used.length ? '<div class="used">Se cita en: ' + used.map(w => '<a href="#paso-' + w + '">' + (PROC[w] ? PROC[w].code : w) + '</a>').join(' ') + '</div>' : '') + '</div>';
       }).join('') + '</div>';
     });
-    document.getElementById('nl').innerHTML = out || '<p class="muted">Sin coincidencias.</p>';
+    document.getElementById('nl').innerHTML = out || '<p class="muted" style="margin-top:14px">Sin coincidencias.</p>';
   };
   inp.addEventListener('input', () => { normFilter = inp.value; draw(); });
   draw();
 }
 
-/* ---------- Vista: guía ---------- */
+/* ---------- Vista: cómo leerlo ---------- */
+function rutasGuia(){
+  const s = (id, ref) => srcChip({id, ref});
+  const rows = [
+   ['proc','Bienes y servicios para que la entidad funcione','La propia entidad, con la Ley 32069'],
+   ['ppr','Una estrategia cuyo resultado en la población se puede medir','La DGPP opina; se aprueba por resolución suprema o por resolución del titular'],
+   ['cap','Recursos adicionales atados a las metas de una política o de un programa','La DGPP, por resolución directoral'],
+   ['proy','Inversión que la entidad puede financiar y contratar','La propia entidad, con Invierte.pe y la Ley 32069'],
+   ['car','Objeto de alta complejidad, de 20 000 UIT o más, para el que la entidad no tiene especialidad o experiencia','Una norma con rango de ley y la opinión vinculante del MEF'],
+   ['g2g','Proyecto de 40 000 UIT o más que necesita asistencia técnica de otro Estado; bienes estratégicos de defensa u orden interno','Decreto supremo del sector, con opinión de la DGPP'],
+   ['deuda','Inversión que no cabe en los recursos de la entidad','Ley anual de endeudamiento y decreto supremo'],
+   ['oxi','Inversión, mantenimiento o servicio priorizado, que cabe en el tope de certificados o en el presupuesto','Lista de priorización de la entidad; informe previo de la Contraloría'],
+   ['app','Servicio que conviene que un privado financie, construya, opere y mantenga por largo plazo','ProInversión o el organismo promotor; opinión favorable del MEF']];
+  return '<h3>Las nueve rutas y cuándo procede cada una</h3><div class="tablewrap"><table><thead><tr><th>Ruta</th><th>Cuándo procede</th><th>Quién la habilita</th><th>Pasos</th></tr></thead><tbody>' +
+    rows.map(r => '<tr><td><a href="#ruta" data-go="' + r[0] + '"><b>' + RUTA[r[0]].k + '</b> · ' + RUTA[r[0]].t + '</a></td><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + D.routes[r[0]].b.length + '</td></tr>').join('') + '</tbody></table></div>' +
+    '<p>Dos figuras se parecen al CAR y no lo son: la compra por encargo a un organismo internacional, que solo cubre la preparación y la selección, y la cooperación técnica no reembolsable ante la APCI. ' + s('LEY32069','art. 35') + ' ' + s('RLGCP','arts. 238 y 239') + '</p>';
+}
+function essaludGuia(){
+  const s = (id, ref) => srcChip({id, ref});
+  return '<h3>Cómo aplica cada mecanismo a EsSalud</h3><ul>' +
+   '<li><b>CAR.</b> EsSalud está dentro del ámbito de la Ley 30356, pero necesita igual una ley que autorice cada convenio. La Ley de Presupuesto de 2026 no trae una autorización para EsSalud. ' + s('L30356','art. 1') + ' ' + s('DS181','art. 2') + '</li>' +
+   '<li><b>G2G.</b> La ley solo habilita a los ministerios, sus organismos públicos adscritos, programas y proyectos especiales. No se encontró una norma que habilite a EsSalud: confírmalo con asesoría jurídica antes de plantearlo. ' + s('LEY32069','20.ª DCF, párr. 3') + '</li>' +
+   '<li><b>APP.</b> EsSalud conserva sus contratos de APP ya firmados, pero solo como entidad titular en la fase de ejecución contractual, según precisó el MEF en julio de 2026. Para un proyecto nuevo, confirma con el MEF si debe impulsarse a través de ProInversión. ' + s('OF133','') + ' ' + s('L32441','14.ª DCF') + '</li>' +
+   '<li><b>Obras por Impuestos.</b> El reglamento trae una lista cerrada de entidades que pueden usar el mecanismo, y en 2026 el MEF opinó que las empresas del Estado bajo FONAFE no están comprendidas. No se encontró una norma que incluya a EsSalud. ' + s('DS038','art. 1') + '</li>' +
+   '<li><b>Programa presupuestal.</b> La directiva se aplica a las entidades del Gobierno Nacional, regional y local. EsSalud se rige por las directivas de FONAFE y no tiene programas presupuestales del MEF. ' + s('DIRPP','art. 1.2') + ' ' + s('DL1440','arts. 63.2 y 64.2') + '</li>' +
+   '<li><b>CAP.</b> Un CAP asigna recursos a pliegos presupuestarios. EsSalud no es un pliego del sistema de presupuesto, por lo que no puede ser beneficiario. ' + s('DL1440','art. 67.1') + ' ' + s('DCAP','') + '</li></ul>';
+}
 function viewGuia(){
   const s = (id, ref) => srcChip({id, ref});
-  let h = '<section class="block guide"><h2>Cómo usarlo</h2><ol>' +
-   '<li><b>Empieza por la pregunta.</b> ¿Es un <b>proceso</b> (actividad permanente para operar) o un <b>proyecto de inversión</b> (intervención temporal para crear, ampliar, mejorar o recuperar capacidad)? Si es un proyecto y no hay recursos, se suma el endeudamiento. Elige la opción en el <a href="#mapa">mapa</a> y verás la ruta numerada. ' + s('DS140','art. 3, núms. 18 y 27') + '</li>' +
-   '<li><b>Recorre la ruta caja por caja.</b> Cada caja dice quién responde, qué recibe, qué entrega y con qué sistemas se conecta.</li>' +
-   '<li><b>Baja al detalle.</b> En cada procedimiento verás las actividades en orden, su responsable, quién participa, el resultado, el aplicativo y la fuente. Las marcas <span class="kb A">Aprueba o decide</span> y <span class="kb O">Opina o controla</span> señalan los puntos de control donde el trámite se detiene si falta algo.</li>' +
-   '<li><b>Adáptalo.</b> En <a href="#actores">Mapa de actores</a> escribe el nombre real de cada unidad de tu entidad y copia todas las actividades a Excel para completar plazos internos, formatos y responsables delegados.</li>' +
-   '<li><b>Ante una duda de interpretación,</b> abre la fuente. El mapa resume; la norma publicada en El Peruano es la que vale.</li></ol>';
-  h += '<h3>Los tres niveles y la norma de gestión por procesos</h3><p>La PCM llama nivel 0 (macroproceso) al más agregado y lo desagrega en niveles 1, 2 y siguientes; el procedimiento describe las tareas de un proceso. Este mapa usa la misma lógica:</p>' +
-   '<div class="tablewrap"><table><thead><tr><th>En este mapa</th><th>Equivale a</th><th>Ejemplo</th></tr></thead><tbody>' +
-   '<tr><td>Macro (caja)</td><td>Proceso de nivel 0 o 1</td><td>P4 Ejecución del gasto</td></tr>' +
-   '<tr><td>Meso (procedimiento)</td><td>Proceso de último nivel o procedimiento</td><td>P4.2 Certificar el crédito presupuestario</td></tr>' +
-   '<tr><td>Micro (actividad)</td><td>Actividades y tareas del procedimiento</td><td>P4.2.2 Emitir y registrar la certificación</td></tr></tbody></table></div>' +
-   '<p>En el mapa de procesos de una entidad, planeamiento suele ser un proceso estratégico y los otros cuatro sistemas, procesos de soporte. Cuelga estas cajas del mapa oficial de tu entidad en lugar de crear uno paralelo. ' + s('NT002','') + ' ' + s('GUIAPROC','niveles de proceso') + '</p>';
+  let h = '<section><div class="sec-head" style="margin-bottom:14px"><h2>Cómo leerlo</h2><p>Cada forma es un nivel de detalle y cada color, un sistema.</p></div><div class="shapes">' +
+    '<div class="shape"><div class="demo"><span class="d-node"><span>05</span><span>TE LLEVAS</span></span></div><p><b>Ficha: un paso de la ruta.</b> Es un macroproceso. Arriba dice con quién coordinas; el talón, qué te llevas.</p></div>' +
+    '<div class="shape"><div class="demo"><span class="d-chev"></span></div><p><b>Flecha: un procedimiento.</b> Dentro de cada paso, las flechas ordenan cómo se hace.</p></div>' +
+    '<div class="shape"><div class="demo"><span class="d-note"></span></div><p><b>Nota: una actividad.</b> Dice quién la hace, qué entrega, en qué aplicativo y según qué norma.</p></div>' +
+    '<div class="shape"><div class="demo"><span class="d-note A"><i class="g A"></i></span></div><p><b>Nota de color: alguien aprueba o decide.</b> Sin esa aprobación no se pasa a la actividad siguiente.</p></div>' +
+    '<div class="shape"><div class="demo"><span class="d-note O"><i class="g O"></i></span></div><p><b>Nota negra: alguien opina o controla.</b> Es un punto de control: si falta, el trámite se detiene.</p></div>' +
+    '<div class="shape"><div class="demo"><span class="d-dia"></span></div><p><b>Rombo: una decisión.</b> Las preguntas de «Elige tu ruta» llevan a una de nueve rutas.</p></div></div></section>';
+  h += '<section class="prose"><h3 style="margin-top:0">Cómo usarlo</h3><ol>' +
+   '<li><b>Empieza por la pregunta.</b> ¿Es un <b>proceso</b> (actividad permanente para operar) o un <b>proyecto de inversión</b> (intervención temporal para crear, ampliar, mejorar o recuperar capacidad)? Después, las preguntas sobre los recursos, quién ejecuta y quién financia llevan a una de las nueve rutas. Elige en <a href="#ruta">Ruta</a> y verás los pasos en orden. ' + s('DS140','art. 3, núms. 18 y 27') + '</li>' +
+   '<li><b>Recorre la ruta paso por paso.</b> Cada ficha dice con quién coordinas y qué te llevas. Al abrirla ves por qué existe el paso, qué debes traer, quién más interviene y con qué sistemas se conecta. Con las flechas del teclado pasas al paso anterior o al siguiente.</li>' +
+   '<li><b>Baja al detalle.</b> En cada procedimiento verás las actividades en orden, su responsable, quién participa, el resultado, el aplicativo y la fuente. Las notas marcadas «Aprueba o decide» y «Opina o controla» señalan los puntos de control donde el trámite se detiene si falta algo.</li>' +
+   '<li><b>Mira la ruta desde tu oficina.</b> En <a href="#ruta">Ruta</a>, la lista «Resaltar dónde interviene» deja a color solo los pasos donde participa un actor y dice qué hace en cada uno.</li>' +
+   '<li><b>Adáptalo.</b> En <a href="#actores">Actores</a> escribe el nombre real de cada unidad de tu entidad y copia todas las actividades a Excel para completar plazos internos, formatos y responsables delegados.</li>' +
+   '<li><b>Ante una duda de interpretación,</b> abre la fuente. Esta herramienta resume; la norma publicada en El Peruano es la que vale.</li></ol>';
+  h += rutasGuia() + '<h3>Los tres niveles y la norma de gestión por procesos</h3><p>La PCM llama nivel 0 (macroproceso) al más agregado y lo desagrega en niveles 1, 2 y siguientes; el procedimiento describe las tareas de un proceso. Esta herramienta usa la misma lógica:</p>' +
+   '<div class="tablewrap"><table><thead><tr><th>Aquí</th><th>Equivale a</th><th>Ejemplo</th></tr></thead><tbody>' +
+   '<tr><td>Macro (ficha)</td><td>Proceso de nivel 0 o 1</td><td>P4 Ejecución del gasto</td></tr>' +
+   '<tr><td>Meso (flecha)</td><td>Proceso de último nivel o procedimiento</td><td>P4.2 Certificar el crédito presupuestario</td></tr>' +
+   '<tr><td>Micro (nota)</td><td>Actividades y tareas del procedimiento</td><td>P4.2.2 Emitir y registrar la certificación</td></tr></tbody></table></div>' +
+   '<p>En el mapa de procesos de una entidad, planeamiento suele ser un proceso estratégico y los otros cuatro sistemas, procesos de soporte. Cuelga estos pasos del mapa oficial de tu entidad en lugar de crear uno paralelo. ' + s('NT002','') + ' ' + s('GUIAPROC','niveles de proceso') + '</p>';
   h += '<h3>Qué cambia según el tipo de entidad</h3><ul>' +
    '<li><b>Gobiernos regionales y locales.</b> El PIA y la incorporación de recursos de crédito los aprueba el Consejo Regional o el Concejo Municipal. La solicitud de endeudamiento va con el acuerdo del Consejo o Concejo; el endeudamiento externo requiere garantía del Gobierno Nacional y respetar las reglas fiscales subnacionales. Un gobierno local que gestione endeudamiento externo debe incorporarse a Invierte.pe. ' + s('DL1440','arts. 31.3 y 50.4') + ' ' + s('DL1437','art. 27.2') + ' ' + s('DCONC','art. 18') + ' ' + s('DL1275','') + ' ' + s('DS140','1.ª DCF') + '</li>' +
    '<li><b>Empresas bajo FONAFE, incluida EsSalud.</b> El PMI lo aprueba el Directorio o el Gerente General; en EsSalud, el Presidente Ejecutivo, que lo comunica al MTPE y al MINSA. El presupuesto sigue las normas de FONAFE; en 2026 EsSalud aprueba su PIA y PIM por régimen especial. ' + s('DS140','art. 15.1') + ' ' + s('L29626','55.ª DCF') + ' ' + s('FONAFE','') + ' ' + s('LEY32513','92.ª DCF') + '</li>' +
    '<li><b>Endeudamiento sin garantía del Gobierno Nacional.</b> Las empresas públicas no financieras y los organismos públicos de GR y GL requieren resolución ministerial del MEF; otras formas organizativas no financieras que administran fondos públicos deben informar a la DGTP la concertación, los desembolsos y el servicio de la deuda. ' + s('DCONC','art. 22.1') + ' ' + s('DL1437','art. 63') + '</li>' +
-   '<li><b>Delegaciones.</b> El Titular y la autoridad de la gestión administrativa pueden delegar facultades; registra en el mapa al delegado real, no solo al titular, y revisa las delegaciones cada año. ' + s('DL1440','art. 7.2') + ' ' + s('LEY32069','art. 25.2') + '</li></ul>';
-  h += '<h3>Límites y vigencia</h3><ul>' +
-   '<li>Corte normativo: ' + esc(D.corte) + '. Los plazos marcados como «regla de 2026» vienen de la Ley de Presupuesto del año y cambian cada año.</li>' +
+   '<li><b>Delegaciones.</b> El Titular y la autoridad de la gestión administrativa pueden delegar facultades; registra al delegado real, no solo al titular, y revisa las delegaciones cada año. ' + s('DL1440','art. 7.2') + ' ' + s('LEY32069','art. 25.2') + '</li></ul>';
+  h += essaludGuia() + '<h3>Límites y vigencia</h3><ul>' +
+   '<li>Corte normativo: ' + esc(D.corte) + ' para las rutas A, B y C, y ' + esc(D.corte2) + ' para los seis mecanismos añadidos. Los plazos marcados como «regla de 2026» vienen de la Ley de Presupuesto del año y cambian cada año.</li>' +
    '<li>El Reglamento de Invierte.pe vigente es el DS 140-2026-EF, desde el 18 de julio de 2026; algunos documentos anteriores todavía citan el DS 284-2018-EF, que está derogado.</li>' +
    '<li>Los artículos de la Directiva General de Invierte.pe se citan según su texto de 2019 con modificatorias; confirma la numeración en el texto actualizado del MEF.</li>' +
    '<li>El MEF no publica textos consolidados de los DL 1437 y 1440: las citas usan el texto original más las modificaciones conocidas.</li>' +
    '<li>Los procedimientos de selección convocados antes del 22 de abril de 2025 siguen las reglas de la Ley 30225.</li>' +
-   '<li>No se mapean las APP, las Obras por Impuestos, la cooperación no reembolsable ante la APCI ni la gestión de recursos humanos, que tienen sus propios circuitos.</li></ul>' +
+   '<li>El orden de cada ruta es una pauta general. Varios pasos avanzan en paralelo y cada entidad ajusta la secuencia a sus plazos y delegaciones.</li>' +
+   '<li>Los seis mecanismos añadidos se resumen en sus pasos generales. No se detallan las iniciativas privadas, los Proyectos en Activos ni el régimen excepcional de Obras por Impuestos por el Fenómeno El Niño.</li>' +
+   '<li>No se incluyen la cooperación no reembolsable ante la APCI, la compra por encargo ni la gestión de recursos humanos, que tienen sus propios circuitos.</li></ul>' +
    '<p>Para marcar riesgos y controles en tus propios flujogramas, usa la directiva de control interno de la Contraloría. ' + s('CI','') + '</p></section>';
   $app.innerHTML = h;
+  $app.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', () => { R = a.dataset.go; store(KEY_R, R); }));
 }
 
 /* ---------- Enrutador ---------- */
-function go(h){ location.hash = h; }
-function setTab(t){ document.querySelectorAll('nav.tabs a').forEach(a => { if(a.dataset.tab === t) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); }); }
+function setTab(t){ document.querySelectorAll('nav.tabs a').forEach(a => { if(a.dataset.tab === t) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); }); }
 function route(){
   const h = decodeURIComponent(location.hash.slice(1));
-  if(BOX[h]){ setTab('mapa'); viewBox(h); }
-  else if(PROC[h]){ setTab('mapa'); viewProc(h); }
-  else if(h === 'conexiones'){ setTab('conexiones'); viewConexiones(); }
-  else if(h === 'actores'){ setTab('actores'); viewActores(); }
-  else if(h.indexOf('actor-') === 0){ setTab('actores'); viewActor(h.slice(6)); }
-  else if(h === 'normas'){ setTab('normas'); viewNormas(); }
-  else if(h === 'guia'){ setTab('guia'); viewGuia(); }
-  else { setTab('mapa'); viewMapa(); }
+  const m = h.match(/^(?:paso-)?([A-Z]+\d+)(?:-(\d+))?$/);
+  if(m && BOX[m[1]]){ view = 'paso'; setTab(ctxFor(m[1]).t === 'ruta' ? 'ruta' : 'sistemas'); viewPaso(m[1], m[2] ? Math.max(0, Math.min(+m[2], BOX[m[1]].pr.length) - 1) : undefined); }
+  else if(h === 'sistemas' || h === 'conexiones' || h === 'mapa'){ view = 'sistemas'; setTab('sistemas'); viewSistemas(); }
+  else if(h === 'actores'){ view = 'actores'; setTab('actores'); viewActores(); }
+  else if(h.indexOf('actor-') === 0){ view = 'actor'; setTab('actores'); viewActor(h.slice(6)); }
+  else if(h === 'normas'){ view = 'normas'; setTab('normas'); viewNormas(); }
+  else if(h === 'guia'){ view = 'guia'; setTab('guia'); viewGuia(); }
+  else { view = 'ruta'; setTab('ruta'); viewRuta(false); }
   if(route.started) window.scrollTo(0, 0);
   route.started = true;
 }
-document.getElementById('foot').innerHTML = 'Elaborado con fuentes oficiales (gob.pe, El Peruano, MEF, OECE, Contraloría, CEPLAN, PCM). Corte normativo: ' + esc(D.corte) + '. ' + D.boxes.length + ' macroprocesos, ' + Object.keys(PROC).length + ' procedimientos, ' + ALL.length + ' actividades, ' + Object.keys(D.actors).length + ' actores y ' + Object.keys(D.norms).length + ' normas. No sustituye el texto de las normas.';
+document.addEventListener('keydown', e => {
+  if(view !== 'paso' || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+  if(e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  const a = document.querySelector(e.key === 'ArrowLeft' ? '.pg.prev' : '.pg.next');
+  if(a){ e.preventDefault(); location.hash = a.getAttribute('href').slice(1); }
+});
+let raf = 0;
+const onResize = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(redraw); };
+if(window.ResizeObserver) new ResizeObserver(onResize).observe($app); else window.addEventListener('resize', onResize);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(redraw);
+document.getElementById('foot').innerHTML = 'Elaborado con fuentes oficiales (gob.pe, El Peruano, MEF, OECE, Contraloría, CEPLAN, PCM). Corte normativo: ' + esc(D.corte2) + '. ' + D.boxes.length + ' macroprocesos, ' + Object.keys(PROC).length + ' procedimientos, ' + ALL.length + ' actividades, ' + Object.keys(D.actors).length + ' actores y ' + Object.keys(D.norms).length + ' normas. No sustituye el texto de las normas.';
 window.addEventListener('hashchange', route);
 route();
 })();
