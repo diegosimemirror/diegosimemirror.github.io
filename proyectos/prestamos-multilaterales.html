@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Préstamos multilaterales al Perú · Diego Sime</title>
+<meta name="description" content="Cómo funcionan en la práctica los préstamos del BID y del Banco Mundial al Perú: 19 contratos leídos con las mismas 67 preguntas, con cita y página, y un simulador de desembolso y pago.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- PROCESO 1: Cabecera. El nombre vuelve a la portada; el menú es igual en todas las páginas. -->
+<header class="cabecera">
+  <a class="cabecera__nombre" href="../index.html">Diego Sime, MA</a>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="../index.html#proyectos">Proyectos</a>
+    <a href="../index.html#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- PROCESO 2: Título, gráfico y ficha. El clic en el gráfico lleva al sitio del proyecto. -->
+<div class="encabezado-proyecto">
+  <p class="tema">Gestión pública · Deuda y financiamiento · Análisis de documentos</p>
+  <h1 class="titulo-pagina">Préstamos multilaterales al Perú: contratos, plazos y simulador</h1>
+</div>
+
+<div class="proyecto proyecto--detalle">
+  <a class="figura" href="https://diegosimemirror.github.io/loan/" target="_blank" rel="noopener" title="Abrir el sitio">
+    <img src="../imagenes/proyectos/prestamos-multilaterales.png" width="1120" height="695" alt="Captura de la sección «Lo que muestran los contratos»: seis hallazgos con su cifra en rojo, como 9 de 19 préstamos que se pagan en una o dos cuotas, 0,80 % + 0,42 % como margen del BID que no figura en el contrato, 8 de 10 proyectos del Banco Mundial que cerraron tarde y 64 a 403 días entre la aprobación del BID y la firma.">
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Cómo se fijan en la práctica la tasa, la gracia, el plazo y las reglas de compra de los préstamos del BID y del Banco Mundial al Perú, y cuánto se atrasan los proyectos?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">19 contratos leídos con las mismas 67 preguntas, con 944 citas verificadas. Nueve se pagan en una o dos cuotas al final. El margen nunca figura en el contrato: «lo fija el banco según su política». Ocho de diez proyectos del Banco Mundial cerraron entre 4 y 33 meses después de lo previsto.</p>
+      <p class="enlaces">
+        <a href="https://diegosimemirror.github.io/loan/" target="_blank" rel="noopener">Abrir el sitio</a>
+        <a href="https://diegosimemirror.github.io/loan/simulador.html" target="_blank" rel="noopener">Simulador</a>
+        <a href="https://diegosimemirror.github.io/loan/pipeline.html" target="_blank" rel="noopener">Cómo se hizo</a>
+        <a href="https://github.com/diegosimemirror/loan" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO 3: Detalle. Cada sección usa la rejilla de dos columnas: título a la izquierda y texto a la derecha. -->
+<section class="seccion dos-columnas">
+  <h2>Qué hice</h2>
+  <div class="prosa">
+    <p>Un sitio que explica cómo funcionan los préstamos de la banca multilateral al Perú leyendo los contratos mismos, no sus resúmenes. Parte de una tabla de 206 operaciones de endeudamiento (2011-2026) armada con los decretos supremos del MEF y las bases de los bancos.</p>
+    <ul>
+      <li>Seis hallazgos con cifras, cada uno enlazado a las respuestas de los contratos que lo sustentan.</li>
+      <li>Un simulador que muestra en el tiempo el desembolso, la gracia y el pago de un préstamo, con 7 contratos reales o con supuestos propios. Con los cronogramas reales reproduce la vida promedio que dicen los contratos.</li>
+      <li>Un explorador con las 1 273 respuestas: un contrato completo o una pregunta comparada entre los 19 contratos, con cita, página y enlace al documento oficial.</li>
+      <li>El flujo de trabajo dibujado al estilo n8n, con sus 20 pasos, controles y decisiones.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Cómo se hizo</h2>
+  <div class="prosa">
+    <p>Adapté el método de «How China Lends» (Gelpern y otros, 2023): una misma ficha de preguntas para todos los contratos, con las condiciones generales de cada banco como plantilla y la lectura concentrada en lo negociado. Los contratos se convirtieron a texto con pdftotext y los leyeron agentes de IA, con doble lectura independiente en un piloto y en el 20 % de cada tanda. El acuerdo de fondo fue de 94 % a 98 %. Cada desacuerdo se resolvió como una regla de la ficha, con mi decisión. Un script en Python comprueba que cada cita esté en su página, y las fechas se contrastaron con los datos abiertos del BID y la API del Banco Mundial. El sitio está hecho en HTML, sin librerías, junto con Claude Code.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Limitaciones</h2>
+  <div class="prosa">
+    <ul>
+      <li>No es una muestra al azar: solo el BID y el Banco Mundial publican sus contratos. La CAF, el KfW y JICA no los publican.</li>
+      <li>La verificación comprueba que cada cita exista, no la interpretación jurídica de la cláusula.</li>
+      <li>Las reglas de compra y el margen viven en documentos que no forman parte del contrato (planes de adquisiciones y políticas del banco).</li>
+      <li>Faltan 13 préstamos de inversión del Banco Mundial de 2017 a 2026 y 5 contratos escaneados que requieren OCR.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Créditos</h2>
+  <div class="prosa">
+    <p>Los contratos, los decretos supremos y las bases de datos son públicos. El crédito por esos documentos es del BID, del Banco Mundial y del MEF; el sitio cita fragmentos breves y enlaza a cada fuente oficial.</p>
+    <ul>
+      <li>Gelpern, A., Horn, S., Morris, S., Parks, B. y Trebesch, C. (2023). <a href="https://docs.aiddata.org/reports/how-china-lends.html" target="_blank" rel="noopener">«How China Lends: A Rare Look into 100 Debt Contracts with Foreign Governments»</a>. <i>Economic Policy</i>.</li>
+      <li>BID, <a href="https://data.iadb.org/" target="_blank" rel="noopener">datos abiertos</a>. Banco Mundial, <a href="https://documents.worldbank.org/" target="_blank" rel="noopener">documentos y reportes</a> y API de proyectos.</li>
+      <li>Humphrey, C. (2014). <a href="https://ideas.repec.org/a/taf/rripxx/v21y2014i3p611-639.html" target="_blank" rel="noopener">«The politics of loan pricing in multilateral development banks»</a>. <i>Review of International Political Economy</i>.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROCESO 4: Paso al proyecto siguiente. -->
+<nav class="siguiente" aria-label="Proyecto siguiente">
+  <p class="etiqueta">Siguiente proyecto</p>
+  <a href="mapa-libro-blanco.html">Estudios sobre EsSalud-Perú</a>
+</nav>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>
