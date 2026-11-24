@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Conway y la evolución · Diego Sime</title>
+<meta name="description" content="Bosquejo exploratorio con 8 gráficos que conectan la ley de Conway con la biología evolutiva, para pensar si la digitalización del Estado solo reproduce su estructura.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- PROCESO 1: Cabecera. El nombre vuelve a la portada; el menú es igual en todas las páginas. -->
+<header class="cabecera">
+  <a class="cabecera__nombre" href="../index.html">Diego Sime, MA</a>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="../index.html#proyectos">Proyectos</a>
+    <a href="../index.html#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- PROCESO 2: Título, gráfico y ficha. El clic en el gráfico lleva al bosquejo. -->
+<div class="encabezado-proyecto">
+  <p class="tema">Teoría de la organización · Biología evolutiva · Bosquejo</p>
+  <h1 class="titulo-pagina">Conway y la evolución: ¿la digitalización solo reproduce la estructura del Estado?</h1>
+</div>
+
+<div class="proyecto proyecto--detalle">
+  <a class="figura" href="../demos/conway-evolucion/index.html" title="Abrir el bosquejo">
+    <img src="../imagenes/proyectos/conway-evolucion.png" width="1120" height="882" alt="Gráfico de líneas de menor resistencia. El eje horizontal es digitalizar lo que ya existe y el vertical es cambiar la estructura. Desde una nube de variación ancha pero baja, la población avanza primero hacia la derecha y solo al final sube hacia la meta (más digital y otra estructura), lejos del camino directo. Debajo, la barra de variación disponible para cambiar la estructura y la lectura: con esta variación, la población llega a la meta en 147 pasos; con la misma variación en ambas direcciones tardaría 23.">
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿La digitalización y la inteligencia artificial solo van a reproducir la estructura del Estado que ya existe? ¿Qué enseña la biología evolutiva sobre cómo una estructura sesga lo que puede llegar a ser?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">Un bosquejo con 8 gráficos que conectan la ley de Conway con la biología evolutiva: restricción del desarrollo, líneas de menor resistencia, pleiotropía, estigmergia, modularidad, transiciones mayores, leyes de escala y homología. En el modelo de Lande, con poca variación para cambiar la estructura, la población tarda 147 pasos en llegar a la meta; con variación pareja, 23. Son esquemas para pensar; todavía no usan datos del Estado.</p>
+      <p class="enlaces">
+        <a href="../demos/conway-evolucion/index.html">Abrir el bosquejo</a>
+        <a href="https://github.com/diegosimemirror/evolucion_conway" target="_blank" rel="noopener">Código</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO 3: Detalle. Cada sección usa la rejilla de dos columnas: título a la izquierda y texto a la derecha. -->
+<section class="seccion dos-columnas">
+  <h2>Qué hice</h2>
+  <div class="prosa">
+    <p>La ley de Conway dice que un sistema copia la red de comunicación de la organización que lo diseña. En biología, eso tiene nombre: una restricción del desarrollo, que sesga las formas que puede tomar un organismo sin prohibir las demás. Este bosquejo junta las dos ideas en 8 gráficos, ordenados en tres partes:</p>
+    <ul>
+      <li>Por qué la estructura se reproduce: el espejo de Conway, las líneas de menor resistencia, la pleiotropía y el círculo que forma con la estigmergia.</li>
+      <li>Cómo puede surgir lo nuevo: el costo de coordinarse y la modularidad, y las transiciones mayores.</li>
+      <li>Qué se podría medir con los ROF: una ley de escala de los órganos de apoyo y un árbol para distinguir si los organigramas se parecen por copia o por función.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Cómo se hizo</h2>
+  <div class="prosa">
+    <p>Leí los capítulos sobre restricciones, modularidad, duplicación de genes, transiciones mayores, división del trabajo y plasticidad en cinco libros de biología. Los modelos son pequeños: la ecuación de Lande (Δz = G β) para el camino de una población y un modelo de juguete en el que un enlace entre unidades se conserva si su beneficio supera el costo, con la modularidad Q de Newman. La página está hecha en HTML, CSS y JavaScript sin librerías, junto con Claude Code, y la revisé en computadora, en el ancho de un celular y en modo oscuro.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Limitaciones</h2>
+  <div class="prosa">
+    <ul>
+      <li>Es un bosquejo: los gráficos son esquemas y modelos, no datos del Estado. Las entidades del árbol son hipotéticas.</li>
+      <li>La analogía tiene límites: las organizaciones se diseñan a propósito, y las entidades públicas casi nunca desaparecen, así que la selección es débil.</li>
+      <li>El parecido entre organigramas podría deberse a copiar una plantilla y no a la comunicación. Para distinguirlo hace falta un punto de comparación.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Fuentes</h2>
+  <div class="prosa">
+    <ul>
+      <li>Futuyma, D. J. y Kirkpatrick, M. (2017). <i>Evolution</i> (4.ª ed.). Sinauer.</li>
+      <li>Losos, J. B. y otros (eds.) (2013). <i>The Princeton Guide to Evolution</i>. Princeton University Press.</li>
+      <li>Barresi, M. y Gilbert, S. (2023). <i>Developmental Biology</i>. Sinauer y Oxford University Press.</li>
+      <li>Breed, M. D. y Moore, J. (2021). <i>Animal Behavior</i>. Academic Press.</li>
+      <li>Kandel, E. R. y otros (eds.) (2021). <i>Principles of Neural Science</i>.</li>
+      <li>Conway, M. E. (1968). «How Do Committees Invent?». <i>Datamation</i>, 14(4).</li>
+      <li>Lande, R. (1979). «Quantitative Genetic Analysis of Multivariate Evolution, Applied to Brain:Body Size Allometry». <i>Evolution</i>, 33(1). Schluter, D. (1996). «Adaptive Radiation along Genetic Lines of Least Resistance». <i>Evolution</i>, 50(5).</li>
+      <li>Clune, J., Mouret, J.-B. y Lipson, H. (2013). «The Evolutionary Origins of Modularity». <i>Proceedings of the Royal Society B</i>, 280.</li>
+      <li>Colfer, L. y Baldwin, C. (2016). «The Mirroring Hypothesis: Theory, Evidence, and Exceptions». <i>Industrial and Corporate Change</i>, 25(5).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROCESO 4: Paso al proyecto siguiente. -->
+<nav class="siguiente" aria-label="Proyecto siguiente">
+  <p class="etiqueta">Siguiente proyecto</p>
+  <a href="biblioteca-dewey.html">Biblioteca digital con signatura Dewey: ordenada por tema y autor</a>
+</nav>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>
