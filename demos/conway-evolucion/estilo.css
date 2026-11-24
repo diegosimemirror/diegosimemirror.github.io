@@ -1,0 +1,211 @@
+/* ============================================================
+   estilo.css: el aspecto del bosquejo «Conway y la evolución»
+   Sigue el estilo del portafolio: un solo tamaño para el texto,
+   jerarquía con negrita, y cada gráfico junto a su explicación.
+
+   Colores con significado fijo en TODOS los gráficos:
+     azul    = la estructura que ya existe y lo que la copia
+     naranja = lo que cambia o cruza la estructura
+     gris    = elementos neutros (cajas, líneas de apoyo)
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Schibsted+Grotesk:wght@400;500;600&display=swap");
+
+
+/* ============================================================
+   PROCESO 1: Parámetros (colores, letras, medidas)
+   Insumo:    las preferencias de diseño del portafolio
+   Resultado: variables que usa el resto de este archivo
+   ============================================================ */
+:root {
+  --papel: #ffffff;
+  --tinta: #0a0a0a;
+  --tinta-suave: #666666;
+  --linea: #d9d9d9;
+  --marca: #9a9993;                       /* gris de cajas y líneas neutras */
+  --azul: #2a78d6;                        /* estructura existente */
+  --naranja: #eb6834;                     /* cambio */
+  --azul-velo: rgba(42, 120, 214, 0.12);  /* relleno suave de la nube de variación */
+
+  --letra-titulos: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --letra-texto: "Newsreader", Georgia, "Times New Roman", serif;
+  --texto: 1.125rem;
+  --texto-serif: 1.3125rem;
+  --titulo: clamp(1.5rem, 2vw, 1.6875rem);
+
+  --ancho-sitio: 1320px;
+  --margen: clamp(16px, 3vw, 40px);
+  --aire: clamp(28px, 3.2vw, 44px);
+  --columnas: clamp(24px, 3vw, 48px);
+  color-scheme: light;
+}
+
+/* Modo oscuro: mismos tonos, más claros para que se lean sobre fondo oscuro */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --papel: #1a1a19;
+    --tinta: #f0efec;
+    --tinta-suave: #c3c2b7;
+    --linea: #3a3a37;
+    --marca: #807f79;
+    --azul: #3987e5;
+    --naranja: #d95926;
+    --azul-velo: rgba(57, 135, 229, 0.18);
+    color-scheme: dark;
+  }
+}
+
+
+/* ============================================================
+   PROCESO 2: Página y texto
+   Insumo:    el HTML sin estilo
+   Resultado: columnas de texto y gráfico, con un solo tamaño de letra
+   ============================================================ */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--letra-texto);
+  font-size: var(--texto-serif);
+  line-height: 1.5;
+}
+
+main {
+  max-width: var(--ancho-sitio);
+  margin: 0 auto;
+  padding: var(--aire) var(--margen);
+}
+
+h1, h2, h3, .etiqueta, label, .fuente, .lectura, summary, table, .clave {
+  font-family: var(--letra-titulos);
+  font-size: var(--texto);
+}
+
+h1 { font-size: var(--titulo); font-weight: 600; margin: 0 0 0.6em; }
+h2 { font-weight: 600; margin: 0 0 0.6em; }
+h3 {
+  font-weight: 600;
+  margin: var(--aire) 0 0;
+  padding-top: 0.8em;
+  border-top: 2px solid var(--tinta);
+}
+p { margin: 0 0 0.8em; }
+.fuente, .lectura, .nota { color: var(--tinta-suave); }
+.fuente { margin-top: 1em; }
+a { color: inherit; }
+
+.intro { max-width: 46rem; }
+.clave span { white-space: nowrap; margin-right: 1.2em; }
+.punto {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  border-radius: 50%;
+  margin-right: 0.35em;
+  vertical-align: -0.05em;
+}
+.punto.azul { background: var(--azul); }
+.punto.naranja { background: var(--naranja); }
+
+/* Cada sección: texto a la izquierda, gráfico a la derecha */
+.seccion {
+  display: grid;
+  grid-template-columns: 4.25fr 7.75fr;
+  gap: var(--columnas);
+  align-items: start;
+  padding: var(--aire) 0;
+  border-top: 1px solid var(--linea);
+}
+h3 + .seccion { border-top: 0; }
+/* min-width: 0 deja que el gráfico se deslice por dentro sin ensanchar la página */
+.seccion > * { min-width: 0; }
+
+.solo-texto { max-width: 52rem; padding: 0.8em 0 0; }
+.solo-texto ul { padding-left: 1.1em; }
+.solo-texto li { margin-bottom: 0.5em; }
+
+@media (max-width: 860px) {
+  .seccion { grid-template-columns: 1fr; }
+}
+
+
+/* ============================================================
+   PROCESO 3: Gráficos (SVG)
+   Insumo:    los SVG que dibuja graficos.js
+   Resultado: trazos finos, colores por significado, etiquetas legibles
+   ============================================================ */
+figure { margin: 0; }
+figure svg { width: 100%; height: auto; display: block; }
+
+/* En celular el gráfico no se encoge más de 560 px: se desliza de lado */
+@media (max-width: 600px) {
+  figure { overflow-x: auto; }
+  figure svg { min-width: 560px; }
+}
+
+svg .t { font-family: var(--letra-titulos); font-size: 15px; fill: var(--tinta); }
+svg .suave { fill: var(--tinta-suave); }
+svg .negrita { font-weight: 600; }
+
+.trazo-gris    { stroke: var(--marca);   fill: none; stroke-width: 1.5; }
+.trazo-azul    { stroke: var(--azul);    fill: none; stroke-width: 2; }
+.trazo-naranja { stroke: var(--naranja); fill: none; stroke-width: 2; }
+.caja          { fill: var(--papel); stroke: var(--marca); stroke-width: 1.5; }
+.caja-azul     { fill: var(--papel); stroke: var(--azul); stroke-width: 2; }
+.caja-naranja  { fill: var(--papel); stroke: var(--naranja); stroke-width: 2.5; }
+.relleno-azul    { fill: var(--azul); }
+.relleno-naranja { fill: var(--naranja); }
+.relleno-gris    { fill: var(--marca); }
+.relleno-papel   { fill: var(--papel); }
+.velo-azul       { fill: var(--azul-velo); stroke: var(--azul); stroke-width: 1.5; }
+.punta-gris    { fill: var(--marca); }
+.punta-azul    { fill: var(--azul); }
+.zona-activa   { fill: transparent; cursor: crosshair; }
+.toque         { stroke: transparent; stroke-width: 12; fill: none; cursor: pointer; }
+
+/* Controles debajo del gráfico */
+.control { margin-top: 0.8em; }
+.control label { display: block; margin-bottom: 0.2em; }
+.control input[type="range"] { width: 100%; accent-color: var(--azul); }
+.extremos {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--letra-titulos);
+  font-size: var(--texto);
+  color: var(--tinta-suave);
+}
+.lectura { margin-top: 0.6em; color: var(--tinta); }
+
+/* Tabla opcional (para leer los valores sin el gráfico) */
+details { margin-top: 0.8em; }
+summary { cursor: pointer; color: var(--tinta-suave); }
+table { border-collapse: collapse; margin-top: 0.5em; }
+th, td { text-align: right; padding: 0.25em 0.8em; border-bottom: 1px solid var(--linea); }
+th:first-child, td:first-child { text-align: left; }
+
+/* Ventana flotante que aparece al pasar el cursor */
+#tip {
+  position: fixed;
+  pointer-events: none;
+  background: var(--tinta);
+  color: var(--papel);
+  font-family: var(--letra-titulos);
+  font-size: 15px;
+  padding: 6px 9px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.1s;
+  z-index: 10;
+  max-width: 260px;
+}
+
+footer {
+  margin-top: var(--aire);
+  padding-top: 1em;
+  border-top: 1px solid var(--linea);
+  font-family: var(--letra-titulos);
+  font-size: var(--texto);
+  color: var(--tinta-suave);
+}

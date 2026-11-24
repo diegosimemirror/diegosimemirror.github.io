@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>Conway y la evolución · bosquejo</title>
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<main>
+
+  <!-- ========================================================
+       Encabezado: la pregunta y la clave de colores
+       ======================================================== -->
+  <header class="intro">
+    <h1>Conway y la evolución</h1>
+    <p>La ley de Conway dice que un sistema copia la red de comunicación de la organización que lo diseña. La biología evolutiva estudia algo parecido desde hace décadas: la estructura que produce un organismo sesga lo que ese organismo puede llegar a ser.</p>
+    <p>La pregunta de fondo: <strong>¿la digitalización y la inteligencia artificial solo van a reproducir la estructura del Estado que ya existe?</strong></p>
+    <p class="nota">Bosquejo exploratorio. Los gráficos son esquemas y modelos para pensar; no usan datos del Estado.</p>
+    <p class="clave"><span><i class="punto azul"></i>La estructura que ya existe y lo que la copia</span> <span><i class="punto naranja"></i>Lo que cambia o la cruza</span></p>
+  </header>
+
+
+  <h3>Por qué la estructura se reproduce</h3>
+
+  <!-- 1. El espejo -->
+  <section class="seccion">
+    <div>
+      <h2>1. El espejo</h2>
+      <p>En 1968, Melvin Conway notó que un sistema copia la red de comunicación de quienes lo diseñan. Su ejemplo: si cuatro equipos hacen un compilador, sale un compilador de cuatro pasadas.</p>
+      <p><strong>En el Estado:</strong> si cada dirección tiene su propio sistema, los sistemas se hablan tan poco como las direcciones.</p>
+      <p class="nota">Pasa el cursor sobre un equipo para ver el módulo que le corresponde.</p>
+      <p class="fuente">Conway (1968), «How Do Committees Invent?», <i>Datamation</i> 14(4).</p>
+    </div>
+    <figure id="g1"></figure>
+  </section>
+
+  <!-- 2. Sesgo, no prohibición -->
+  <section class="seccion">
+    <div>
+      <h2>2. Un sesgo, no una prohibición</h2>
+      <p>En biología esto se llama <strong>restricción del desarrollo</strong>: un sesgo en las formas que puede tomar un organismo, causado por la estructura que lo construye. La nube azul es la variación disponible. La población avanza hacia la meta, pero primero por donde hay más variación. Es la <strong>línea de menor resistencia</strong>.</p>
+      <p><strong>En el Estado:</strong> digitalizar lo que ya existe es fácil y rápido; cambiar la estructura es posible, pero lento. Tu hipótesis, dicha así: la digitalización reproduce rápido y cambia despacio.</p>
+      <p class="fuente">Futuyma y Kirkpatrick, <i>Evolution</i> (2017), cap. 15, p. 389, y fig. 20.15. Schluter (1996), <i>Evolution</i> 50(5). Modelo: Lande (1979), Δz = G β.</p>
+    </div>
+    <figure>
+      <div id="g2"></div>
+      <div class="control">
+        <label for="g2-variacion">Variación disponible para cambiar la estructura</label>
+        <input type="range" id="g2-variacion" min="5" max="100" value="15">
+        <div class="extremos"><span>Poca</span><span>Igual que para digitalizar</span></div>
+      </div>
+      <p class="lectura" id="g2-lectura"></p>
+    </figure>
+  </section>
+
+  <!-- 3. Pleiotropía -->
+  <section class="seccion">
+    <div>
+      <h2>3. Lo que está atado a muchas cosas casi no cambia</h2>
+      <p><strong>Pleiotropía</strong> es cuando un gen tiene varios efectos a la vez. Los mamíferos tienen siempre siete vértebras en el cuello, de la jirafa al ratón; las aves pueden tener docenas. Una hipótesis (Galis) es que los genes que fijan esas vértebras también controlan la multiplicación de las células, y tocarlos sale muy caro.</p>
+      <p><strong>En el Estado:</strong> una unidad del organigrama está atada a su presupuesto, sus plazas, sus procedimientos y sus sistemas. Moverla obliga a mover todo eso.</p>
+      <p><strong>Hipótesis que se puede medir:</strong> las unidades con más vínculos cambian menos de una versión del ROF a la siguiente.</p>
+      <p class="fuente">Barresi y Gilbert, <i>Developmental Biology</i> (2023), sección 26.3.</p>
+    </div>
+    <figure id="g3"></figure>
+  </section>
+
+  <!-- 4. Estigmergia -->
+  <section class="seccion">
+    <div>
+      <h2>4. El círculo que reproduce la estructura</h2>
+      <p>Las termitas construyen sin plano: cada montoncito de barro invita a poner otro en el mismo lugar, y así sale un pilar. Se llama <strong>estigmergia</strong>: construir siguiendo el patrón que dejó lo construido antes.</p>
+      <p><strong>En el Estado:</strong> sumada a Conway, forma un círculo. La organización diseña sistemas con su forma, cada sistema nuevo sigue el patrón del anterior, y los sistemas fijan quién se comunica con quién.</p>
+      <p><strong>Dónde se puede cortar:</strong> la «maniobra inversa de Conway» propone cambiar primero la organización, para que el sistema que salga tenga otra forma. El cerebro muestra que también se puede ir en ese sentido: el uso cambia las conexiones (Hebb).</p>
+      <p class="fuente">Breed y Moore, <i>Animal Behavior</i> (2021), cap. 14, pp. 519-520. Kandel y otros, <i>Principles of Neural Science</i> (2021), cap. 49. Skelton y Pais (2019), <i>Team Topologies</i>.</p>
+    </div>
+    <figure id="g4"></figure>
+  </section>
+
+
+  <h3>Cómo puede surgir lo nuevo</h3>
+
+  <!-- 5. Costo de coordinación -->
+  <section class="seccion">
+    <div>
+      <h2>5. Cuando coordinarse cuesta, aparecen los módulos</h2>
+      <p>Un <strong>módulo</strong> es un grupo de partes muy conectadas entre sí y poco con el resto. Clune, Mouret y Lipson (2013) mostraron que la modularidad aparece en la evolución cuando cada conexión tiene un costo.</p>
+      <p><strong>En el Estado:</strong> lo digital podría abaratar la coordinación y aflojar el espejo. Pero solo si baja el costo real: si las normas, el presupuesto y las responsabilidades siguen separados, coordinarse sigue saliendo caro.</p>
+      <p class="nota">Modelo de juguete: cada enlace posible entre unidades tiene un beneficio al azar, y se conserva si ese beneficio supera el costo. Pasa el cursor sobre un enlace naranja para verlo.</p>
+      <p class="fuente">Clune, Mouret y Lipson (2013), <i>Proc. R. Soc. B</i> 280. Futuyma y Kirkpatrick, cap. 15. Colfer y Baldwin (2016).</p>
+    </div>
+    <figure>
+      <div id="g5"></div>
+      <div class="control">
+        <label for="g5-costo">Costo de coordinarse entre unidades</label>
+        <input type="range" id="g5-costo" min="0" max="100" value="80">
+        <div class="extremos"><span>Bajo</span><span>Alto</span></div>
+      </div>
+      <p class="lectura" id="g5-lectura"></p>
+    </figure>
+  </section>
+
+  <!-- 6. Transición mayor -->
+  <section class="seccion">
+    <div>
+      <h2>6. Lo que haría falta para cambiar de nivel</h2>
+      <p>En la historia de la vida hubo pocas <strong>transiciones mayores</strong>, como el paso de células sueltas a organismos de muchas células. En cada una, unidades que vivían por su cuenta pasaron a depender del conjunto. Las células de un cuerpo cooperan porque son casi idénticas genéticamente: el éxito del todo es su propio éxito.</p>
+      <p><strong>En el Estado:</strong> una transformación digital de verdad sería una transición así. Las entidades dejarían de ser dueñas de su información y compartirían un canal común. Hacen falta dos cosas: el canal, y que a cada parte le convenga el éxito del todo.</p>
+      <p class="fuente">Futuyma y Kirkpatrick, tabla 17.2 (p. 438) y cap. 12 (p. 316). Maynard Smith y Szathmáry (1995), <i>The Major Transitions in Evolution</i>.</p>
+    </div>
+    <figure id="g6"></figure>
+  </section>
+
+
+  <h3>Qué se podría medir</h3>
+
+  <!-- 7. Ley de escala -->
+  <section class="seccion">
+    <div>
+      <h2>7. ¿La coordinación crece más rápido que el tamaño?</h2>
+      <p>En bacterias, cada vez que el genoma duplica sus genes, los genes reguladores (los que controlan a otros genes) se multiplican por cuatro: crecen con el cuadrado del tamaño. En software, Brooks llegó a algo parecido: entre <i>n</i> personas hay <i>n</i>(<i>n</i>−1)/2 canales de comunicación.</p>
+      <p><strong>Qué mediríamos:</strong> en cada ROF, los órganos de apoyo y de asesoría frente al total de órganos. Si la pendiente sale mayor que 1, la carga de coordinación crece más rápido que la entidad.</p>
+      <p class="nota">Escala logarítmica: cada marca de abajo duplica el tamaño y cada marca de la izquierda lo multiplica por 10. Así, una curva el doble de empinada que la gris crece con el cuadrado. Curvas teóricas, iguales a 1 en una entidad de 4 unidades; todavía no hay datos del Estado.</p>
+      <p class="fuente"><i>The Princeton Guide to Evolution</i> (2013), cap. V.9 (van Nimwegen, 2003). Brooks (1975), <i>The Mythical Man-Month</i>.</p>
+    </div>
+    <figure>
+      <div id="g7"></div>
+      <details>
+        <summary>Ver los valores en una tabla</summary>
+        <table id="g7-tabla"></table>
+      </details>
+    </figure>
+  </section>
+
+  <!-- 8. Filogenia de organigramas -->
+  <section class="seccion">
+    <div>
+      <h2>8. ¿Se parecen por copia o por función?</h2>
+      <p>En biología, dos rasgos pueden parecerse por venir de un ancestro común (<strong>homología</strong>) o por resolver el mismo problema (<strong>convergencia</strong>). Un árbol de parecidos ayuda a distinguirlos.</p>
+      <p><strong>En el Estado:</strong> los organigramas descienden de una plantilla escrita, los Lineamientos de Organización del Estado. Si al agrupar por parecido se juntan las entidades de la misma plantilla, el parecido es copia. Si se juntan las del mismo sector, es convergencia por función.</p>
+      <p class="nota">S: sector social. E: sector económico. El año es la versión del ROF. Entidades hipotéticas.</p>
+      <p class="fuente">Barresi y Gilbert, sección 26.1 (duplicación y divergencia). <i>The Princeton Guide to Evolution</i>, cap. V.5.</p>
+    </div>
+    <figure id="g8"></figure>
+  </section>
+
+
+  <h3>Dónde se rompe la analogía</h3>
+  <div class="solo-texto">
+    <ul>
+      <li>Las organizaciones se diseñan a propósito; la evolución es ciega.</li>
+      <li>No está claro cuál es el «gen» de una organización. En el Perú hay una ventaja: el ROF funciona como un genoma escrito, con fecha y con versiones.</li>
+      <li>Las entidades públicas casi nunca desaparecen, así que la selección es débil. Cuando la selección es débil, se acumula complejidad que no cumple ninguna función (Lynch, en <i>The Princeton Guide to Evolution</i>, cap. V.2).</li>
+      <li>No todo rasgo es una adaptación. El espejo podría deberse a copiar una plantilla y no a la comunicación. Para saberlo hace falta un punto de comparación (un «modelo nulo»).</li>
+    </ul>
+  </div>
+
+  <h3>Lecturas</h3>
+  <div class="solo-texto">
+    <ul>
+      <li>Futuyma y Kirkpatrick (2017), <i>Evolution</i>, caps. 12, 15, 17 y 20.</li>
+      <li>Losos y otros (2013), <i>The Princeton Guide to Evolution</i>, caps. V.2, V.5, V.9 y V.11.</li>
+      <li>Barresi y Gilbert (2023), <i>Developmental Biology</i>, cap. 26.</li>
+      <li>Breed y Moore (2021), <i>Animal Behavior</i>, cap. 14.</li>
+      <li>Kandel y otros (2021), <i>Principles of Neural Science</i>, cap. 49.</li>
+      <li>Conway (1968); Simon (1962), «The Architecture of Complexity»; Maynard Smith y otros (1985), «Developmental Constraints and Evolution»; Lande (1979); Schluter (1996); Clune, Mouret y Lipson (2013); Colfer y Baldwin (2016).</li>
+    </ul>
+  </div>
+
+  <footer>Bosquejo exploratorio · 24 de noviembre de 2026</footer>
+</main>
+
+<div id="tip" role="status" aria-live="polite"></div>
+<script src="graficos.js"></script>
+</body>
+</html>
