@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Biblioteca digital con signatura Dewey · Diego Sime</title>
+<meta name="description" content="Un pipeline que ordena una biblioteca digital como una biblioteca universitaria: clase Dewey, autor y año en el nombre de cada archivo, sin subcarpetas y sin trabajo manual.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+<div class="pagina">
+
+<!-- PROCESO 1: Cabecera. El nombre vuelve a la portada; el menú es igual en todas las páginas. -->
+<header class="cabecera">
+  <a class="cabecera__nombre" href="../index.html">Diego Sime, MA</a>
+  <nav class="cabecera__menu" aria-label="Principal">
+    <a href="../index.html#proyectos">Proyectos</a>
+    <a href="../index.html#participacion">Participación</a>
+    <a href="https://www.linkedin.com/in/diego-sime-rendon/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/diegosimemirror" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- PROCESO 2: Título, gráfico y ficha. El clic en el gráfico lleva al código y al pipeline. -->
+<div class="encabezado-proyecto">
+  <p class="tema">Bibliotecología · Agentes de IA · Pipeline</p>
+  <h1 class="titulo-pagina">Biblioteca digital con signatura Dewey: ordenada por tema y autor</h1>
+</div>
+
+<div class="proyecto proyecto--detalle">
+  <a class="figura" href="https://github.com/diegosimemirror/biblioteca" target="_blank" rel="noopener" title="Ver el código y el pipeline">
+    <img src="../imagenes/proyectos/biblioteca-dewey.svg" width="1120" height="720" alt="Pipeline en estilo n8n, en dos filas. Fila 1: Inicio, B1 Explorar (inventario de archivos), B2 Separar y fichar (metadatos, ISBN, copias) y Clasificar Dewey (Claude, 3 en paralelo). Fila 2: B3 Catálogo y plan (Excel y plan, en simulación), Control de calidad, Esperar aprobación y B4 Mover y renombrar (con registro para deshacer). Debajo, la carpeta ordenada como un estante: 184_Plato_1997_The-Dialogues-of-Plato-4.pdf, 193_Vieweg_2020_The-Idealism-of-Freedom.pdf y 833_Kafka_2009_The-Castle.pdf.">
+  </a>
+  <div class="ficha">
+    <div>
+      <p class="etiqueta">Pregunta</p>
+      <p class="pregunta">¿Cómo ordenar una biblioteca digital como una biblioteca universitaria, primero por tema y luego por autor, sin subcarpetas y sin renombrar nada a mano?</p>
+    </div>
+    <div>
+      <p class="etiqueta">Resultado</p>
+      <p class="resultado">555 libros clasificados con la Clasificación Decimal Dewey en una sola carpeta, donde el nombre de cada archivo es su signatura: 193_Vieweg_2020_The-Idealism-of-Freedom.pdf. 20 copias idénticas apartadas por su huella digital, 604 archivos movidos sin errores y un registro que permite deshacerlo todo.</p>
+      <p class="enlaces">
+        <a href="https://github.com/diegosimemirror/biblioteca" target="_blank" rel="noopener">Código</a>
+        <a href="https://github.com/diegosimemirror/biblioteca/blob/main/pipeline/pipeline_biblioteca.n8n.json" target="_blank" rel="noopener">Flujo para n8n</a>
+        <a href="https://github.com/diegosimemirror/biblioteca/blob/main/prompts/clasificar_dewey.md" target="_blank" rel="noopener">Prompt de clasificación</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO 3: Detalle. Cada sección usa la rejilla de dos columnas: título a la izquierda y texto a la derecha. -->
+<section class="seccion dos-columnas">
+  <h2>Qué hice</h2>
+  <div class="prosa">
+    <p>En una biblioteca, cada libro lleva una signatura: el código de su tema y una marca de su autor. Como los estantes se ordenan por signatura, los libros quedan agrupados por tema y, dentro de cada tema, por autor. El pipeline lleva esa signatura al nombre del archivo:</p>
+    <p><code>Dewey_Apellido_Año_Título.ext</code></p>
+    <ul>
+      <li>Clase Dewey de 3 cifras: solo números, que ordenan bien y no traen signos que no sirven en nombres de archivo.</li>
+      <li>Sin espacios ni tildes, para que la búsqueda no falle. Buscar <code>193_</code> muestra la filosofía alemana, y buscar un apellido muestra todos los libros de ese autor o sobre él.</li>
+      <li>Un catálogo en Excel guarda lo que no cabe en el nombre: título completo, coautores, editorial, ISBN, idioma y nombre original.</li>
+      <li>Nada se borra: las copias idénticas, los archivos vacíos y la basura de sistema van a una carpeta <code>revisar</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Cómo se hizo</h2>
+  <div class="prosa">
+    <p>Python lee los metadatos, el ISBN y el comienzo del texto de cada PDF, EPUB y MOBI sin abrirlos a mano, y compara el contenido completo de los archivos para detectar copias. Claude asigna la clase Dewey y los datos de catálogo en tres bloques en paralelo, con las mismas reglas escritas. Antes de mover un archivo, el pipeline arma el catálogo y el plan completo como simulación; solo después de aprobarlo los ejecuta, y anota cada movimiento. Lo construí con Claude Code. El flujo también está como plantilla para n8n.</p>
+  </div>
+</section>
+
+<section class="seccion dos-columnas">
+  <h2>Limitaciones</h2>
+  <div class="prosa">
+    <ul>
+      <li>La clase la asigna una IA, no un catálogo oficial: 148 de 555 libros (27&nbsp;%) quedaron marcados para revisar.</li>
+      <li>Con 3 cifras, algunas clases quedan grandes: la 193 (filosofía alemana) reúne 58 libros.</li>
+      <li>El pipeline procesa la biblioteca completa de una vez; para los libros que lleguen después hace falta una versión que procese solo los nuevos.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROCESO 4: Paso al proyecto siguiente. -->
+<nav class="siguiente" aria-label="Proyecto siguiente">
+  <p class="etiqueta">Siguiente proyecto</p>
+  <a href="aprendizaje-ml.html">Aprendizaje de Machine Learning: cómo aprende una máquina</a>
+</nav>
+
+</main>
+
+<footer class="pie">Hecho con HTML y CSS, publicado en GitHub Pages.</footer>
+
+</div>
+</body>
+</html>
